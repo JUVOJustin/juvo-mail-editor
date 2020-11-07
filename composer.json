@@ -1,0 +1,12 @@
+{
+  "require-dev": {
+  },
+  "autoload": {
+    "psr-4": {
+      "JUVO_MailEditor\\": "src/"
+    }
+  },
+  "require": {
+    "yahnis-elsts/plugin-update-checker": "^4.10"
+  }
+}

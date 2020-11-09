@@ -1,0 +1,24 @@
+{
+    "name": "juvo/wp-admin-notices",
+    "description": "Adds a wrapper layer to store notices for wptrt/admin-notices",
+    "keywords"    : [ "wordpress", "wptrt", "notices"],
+    "require": {
+        "php": ">=7.0.0",
+        "wptrt/admin-notices": "^1.0"
+    },
+    "support"     : {
+        "issues" : "https://github.com/JUVOJustin/wp-admin-notices/issues"
+    },
+    "authors": [
+        {
+            "name": "Justin Vogt",
+            "email": "mail@juvo-design.de",
+            "homepage": "https://juvo-design.de"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "juvo\\WordPressAdminNotices\\": "src/"
+        }
+    }
+}

@@ -1,23 +1,21 @@
 <?php
 /**
  * Plugin Name:     Mail Editor
- * Plugin URI:      PLUGIN SITE HERE
- * Description:     PLUGIN DESCRIPTION HERE
+ * Plugin URI:      https://juvo-design.de
+ * Description:     JUVO Mail Editor helps to configure the standard mail notification system of WordPress
  * Author:          JUVO Webdesign - Justin Vogt
  * Author URI:      https://juvo-design.de
  * Text Domain:     juvo-mail-editor
  * Domain Path:     /languages
- * Version:         0.1.0
- *
+ * Version:         1.0.0
  */
-
-// If this file is called directly, abort.
 
 use juvo\WordPressAdminNotices\Manager;
 use JUVO_MailEditor\Activator;
 use JUVO_MailEditor\Deactivator;
 use JUVO_MailEditor\Mail_Editor;
 
+// If this file is called directly, abort.
 if ( ! defined( 'WPINC' ) ) {
 	die;
 }

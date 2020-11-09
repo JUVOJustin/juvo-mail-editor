@@ -14,9 +14,9 @@
 // If this file is called directly, abort.
 
 use juvo\WordPressAdminNotices\Manager;
+use JUVO_MailEditor\Activator;
+use JUVO_MailEditor\Deactivator;
 use JUVO_MailEditor\Mail_Editor;
-use MediaFetcher\Activator;
-use MediaFetcher\Deactivator;
 
 if ( ! defined( 'WPINC' ) ) {
 	die;

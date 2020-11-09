@@ -4,12 +4,12 @@
 namespace JUVO_MailEditor;
 
 
-use MediaFetcher\Shortcodes\Articles;
-use Timber\Timber;
-use Twig\Environment;
-use Twig\Loader\FilesystemLoader;
+use JUVO_MailEditor\Mails\New_User;
+use JUVO_MailEditor\Mails\New_User_Admin;
+use JUVO_MailEditor\Mails\Password_Changed;
+use JUVO_MailEditor\Mails\Password_Reset;
 
-class MailEditor {
+class Mail_Editor {
 
 	/**
 	 * The loader that's responsible for maintaining and registering all hooks that power
@@ -90,9 +90,45 @@ class MailEditor {
 	 */
 	private function define_admin_hooks() {
 
-//		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
-//		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
+		/**
+		 * ACF
+		 */
+		$this->loader->add_filter( "acf/settings/save_json", new ACF(), "acf_json_save_point" );
+		$this->loader->add_filter( "acf/settings/load_json", new ACF(), "acf_json_load_point" );
+		$this->loader->add_action( 'acf/init', new ACF(), "add_juvo_mail_editor_menu" );
 
+
+		/**
+		 * Mail Options
+		 */
+		$this->loader->add_action( "rest_insert_user", new Mail_Options(), "rest_user_create", 12, 1);
+		remove_action( "register_new_user", "wp_send_new_user_notifications" );
+		remove_action( "edit_user_created_user", "wp_send_new_user_notifications", 10 );
+		$this->loader->add_action( "register_new_user", new Mail_Options(), "new_user_notifications", 10, 2);
+		$this->loader->add_action( "edit_user_created_user", new Mail_Options(), "new_user_notifications", 10, 2);
+		$this->loader->add_filter( "send_password_change_email", new Mail_Options(), "password_changed_email", 10 , 3);
+		$this->loader->add_filter( "retrieve_password_message", new Mail_Options(), "password_reset_email", 11, 4);
+
+
+		/**
+		 * Default Mail Overrides
+		 */
+		$this->loader->add_action( 'wp_new_user_notification_email', new New_User(), 'new_user_notification_email', 10, 2 );
+		$this->loader->add_action( 'wp_new_user_notification_email_admin', new New_User_Admin(), 'new_user_notification_email_admin', 10, 2 );
+		$this->loader->add_filter( 'retrieve_password_message', new Password_Reset(), 'password_reset_email_message', 10, 4 );
+		$this->loader->add_filter( 'retrieve_password_title', new Password_Reset(), 'password_reset_email_subject', 10, 4 );
+		$this->loader->add_action( 'password_change_email', new Password_Changed(), 'password_changed_email_message', 10, 3 );
+
+	}
+
+	/**
+	 * Register all of the hooks related to the public-facing functionality
+	 * of the plugin.
+	 *
+	 * @since    1.0.0
+	 * @access   private
+	 */
+	private function define_public_hooks() {
 	}
 
 	/**
@@ -114,16 +150,6 @@ class MailEditor {
 	 */
 	public function get_version() {
 		return $this->version;
-	}
-
-	/**
-	 * Register all of the hooks related to the public-facing functionality
-	 * of the plugin.
-	 *
-	 * @since    1.0.0
-	 * @access   private
-	 */
-	private function define_public_hooks() {
 	}
 
 	/**

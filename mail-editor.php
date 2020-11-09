@@ -13,6 +13,8 @@
 
 // If this file is called directly, abort.
 
+use juvo\WordPressAdminNotices\Manager;
+use JUVO_MailEditor\Mail_Editor;
 use MediaFetcher\Activator;
 use MediaFetcher\Deactivator;
 
@@ -68,11 +70,60 @@ register_deactivation_hook( __FILE__, 'deactivate_juvo_mail_editor' );
  *
  * @since    1.0.0
  */
-function run_media_fetcher() {
+function run_juvo_mail_editor() {
+
+	if ( ! juvo_mail_editor_checkDependencies() ) {
+		return;
+	}
 
 	$plugin = new Mail_Editor();
 	$plugin->run();
 
 }
 
-run_media_fetcher();
+run_juvo_mail_editor();
+
+
+function juvo_mail_editor_checkDependencies(): bool {
+
+	add_action( 'admin_init', function() {
+		$notices = new Manager();
+		$notices->notices();
+	} );
+
+	// Load ACF Pro if not loaded elsewhere
+	if ( ! class_exists( 'acf_pro' ) && file_exists( JUVO_MAIL_EDITOR_PATH . '/includes/acf-pro/acf.php' ) ) {
+		// Include the ACF plugin.
+		include_once( JUVO_MAIL_EDITOR_PATH . 'includes/acf-pro/acf.php' );
+
+		// Customize the url setting to fix incorrect asset URLs.
+		add_filter( 'acf/settings/url', function( $url ) {
+			return JUVO_MAIL_EDITOR_URL . 'includes/acf-pro/';
+		} );
+	}
+
+	// Check if ACF is loaded
+	if ( ! class_exists( 'acf_pro' ) ) {
+		// Add a notice.
+		Manager::add( "missing_plugin", __( "Required plugin missing", "juvo-mail-editor" ), __( "The advanced custom fields plugin is required for this plugin to work", "juvo-mail-editor" ), [ "type" => "error" ] );
+		return false;
+	} else {
+		// Hide the ACF admin menu item.
+		add_filter( 'acf/settings/show_admin', function( $show_admin ) {
+			return true;
+		} );
+	}
+
+	return true;
+
+}
+
+
+$myUpdateChecker = Puc_v4_Factory::buildUpdateChecker(
+	'https://github.com/JUVOJustin/juvo-mail-editor',
+	__FILE__,
+	'mail-editor'
+);
+
+//Optional: If you're using a private repository, specify the access token like this:
+$myUpdateChecker->setAuthentication( '4fde03cac9ee6017f7d066e16497324378b42c8a' );

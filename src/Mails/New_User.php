@@ -8,29 +8,47 @@ use WP_User;
 
 class New_User extends Mail_Generator {
 
-	private $placeholder = [
-		"password_reset_link"    => ""
+	private array $placeholder = [
+		"password_reset_link" => ""
 	];
-	private $text = "";
+	private string $text = "";
+	private string $subject = "";
+
+	/**
+	 * New_User_Admin constructor.
+	 */
+	public function __construct() {
+		$this->text    = $this->getMessageCustomField();
+		$this->subject = $this->getSubjectCustomField();
+	}
 
 	function new_user_notification_email(array $email, WP_User $user) {
-		$this->text = $this->getCustomField();
 
 		if (empty($this->text)) {
-			return $email;
+			$this->text = $email['message'];
+		}
+
+		if (empty($this->subject)) {
+			$this->subject = $email['subject'];
 		}
 
 		$this->setContentType(true);
 
 		$this->setPlaceholderValues($user, []);
+		$this->subject = Placeholder::replacePlaceholder($user, $this->placeholder, $this->subject);
 		$this->text = Placeholder::replacePlaceholder($user, $this->placeholder, $this->text);
 
 		$email['message'] = $this->text;
+		$email['subject'] = $this->subject;
 		return $email;
 	}
 
-	protected function getCustomField(): string {
-		return get_field("new_user_message", "option");
+	private function getSubjectCustomField(): string {
+		return get_field("new_user_subject", "option") ?: "";
+	}
+
+	protected function getMessageCustomField(): string {
+		return get_field("new_user_message", "option") ?: "";
 	}
 
 	protected function setPlaceholderValues(WP_User $user, array $options): void {

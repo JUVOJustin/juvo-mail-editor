@@ -4,8 +4,98 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "952e51b62573ed522791503cdcfe7851",
+    "content-hash": "6cd08e115219a3cb2b819ccef6b9414f",
     "packages": [
+        {
+            "name": "juvo/wp-admin-notices",
+            "version": "v1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/JUVOJustin/wp-admin-notices.git",
+                "reference": "f6500e0145caf3371ad79ad95a16bce2be3d1086"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/JUVOJustin/wp-admin-notices/zipball/f6500e0145caf3371ad79ad95a16bce2be3d1086",
+                "reference": "f6500e0145caf3371ad79ad95a16bce2be3d1086",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.0.0",
+                "wptrt/admin-notices": "^1.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "juvo\\WordPressAdminNotices\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "Justin Vogt",
+                    "email": "mail@juvo-design.de",
+                    "homepage": "https://juvo-design.de"
+                }
+            ],
+            "description": "Adds a wrapper layer to store notices for wptrt/admin-notices",
+            "keywords": [
+                "notices",
+                "wordpress",
+                "wptrt"
+            ],
+            "support": {
+                "issues": "https://github.com/JUVOJustin/wp-admin-notices/issues",
+                "source": "https://github.com/JUVOJustin/wp-admin-notices/tree/master"
+            },
+            "time": "2020-05-12T21:09:47+00:00"
+        },
+        {
+            "name": "wptrt/admin-notices",
+            "version": "v1.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/WPTT/admin-notices.git",
+                "reference": "3904e0dc087b48289056a77eea3d1dab4ef0dde1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/WPTT/admin-notices/zipball/3904e0dc087b48289056a77eea3d1dab4ef0dde1",
+                "reference": "3904e0dc087b48289056a77eea3d1dab4ef0dde1",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.6"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "WPTRT\\AdminNotices\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "WordPress.org Theme Review Team",
+                    "email": "themes@wordpress.org",
+                    "homepage": "https://make.wordpress.org/themes",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A class to create admin-notices for the WordPress dashboard.",
+            "homepage": "https://github.com/WPTRT/admin-notices",
+            "keywords": [
+                "wordpress"
+            ],
+            "support": {
+                "issues": "https://github.com/WPTRT/admin-notices/issues",
+                "source": "https://github.com/WPTT/admin-notices/tree/v1.0.3"
+            },
+            "time": "2020-02-15T10:34:51+00:00"
+        },
         {
             "name": "yahnis-elsts/plugin-update-checker",
             "version": "v4.10",

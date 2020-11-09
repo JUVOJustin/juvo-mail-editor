@@ -7,6 +7,7 @@
     }
   },
   "require": {
-    "yahnis-elsts/plugin-update-checker": "^4.10"
+    "yahnis-elsts/plugin-update-checker": "^4.10",
+    "juvo/wp-admin-notices": "^1.0"
   }
 }

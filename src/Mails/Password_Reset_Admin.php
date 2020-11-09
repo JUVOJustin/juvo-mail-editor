@@ -1,55 +1,51 @@
 <?php
 
+
 namespace JUVO_MailEditor\Mails;
+
 
 use JUVO_MailEditor\Mail_Generator;
 use JUVO_MailEditor\Placeholder;
 use WP_User;
 
-class New_User_Admin extends Mail_Generator {
+class Password_Reset_Admin extends Mail_Generator {
 
 	private array $placeholder = [];
 	private string $text = "";
 	private string $subject = "";
 
 	/**
-	 * New_User_Admin constructor.
+	 * Password_Reset_Admin constructor.
 	 */
 	public function __construct() {
 		$this->text    = $this->getMessageCustomField();
 		$this->subject = $this->getSubjectCustomField();
 	}
 
-	function new_user_notification_email_admin( array $email, WP_User $user ) {
+	function password_reset_email_message(WP_User $user) {
 
-		if (empty($this->text)) {
-			$this->text = $email['message'];
+		if (empty($this->text) || empty($this->subject)) {
+			return;
 		}
 
-		if (empty($this->subject)) {
-			$this->subject = $email['subject'];
-		}
+		$this->setContentType(true);
 
-		$this->setContentType( true );
-
-		$this->setPlaceholderValues( $user, [] );
+		$this->setPlaceholderValues($user, []);
 		$this->subject = Placeholder::replacePlaceholder($user, $this->placeholder, $this->subject);
 		$this->text = Placeholder::replacePlaceholder($user, $this->placeholder, $this->text);
 
-		$email['message'] = $this->text;
-		$email['subject'] = $this->subject;
-		return $email;
+		wp_mail(get_bloginfo("admin_email"), $this->subject , $this->text);
 	}
 
 	private function getSubjectCustomField(): string {
-		return get_field("new_user_subject_admin", "option") ?: "";
+		return get_field("password_reset_subject_admin", "option") ?: "";
 	}
 
 	protected function getMessageCustomField(): string {
-		return get_field("new_user_message_admin", "option") ?: "";
+		return get_field("password_reset_message_admin", "option") ?: "";
 	}
 
-	protected function setPlaceholderValues( WP_User $user, array $options ): void {
+	protected function setPlaceholderValues(WP_User $user , array $options): void {
 	}
 
 }

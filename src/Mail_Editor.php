@@ -93,21 +93,25 @@ class Mail_Editor {
 		/**
 		 * ACF
 		 */
-		$this->loader->add_filter( "acf/settings/save_json", new ACF(), "acf_json_save_point" );
-		$this->loader->add_filter( "acf/settings/load_json", new ACF(), "acf_json_load_point" );
-		$this->loader->add_action( 'acf/init', new ACF(), "add_juvo_mail_editor_menu" );
+		$acf = new ACF();
+		$this->loader->add_filter( "acf/settings/save_json", $acf, "acf_json_save_point" );
+		$this->loader->add_filter( "acf/settings/load_json", $acf, "acf_json_load_point" );
+		$this->loader->add_filter( "acf/settings/load_json", $acf, "acf_json_load_point" );
+		$this->loader->add_filter( "acf/fields/wysiwyg/toolbars", $acf, "acf_toolbars");
+		$this->loader->add_action( 'acf/init', $acf, "add_juvo_mail_editor_menu" );
 
 
 		/**
 		 * Mail Options
 		 */
-		$this->loader->add_action( "rest_insert_user", new Mail_Options(), "rest_user_create", 12, 1);
+		$mail_options = new Mail_Options();
+		$this->loader->add_action( "rest_insert_user", $mail_options, "rest_user_create", 12, 1);
 		remove_action( "register_new_user", "wp_send_new_user_notifications" );
 		remove_action( "edit_user_created_user", "wp_send_new_user_notifications", 10 );
-		$this->loader->add_action( "register_new_user", new Mail_Options(), "new_user_notifications", 10, 2);
-		$this->loader->add_action( "edit_user_created_user", new Mail_Options(), "new_user_notifications", 10, 2);
-		$this->loader->add_filter( "send_password_change_email", new Mail_Options(), "password_changed_email", 10 , 3);
-		$this->loader->add_filter( "retrieve_password_message", new Mail_Options(), "password_reset_email", 11, 4);
+		$this->loader->add_action( "register_new_user", $mail_options, "new_user_notifications", 10, 2);
+		$this->loader->add_action( "edit_user_created_user", $mail_options, "new_user_notifications", 10, 2);
+		$this->loader->add_filter( "send_password_change_email", $mail_options, "password_changed_email", 10 , 3);
+		$this->loader->add_filter( "retrieve_password_message", $mail_options, "password_reset_email", 11, 4);
 
 
 		/**

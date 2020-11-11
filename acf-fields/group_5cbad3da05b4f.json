@@ -116,7 +116,7 @@
             },
             "default_value": "Hallo {{FULLNAME_ELSE_USERNAME}},\r\n\r\nschön, dass Sie dabei sind!\r\nMit dieser Nachricht erhalten Sie Ihre persönlichen Zugangsdaten zu {{SITE_NAME}}.\r\n\r\n<b>Ihre Zugangsdaten:<\/b>\r\n\r\nIhr Benutzername: {{USERNAME}}\r\nHolen Sie sich Ihr Passwort jetzt unter folgendem Link: {{PASSWORD_RESET_LINK}}\r\nHier einloggen: {{WPURL}}\r\n\r\nBei Fragen wenden Sie sich gerne an <a href=\"mailto:{{ADMIN_EMAIL}}\">{{ADMIN_EMAIL}}<\/a>\r\n\r\n\r\nMit besten Grüßen,\r\nDas Team von {{SITE_NAME}}",
             "tabs": "all",
-            "toolbar": "basic",
+            "toolbar": "mail",
             "media_upload": 0,
             "delay": 0
         },
@@ -197,8 +197,8 @@
                 "id": ""
             },
             "default_value": "Neue Benutzerregistrierung auf  {{SITE_NAME}} ({{WPURL}}):\r\n\r\nID: {{USERID}}\r\nBenutzername: {{USERNAME}}\r\nVor- und Nachname: {{FIRST_NAME}} {{LAST_NAME}}\r\nE-Mail: {{USER_EMAIL}}\r\n\r\nSie erhalten diese E-Mail, da {{ADMIN_EMAIL}} als Administrator-E-Mail-Adresse hinterlegt ist.",
-            "tabs": "visual",
-            "toolbar": "basic",
+            "tabs": "all",
+            "toolbar": "mail",
             "media_upload": 0,
             "delay": 0
         },
@@ -353,7 +353,7 @@
             },
             "default_value": "",
             "tabs": "all",
-            "toolbar": "basic",
+            "toolbar": "mail",
             "media_upload": 0,
             "delay": 0
         },
@@ -407,7 +407,7 @@
             },
             "default_value": "",
             "tabs": "all",
-            "toolbar": "basic",
+            "toolbar": "mail",
             "media_upload": 0,
             "delay": 0
         },
@@ -499,7 +499,7 @@
             },
             "default_value": "Hallo,\r\ndas Passwort für das Benutzerkonto <b>{{USERNAME}}<\/b> wurde geändert.\r\n\r\nWenn Sie diese Änderung nicht vorgenommen haben, kontaktieren Sie bitte den Support unter <a href=\"mailto:{{ADMIN_EMAIL}}\">{{ADMIN_EMAIL}}<\/a>.\r\nDiese E-Mail wurde an {{USER_EMAIL}} gesendet.\r\n\r\nHier einloggen: <a href=\"{{WPURL}}\">{{WPURL}}<\/a>\r\nBei Fragen wenden Sie sich gerne an <a href=\"mailto:{{ADMIN_EMAIL}}\">{{ADMIN_EMAIL}}<\/a>\r\n\r\n\r\nMit besten Grüßen,\r\nDas Team von {{SITE_NAME}}",
             "tabs": "all",
-            "toolbar": "basic",
+            "toolbar": "mail",
             "media_upload": 0,
             "delay": 0
         },
@@ -567,7 +567,7 @@
             },
             "default_value": "Hallo,\r\ndas Passwort für das Benutzerkonto <b>{{USERNAME}}<\/b> ({{USERID}}) wurde geändert.\r\n\r\nBitte stellen Sie sicher, dass diese Änderung von Ihnen beabsichtigt war. Andernfalls sollten Sie dringend die Rechte anderer Benutzer kontrollieren und ggf. herabsetzen.  \r\n\r\n\r\nMit besten Grüßen,\r\nDas Team von {{SITE_NAME}}",
             "tabs": "all",
-            "toolbar": "basic",
+            "toolbar": "mail",
             "media_upload": 0,
             "delay": 0
         }
@@ -589,5 +589,5 @@
     "hide_on_screen": "",
     "active": true,
     "description": "",
-    "modified": 1604893969
+    "modified": 1605096046
 }

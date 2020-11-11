@@ -31,10 +31,9 @@ class Password_Reset extends Mail_Generator {
 			return $message;
 		}
 
-		$this->setContentType(true);
-
 		$this->setPlaceholderValues($user, ["key"=>$key]);
 		$this->text = Placeholder::replacePlaceholder($user, $this->placeholder, $this->text);
+		$this->text = $this->setContentType($this->text);
 
 		return $this->text;
 	}
@@ -55,7 +54,7 @@ class Password_Reset extends Mail_Generator {
 		return get_field("password_reset_message", "option") ?: "";
 	}
 
-	private function getSubjectCustomField(): string {
+	protected function getSubjectCustomField(): string {
 		return get_field("password_reset_subject", "option") ?: "";
 	}
 

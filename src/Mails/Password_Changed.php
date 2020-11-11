@@ -34,18 +34,18 @@ class Password_Changed extends Mail_Generator {
 			$this->subject = $email['subject'];
 		}
 
-		$this->setContentType(true);
-
 		$this->setPlaceholderValues($user, []);
 		$this->subject = Placeholder::replacePlaceholder($user, $this->placeholder, $this->subject);
 		$this->text = Placeholder::replacePlaceholder($user, $this->placeholder, $this->text);
+		$this->text = $this->setContentType($this->text);
 
 		$email['message'] = $this->text;
 		$email['subject'] = $this->subject;
+
 		return $email;
 	}
 
-	private function getSubjectCustomField(): string {
+	protected function getSubjectCustomField(): string {
 		return get_field("password_changed_subject", "option") ?: "";
 	}
 

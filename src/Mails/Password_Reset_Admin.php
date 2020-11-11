@@ -28,16 +28,15 @@ class Password_Reset_Admin extends Mail_Generator {
 			return;
 		}
 
-		$this->setContentType(true);
-
 		$this->setPlaceholderValues($user, []);
 		$this->subject = Placeholder::replacePlaceholder($user, $this->placeholder, $this->subject);
 		$this->text = Placeholder::replacePlaceholder($user, $this->placeholder, $this->text);
+		$this->text = $this->setContentType($this->text);
 
 		wp_mail(get_bloginfo("admin_email"), $this->subject , $this->text);
 	}
 
-	private function getSubjectCustomField(): string {
+	protected function getSubjectCustomField(): string {
 		return get_field("password_reset_subject_admin", "option") ?: "";
 	}
 

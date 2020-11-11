@@ -15,7 +15,7 @@ class New_User extends Mail_Generator {
 	private string $subject = "";
 
 	/**
-	 * New_User_Admin constructor.
+	 * New_User constructor.
 	 */
 	public function __construct() {
 		$this->text    = $this->getMessageCustomField();
@@ -32,18 +32,17 @@ class New_User extends Mail_Generator {
 			$this->subject = $email['subject'];
 		}
 
-		$this->setContentType(true);
-
 		$this->setPlaceholderValues($user, []);
 		$this->subject = Placeholder::replacePlaceholder($user, $this->placeholder, $this->subject);
 		$this->text = Placeholder::replacePlaceholder($user, $this->placeholder, $this->text);
+		$this->text = $this->setContentType($this->text);
 
 		$email['message'] = $this->text;
 		$email['subject'] = $this->subject;
 		return $email;
 	}
 
-	private function getSubjectCustomField(): string {
+	protected function getSubjectCustomField(): string {
 		return get_field("new_user_subject", "option") ?: "";
 	}
 

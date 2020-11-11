@@ -7,11 +7,7 @@ namespace JUVO_MailEditor;
 class ACF {
 
 	public function acf_json_save_point( string $path ): string {
-		// update path
-		$path = JUVO_MAIL_EDITOR_PATH . '/acf-fields';
-
-		// return
-		return $path;
+		return JUVO_MAIL_EDITOR_PATH . '/acf-fields';
 	}
 
 	public function acf_json_load_point(array $paths): array {
@@ -47,6 +43,20 @@ class ACF {
 
 		return $field;
 	}
+
+
+	public function acf_toolbars( $toolbars ) {
+
+		// "Mail" Toolbar inherits from "Full" Toolbar
+		$toolbars['Mail'] = $toolbars['Full' ];
+
+		if( ($key = array_search('wp_more' , $toolbars['Mail'][1])) !== false ) {
+			unset( $toolbars['Mail'][1][$key] );
+		}
+
+		return $toolbars;
+	}
+
 
 
 }

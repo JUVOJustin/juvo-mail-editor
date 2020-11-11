@@ -45,11 +45,9 @@ class Mail_Options {
 		switch ( $password_changed_notification ) {
 			case "admin":
 				$pw_changed_admin->send_password_changed_email_message( $user, $userdata );
-
 				return false;
 			case "both":
 				$pw_changed_admin->send_password_changed_email_message( $user, $userdata );
-
 				return true;
 			case "none":
 				return false;

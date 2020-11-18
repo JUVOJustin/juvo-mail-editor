@@ -90,7 +90,7 @@ function juvo_mail_editor_checkDependencies(): bool {
 	} );
 
 	// Load ACF Pro if not loaded elsewhere
-	if ( ! class_exists( 'acf_pro' ) && file_exists( JUVO_MAIL_EDITOR_PATH . '/includes/acf-pro/acf.php' ) ) {
+	if ( ! class_exists( 'acf_pro' ) && file_exists( JUVO_MAIL_EDITOR_PATH . 'includes/acf-pro/acf.php' ) ) {
 		// Include the ACF plugin.
 		include_once( JUVO_MAIL_EDITOR_PATH . 'includes/acf-pro/acf.php' );
 

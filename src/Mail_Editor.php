@@ -4,6 +4,8 @@
 namespace JUVO_MailEditor;
 
 
+use JUVO_MailEditor\Admin\Admin;
+use JUVO_MailEditor\Generic_Mail\Editor;
 use JUVO_MailEditor\Mails\New_User;
 use JUVO_MailEditor\Mails\New_User_Admin;
 use JUVO_MailEditor\Mails\Password_Changed;
@@ -90,14 +92,17 @@ class Mail_Editor {
 	 */
 	private function define_admin_hooks() {
 
+		$plugin_admin = new Admin( $this->get_plugin_name(), $this->get_version() );
+		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
+		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
+
 		/**
 		 * ACF
 		 */
 		$acf = new ACF();
 		$this->loader->add_filter( "acf/settings/save_json", $acf, "acf_json_save_point" );
-		$this->loader->add_filter( "acf/settings/load_json", $acf, "acf_json_load_point" );
-		$this->loader->add_filter( "acf/settings/load_json", $acf, "acf_json_load_point" );
-		$this->loader->add_filter( "acf/fields/wysiwyg/toolbars", $acf, "acf_toolbars");
+		$this->loader->add_filter( "acf/settings/load_json", $acf, "acf_json_load_point", 9 );
+		$this->loader->add_filter( "acf/fields/wysiwyg/toolbars", $acf, "acf_toolbars" );
 		$this->loader->add_action( 'acf/init', $acf, "add_juvo_mail_editor_menu" );
 
 
@@ -105,13 +110,13 @@ class Mail_Editor {
 		 * Mail Options
 		 */
 		$mail_options = new Mail_Options();
-		$this->loader->add_action( "rest_insert_user", $mail_options, "rest_user_create", 12, 1);
+		$this->loader->add_action( "rest_insert_user", $mail_options, "rest_user_create", 12, 1 );
 		remove_action( "register_new_user", "wp_send_new_user_notifications" );
 		remove_action( "edit_user_created_user", "wp_send_new_user_notifications", 10 );
-		$this->loader->add_action( "register_new_user", $mail_options, "new_user_notifications", 10, 2);
-		$this->loader->add_action( "edit_user_created_user", $mail_options, "new_user_notifications", 10, 2);
-		$this->loader->add_filter( "send_password_change_email", $mail_options, "password_changed_email", 10 , 3);
-		$this->loader->add_filter( "retrieve_password_message", $mail_options, "password_reset_email", 11, 4);
+		$this->loader->add_action( "register_new_user", $mail_options, "new_user_notifications", 10, 2 );
+		$this->loader->add_action( "edit_user_created_user", $mail_options, "new_user_notifications", 10, 2 );
+		$this->loader->add_filter( "send_password_change_email", $mail_options, "password_changed_email", 10, 3 );
+		$this->loader->add_filter( "retrieve_password_message", $mail_options, "password_reset_email", 11, 4 );
 
 
 		/**
@@ -123,16 +128,13 @@ class Mail_Editor {
 		$this->loader->add_filter( 'retrieve_password_title', new Password_Reset(), 'password_reset_email_subject', 10, 4 );
 		$this->loader->add_action( 'password_change_email', new Password_Changed(), 'password_changed_email_message', 10, 3 );
 
-	}
 
-	/**
-	 * Register all of the hooks related to the public-facing functionality
-	 * of the plugin.
-	 *
-	 * @since    1.0.0
-	 * @access   private
-	 */
-	private function define_public_hooks() {
+		/**
+		 * Generic Mail Action
+		 */
+		$editor = new Editor();
+		$this->loader->add_action( 'acf/init', $editor, 'register_templates', 10, 0 );
+
 	}
 
 	/**
@@ -154,6 +156,16 @@ class Mail_Editor {
 	 */
 	public function get_version() {
 		return $this->version;
+	}
+
+	/**
+	 * Register all of the hooks related to the public-facing functionality
+	 * of the plugin.
+	 *
+	 * @since    1.0.0
+	 * @access   private
+	 */
+	private function define_public_hooks() {
 	}
 
 	/**

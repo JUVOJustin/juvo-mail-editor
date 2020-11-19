@@ -31,12 +31,15 @@ class Placeholder {
 
 	private function setGlobalPlaceholders() {
 
-		$this->globalPlaceholders["first_name"]             = $this->user->first_name;
-		$this->globalPlaceholders["last_name"]              = $this->user->last_name;
-		$this->globalPlaceholders["username"]               = $this->user->nickname;
-		$this->globalPlaceholders["userid"]                 = $this->user->ID;
-		$this->globalPlaceholders["fullname_else_username"] = empty( $this->user->first_name ) && empty( $user->last_name ) ? $this->user->nickname : $this->user->first_name . " " . $this->user->last_name;
-		$this->globalPlaceholders["user_email"]              = $this->user->user_email;
+		if ($this->user) {
+			$this->globalPlaceholders["first_name"]             = $this->user->first_name;
+			$this->globalPlaceholders["last_name"]              = $this->user->last_name;
+			$this->globalPlaceholders["username"]               = $this->user->nickname;
+			$this->globalPlaceholders["userid"]                 = $this->user->ID;
+			$this->globalPlaceholders["fullname_else_username"] = empty( $this->user->first_name ) && empty( $user->last_name ) ? $this->user->nickname : $this->user->first_name . " " . $this->user->last_name;
+			$this->globalPlaceholders["user_email"]              = $this->user->user_email;
+		}
+
 		$this->globalPlaceholders["site_name"]              = get_bloginfo( "name" );
 		$this->globalPlaceholders["site_description"]       = get_bloginfo( "description" );
 		$this->globalPlaceholders["admin_email"]            = get_bloginfo( "admin_email" );

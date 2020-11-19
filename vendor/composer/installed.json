@@ -2,24 +2,24 @@
     "packages": [
         {
             "name": "juvo/wp-admin-notices",
-            "version": "v1.0",
-            "version_normalized": "1.0.0.0",
+            "version": "v1.0.2",
+            "version_normalized": "1.0.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/JUVOJustin/wp-admin-notices.git",
-                "reference": "f6500e0145caf3371ad79ad95a16bce2be3d1086"
+                "reference": "53129ec20d2bef9aac6291638d924a44fa7781c4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/JUVOJustin/wp-admin-notices/zipball/f6500e0145caf3371ad79ad95a16bce2be3d1086",
-                "reference": "f6500e0145caf3371ad79ad95a16bce2be3d1086",
+                "url": "https://api.github.com/repos/JUVOJustin/wp-admin-notices/zipball/53129ec20d2bef9aac6291638d924a44fa7781c4",
+                "reference": "53129ec20d2bef9aac6291638d924a44fa7781c4",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.0.0",
                 "wptrt/admin-notices": "^1.0"
             },
-            "time": "2020-05-12T21:09:47+00:00",
+            "time": "2020-11-23T09:36:17+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -43,7 +43,7 @@
             ],
             "support": {
                 "issues": "https://github.com/JUVOJustin/wp-admin-notices/issues",
-                "source": "https://github.com/JUVOJustin/wp-admin-notices/tree/master"
+                "source": "https://github.com/JUVOJustin/wp-admin-notices/tree/v1.0.2"
             },
             "install-path": "../juvo/wp-admin-notices"
         },

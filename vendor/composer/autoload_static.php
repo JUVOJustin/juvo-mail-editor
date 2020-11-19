@@ -21,6 +21,7 @@ class ComposerStaticInitb653b5f6592dd4008d9fb3d73dda1214
         ),
         'J' => 
         array (
+            'JUVO_MailEditor\\Admin\\' => 22,
             'JUVO_MailEditor\\' => 16,
         ),
     );
@@ -33,6 +34,10 @@ class ComposerStaticInitb653b5f6592dd4008d9fb3d73dda1214
         'WPTRT\\AdminNotices\\' => 
         array (
             0 => __DIR__ . '/..' . '/wptrt/admin-notices/src',
+        ),
+        'JUVO_MailEditor\\Admin\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/admin',
         ),
         'JUVO_MailEditor\\' => 
         array (

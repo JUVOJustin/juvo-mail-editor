@@ -28,4 +28,13 @@ class Notice extends Manager {
         }
         return true;
     }
+
+	/**
+	 * @return string
+	 */
+	public function getId(): string {
+		return $this->id;
+	}
+
+
 }

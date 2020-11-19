@@ -8,5 +8,6 @@ $baseDir = dirname($vendorDir);
 return array(
     'juvo\\WordPressAdminNotices\\' => array($vendorDir . '/juvo/wp-admin-notices/src'),
     'WPTRT\\AdminNotices\\' => array($vendorDir . '/wptrt/admin-notices/src'),
+    'JUVO_MailEditor\\Admin\\' => array($baseDir . '/admin'),
     'JUVO_MailEditor\\' => array($baseDir . '/src'),
 );

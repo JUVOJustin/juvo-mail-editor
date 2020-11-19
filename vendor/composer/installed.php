@@ -6,7 +6,7 @@
     'aliases' => 
     array (
     ),
-    'reference' => 'd0efcc58f275f717f59e29e301972e5eeeaa7277',
+    'reference' => '1b123301e10e77eba87b525024389a8d41f520e3',
     'name' => '__root__',
   ),
   'versions' => 
@@ -18,16 +18,16 @@
       'aliases' => 
       array (
       ),
-      'reference' => 'd0efcc58f275f717f59e29e301972e5eeeaa7277',
+      'reference' => '1b123301e10e77eba87b525024389a8d41f520e3',
     ),
     'juvo/wp-admin-notices' => 
     array (
-      'pretty_version' => 'v1.0',
-      'version' => '1.0.0.0',
+      'pretty_version' => 'v1.0.2',
+      'version' => '1.0.2.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'f6500e0145caf3371ad79ad95a16bce2be3d1086',
+      'reference' => '53129ec20d2bef9aac6291638d924a44fa7781c4',
     ),
     'wptrt/admin-notices' => 
     array (

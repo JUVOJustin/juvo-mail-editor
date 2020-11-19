@@ -14,6 +14,17 @@ add_action( 'admin_init', function() {
 
 // Add a notice.
 \juvo\WordPressAdminNotices\Manager::add((string) $id, (string) $title, (string) $content, (array) $options);
+
+// Remove a notice.
+\juvo\WordPressAdminNotices\Manager::remove((string) $id, (bool) $onlyGlobal);
+
+//Example: Check if Advanced Custom Fields Pro is installed
+if ( ! class_exists( 'acf_pro' ) ) {
+   // Add a notice.
+   Manager::add( "missing_plugin", "Required plugin missing","The advanced custom fields plugin is required for this plugin to work" ), [ "type" => "error" ] );
+} else {
+   Manager::remove( "missing_plugin");
+}
 ```
 
 [wptrt/admin-notices](https://github.com/WPTRT/admin-notices) parameters are fully supported. If a notice with global scope is dismissed, it will be automatically removed from the transient. Additionally a `max_age` parameter can be passed to the `Manager` constructor.

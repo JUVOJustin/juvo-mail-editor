@@ -34,16 +34,51 @@ class Manager
         $notices[] = new Notice($id, $title, $message, $options);;
 
         // Get already stored notices
-        $stored = (new self)->getTransient();
+        $stored = self::getTransient();
 
-        // Add
+        // Remove Duplicates
         if (!empty($stored)) {
-            $notices = array_merge($notices, $stored);
+	        foreach ($stored as $key => $notice) {
+		        if ($notice->getID() === $id) {
+			        unset($stored[$key]);
+		        }
+	        }
         }
 
+        // Add Notice
+        $notices = array_merge($notices, $stored);
+
         // Save notices
-        set_transient(self::TRANSIENT, $notices, 0);
+        self::setTransient($notices, 0);
     }
+
+
+	/**
+	 * Deletes notices from transient if dismissed and scope is global
+	 *
+	 * @param string $id id of notice to delete
+	 */
+	public static function remove(string $id, bool $onlyGlobal = false): void {
+		$notices = self::getTransient();
+
+		foreach($notices as $key => $notice) {
+			if ($notice->id != $id ) {
+				continue;
+			}
+
+			if ($onlyGlobal === true && !$notice->isGlobalScope()) {
+				continue;
+			}
+
+			unset($notices[$key]);
+		}
+
+		if (empty($notices)) {
+			delete_transient(self::TRANSIENT);
+		} else {
+			self::setTransient($notices);
+		}
+	}
 
     /**
      * Passes stored notices to WPTRT\AdminNotices
@@ -54,11 +89,21 @@ class Manager
 
             // Delete Notice if is older than MAX_AGE
             if (time() - $notice->creationTime > $this->max_age) {
-                $this->removeFromTransient($notice->id);
+                self::remove($notice->id);
                 continue;
             }
 
             $notices->add($notice->id, $notice->title, $notice->message, $notice->options);
+
+            // Delete wptrt Dismissed options to always show notice until it is removed
+	        // Otherwise it would bes stored over and over again but not displayed
+            if (isset($notice->options['scope']) && $notice->options['scope'] === "user") {
+            	$user = wp_get_current_user();
+            	$key = isset($notice->options['option_prefix']) ? $notice->options['option_prefix']."_".$notice->id : "wptrt_notice_dismissed_". $notice->id;
+	            delete_user_meta( $user->ID, $key);
+            } else {
+	            delete_option( "wptrt_notice_dismissed_".  $notice->id);
+            }
         }
         $notices->boot();
     }
@@ -76,34 +121,7 @@ class Manager
         // Security check: Make sure nonce is OK.
         check_ajax_referer('wptrt_dismiss_notice_' . $_POST['id'], 'nonce', true);
 
-        $this->removeFromTransient($_POST["id"], true);
-    }
-
-    /**
-     * Deletes notices from transient if dismissed and scope is global
-     *
-     * @param string $id id of notice to delete
-     */
-    private function removeFromTransient(string $id, bool $onlyGlobal = false): void {
-        $notices = $this->getTransient();
-
-        foreach($notices as $key => $notice) {
-            if ($notice->id != $id ) {
-                continue;
-            }
-
-            if ($onlyGlobal === true && !$notice->isGlobalScope()) {
-                continue;
-            }
-
-            unset($notices[$key]);
-        }
-
-        if (empty($notices)) {
-            delete_transient(self::TRANSIENT);
-        } else {
-            $this->setTransient($notices);
-        }
+        self::remove($_POST["id"], true);
     }
 
     /**
@@ -112,7 +130,7 @@ class Manager
      * @param $value
      * @param int $expiration
      */
-    private function setTransient(array $value, int $expiration = 0): void {
+    private static function setTransient(array $value, int $expiration = 0): void {
         set_transient(self::TRANSIENT, $value, 0);
     }
 
@@ -121,7 +139,7 @@ class Manager
      *
      * @return array of notice objects or empty array
      */
-    private function getTransient(): array {
+    private static function getTransient(): array {
         $value = get_transient(self::TRANSIENT);
 
         if (empty($value)) {

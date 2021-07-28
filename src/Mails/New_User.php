@@ -2,58 +2,97 @@
 
 namespace JUVO_MailEditor\Mails;
 
+use CMB2;
 use JUVO_MailEditor\Mail_Generator;
-use JUVO_MailEditor\Placeholder;
+use JUVO_MailEditor\Mails_PT;
+use JUVO_MailEditor\Relay;
+use JUVO_MailEditor\Trigger;
 use WP_User;
 
 class New_User extends Mail_Generator {
 
-	private array $placeholder = [
+	private $placeholders = [
 		"password_reset_link" => ""
 	];
-	private string $text = "";
-	private string $subject = "";
 
 	/**
-	 * New_User constructor.
+	 * Callback for wordpresss native user trigger
+	 *
+	 * @param array $email
+	 * @param WP_User $user
+	 *
 	 */
-	public function __construct() {
-		$this->text    = $this->getMessageCustomField();
-		$this->subject = $this->getSubjectCustomField();
+	public function new_user_notification_email( array $email, WP_User $user ) {
+
+		$this->setPlaceholderValues( $user );
+
+		$relay = new Relay( $this->getTrigger(), $this->placeholders, $user );
+		$relay->sendMails();
 	}
 
-	function new_user_notification_email(array $email, WP_User $user) {
-
-		if (empty($this->text)) {
-			$this->text = $email['message'];
-		}
-
-		if (empty($this->subject)) {
-			$this->subject = $email['subject'];
-		}
-
-		$this->setPlaceholderValues($user, []);
-		$this->subject = Placeholder::replacePlaceholder($user, $this->placeholder, $this->subject);
-		$this->text = Placeholder::replacePlaceholder($user, $this->placeholder, $this->text);
-		$this->text = $this->setContentType($this->text);
-
-		$email['message'] = $this->text;
-		$email['subject'] = $this->subject;
-		return $email;
+	protected function setPlaceholderValues( WP_User $user ): void {
+		$adt_rp_key                                = get_password_reset_key( $user );
+		$user_login                                = $user->user_login;
+		$this->placeholders["password_reset_link"] = '<a href="' . network_site_url( "wp-login.php?action=rp&key=$adt_rp_key&login=" . rawurlencode( $user_login ), 'login' ) . '">' . network_site_url( "wp-login.php?action=rp&key=$adt_rp_key&login=" . rawurlencode( $user_login ), 'login' ) . '</a>';
 	}
 
-	protected function getSubjectCustomField(): string {
-		return get_field("new_user_subject", "option") ?: "";
+	/**
+	 * @param WP_User $user
+	 */
+	public function rest_user_create( WP_User $user ): void {
+
+		$this->setPlaceholderValues( $user );
+
+		$relay = new Relay( $this->getTrigger(), $this->placeholders, $user );
+		$relay->sendMails();
+
 	}
 
-	protected function getMessageCustomField(): string {
-		return get_field("new_user_message", "option") ?: "";
+	/**
+	 * @param array $triggers
+	 *
+	 * @return Trigger[]
+	 */
+	public function registerTrigger( array $triggers ): array {
+
+		$message = __( 'New user registration on your site {{SITE_NAME}}:' ) . "\r\n\r\n";
+		$message .= __( 'Username: {{USERNAME}}' ) . "\r\n\r\n";
+		$message .= __( 'Email: {{USER_EMAIL}}' ) . "\r\n";
+
+		$trigger = new Trigger( "New User (User)", $this->getTrigger() );
+		$trigger
+			->setSubject( "New User Registration" )
+			->setContent( $message )
+			->setRecipients( "{{CONTEXT}}" )
+			->setPlaceholders( $this->placeholders );
+
+		$triggers[] = $trigger;
+
+		return $triggers;
+
 	}
 
-	protected function setPlaceholderValues(WP_User $user, array $options): void {
-		$adt_rp_key = get_password_reset_key($user);
-		$user_login = $user->user_login;
-		$this->placeholder["password_reset_link"] = '<a href="' . network_site_url("wp-login.php?action=rp&key=$adt_rp_key&login=" . rawurlencode($user_login), 'login') . '">' . network_site_url("wp-login.php?action=rp&key=$adt_rp_key&login=" . rawurlencode($user_login), 'login') . '</a>';
+	/**
+	 * Add Custom Fields to metabox
+	 *
+	 * @param CMB2 $cmb
+	 *
+	 * @return CMB2
+	 */
+	public function addCustomFields( CMB2 $cmb ): CMB2 {
+
+		$field = array(
+			'name' => __( 'Trigger on rest', 'juvo-mail-editor' ),
+			'desc' => __( 'Sends email if user is created via Rest API', 'juvo-mail-editor' ),
+			'id'   => Mails_PT::POST_TYPE_NAME . '_rest',
+			'type' => 'checkbox',
+		);
+
+		return $this->addFieldForTrigger( $field, $cmb );
+
 	}
 
+	public function getTrigger(): string {
+		return "new_user";
+	}
 }

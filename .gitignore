@@ -6,3 +6,4 @@ wp-cli.local.yml
 *.sql
 *.tar.gz
 *.zip
+/vendor/

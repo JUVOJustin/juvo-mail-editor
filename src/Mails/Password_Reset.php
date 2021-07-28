@@ -4,63 +4,79 @@
 namespace JUVO_MailEditor\Mails;
 
 
+use CMB2;
 use JUVO_MailEditor\Mail_Generator;
-use JUVO_MailEditor\Placeholder;
+use JUVO_MailEditor\Mail_Trigger_TAX;
+use JUVO_MailEditor\Mails_PT;
+use JUVO_MailEditor\Relay;
+use JUVO_MailEditor\Trigger;
 use WP_User;
 
 class Password_Reset extends Mail_Generator {
 
-	private array $placeholder = [
-		"password_reset_link" => "",
+	private $placeholders = [
+		"PASSWORD_RESET_LINK" => "",
 	];
-	private string $text = "";
-	private string $subject = "";
+
+	function password_reset_email_message( string $message, string $key, string $user_login, WP_User $user ): string {
+		$this->setPlaceholderValues( $user, [ "key" => $key ] );
+		$relay    = new Relay( $this->getTrigger(), $this->placeholders, $user );
+		$template = $relay->getPosts()[0];
+
+		return $relay->prepareContent( $template );
+	}
+
+	protected function setPlaceholderValues( WP_User $user, array $options = [] ): void {
+		if ( ! empty( $options ) && isset( $options["key"] ) ) {
+			$this->placeholders["PASSWORD_RESET_LINK"] = '<a href="' . network_site_url( "wp-login.php?action=rp&key={$options["key"]}&login=" . rawurlencode( $user->user_login ), 'login' ) . '">' . network_site_url( "wp-login.php?action=rp&key={$options["key"]}&login=" . rawurlencode( $user->user_login ), 'login' ) . '</a>';
+		}
+	}
+
+	public function getTrigger(): string {
+		return "password_reset";
+	}
+
+	function password_reset_email_subject( string $title, string $user_login, WP_User $user ): string {
+		$this->setPlaceholderValues( $user );
+		$relay    = new Relay( $this->getTrigger(), $this->placeholders, $user );
+		$template = $relay->getPosts()[0];
+
+		return $relay->prepareSubject( $template );
+
+	}
+
+	public function addCustomFields( CMB2 $cmb ): CMB2 {
+		if ( has_term( $this->getTrigger(), Mail_Trigger_TAX::TAXONOMY_NAME, $cmb->object_id() ) ) {
+			$cmb->remove_field( Mails_PT::POST_TYPE_NAME . '_recipients' );
+		}
+
+		return $cmb;
+	}
 
 	/**
-	 * Password_Reset constructor.
+	 * @param array $triggers
+	 *
+	 * @return Trigger[]
 	 */
-	public function __construct() {
-		$this->text    = $this->getMessageCustomField();
-		$this->subject = $this->getSubjectCustomField();
+	public function registerTrigger( array $triggers ): array {
+
+		$message = __( 'Someone has requested a password reset for the following account:' ) . "\r\n\r\n";
+		$message .= sprintf( __( 'Site Name: %s' ), "{{SITE_NAME}}" ) . "\r\n\r\n";
+		$message .= sprintf( __( 'Username: %s' ), "{{USERNAME}}" ) . "\r\n\r\n";
+		$message .= __( 'If this was a mistake, ignore this email and nothing will happen.' ) . "\r\n\r\n";
+		$message .= __( 'To reset your password, visit the following address:' ) . "\r\n\r\n";
+		$message .= __( '{{PASSWORD_RESET_LINK}}' ) . "\r\n\r\n";
+
+		$trigger = new Trigger( "Retrieve Password (User)", $this->getTrigger() );
+		$trigger
+			->setSubject( "New User Registration" )
+			->setContent( $message )
+			->setRecipients( "{{CONTEXT}}" )
+			->setPlaceholders( $this->placeholders );
+
+		$triggers[] = $trigger;
+
+		return $triggers;
+
 	}
-
-	function password_reset_email_message(string $message, string $key, string $user_login, WP_User $user) {
-		$this->text = $this->getMessageCustomField();
-
-		if (empty($this->text)) {
-			return $message;
-		}
-
-		$this->setPlaceholderValues($user, ["key"=>$key]);
-		$this->text = Placeholder::replacePlaceholder($user, $this->placeholder, $this->text);
-		$this->text = $this->setContentType($this->text);
-
-		return $this->text;
-	}
-
-	function password_reset_email_subject(string $title, string $user_login, WP_User $user) {
-
-		if (empty($this->subject)) {
-			return $title;
-		}
-
-		$this->setPlaceholderValues($user, ["key"=>"none"]);
-		$this->subject = Placeholder::replacePlaceholder($user, $this->placeholder, $this->subject);
-
-		return $this->subject;
-	}
-
-	protected function getMessageCustomField(): string {
-		return get_field("password_reset_message", "option") ?: "";
-	}
-
-	protected function getSubjectCustomField(): string {
-		return get_field("password_reset_subject", "option") ?: "";
-	}
-
-	protected function setPlaceholderValues(WP_User $user, array $options): void {
-		$user_login = $user->user_login;
-		$this->placeholder["password_reset_link"] = '<a href="' . network_site_url("wp-login.php?action=rp&key={$options["key"]}&login=" . rawurlencode($user_login), 'login') . '">' . network_site_url("wp-login.php?action=rp&key={$options["key"]}&login=" . rawurlencode($user_login), 'login') . '</a>';
-	}
-
 }

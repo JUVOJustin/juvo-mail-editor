@@ -1,32 +1,90 @@
 {
-    "_readme": [
-        "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
-        "This file is @generated automatically"
-    ],
-    "content-hash": "5d5df5ec041dde0d3685bcd791aa65d1",
-    "packages": [
-        {
-            "name": "juvo/wp-admin-notices",
-            "version": "v1.0.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/JUVOJustin/wp-admin-notices.git",
-                "reference": "53129ec20d2bef9aac6291638d924a44fa7781c4"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/JUVOJustin/wp-admin-notices/zipball/53129ec20d2bef9aac6291638d924a44fa7781c4",
-                "reference": "53129ec20d2bef9aac6291638d924a44fa7781c4",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.0.0",
-                "wptrt/admin-notices": "^1.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
+	"_readme": [
+		"This file locks the dependencies of your project to a known state",
+		"Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+		"This file is @generated automatically"
+	],
+	"content-hash": "40a397c0c24334fbb332084eeb2474f6",
+	"packages": [
+		{
+			"name": "cmb2/cmb2",
+			"version": "v2.9.0",
+			"source": {
+				"type": "git",
+				"url": "https://github.com/CMB2/CMB2.git",
+				"reference": "cacbc8cedbfdf8ffe0e840858e6860f9333c33f2"
+			},
+			"dist": {
+				"type": "zip",
+				"url": "https://api.github.com/repos/CMB2/CMB2/zipball/cacbc8cedbfdf8ffe0e840858e6860f9333c33f2",
+				"reference": "cacbc8cedbfdf8ffe0e840858e6860f9333c33f2",
+				"shasum": ""
+			},
+			"require": {
+				"php": ">5.2.4"
+			},
+			"require-dev": {
+				"apigen/apigen": "4.1.2",
+				"awesomemotive/am-cli-tools": ">=1.3.1",
+				"nette/utils": "2.5.3",
+				"phpunit/phpunit": "6.5.13"
+			},
+			"suggest": {
+				"composer/installers": "~1.0"
+			},
+			"type": "wordpress-plugin",
+			"notification-url": "https://packagist.org/downloads/",
+			"license": [
+				"GPL-2.0-or-later"
+			],
+			"authors": [
+				{
+					"name": "Justin Sternberg",
+					"email": "justin@dsgnwrks.pro",
+					"homepage": "https://dsgnwrks.pro",
+					"role": "Developer"
+				},
+				{
+					"name": "WebDevStudios",
+					"email": "contact@webdevstudios.com",
+					"homepage": "https://github.com/WebDevStudios",
+					"role": "Developer"
+				}
+			],
+			"description": "CMB2 is a metabox, custom fields, and forms library for WordPress that will blow your mind.",
+			"homepage": "https://github.com/CMB2/CMB2",
+			"keywords": [
+				"metabox",
+				"plugin",
+				"wordpress"
+			],
+			"support": {
+				"issues": "https://github.com/CMB2/CMB2/issues",
+				"source": "http://wordpress.org/support/plugin/cmb2"
+			},
+			"time": "2021-03-04T02:18:53+00:00"
+		},
+		{
+			"name": "juvo/wp-admin-notices",
+			"version": "v1.0.2",
+			"source": {
+				"type": "git",
+				"url": "https://github.com/JUVOJustin/wp-admin-notices.git",
+				"reference": "53129ec20d2bef9aac6291638d924a44fa7781c4"
+			},
+			"dist": {
+				"type": "zip",
+				"url": "https://api.github.com/repos/JUVOJustin/wp-admin-notices/zipball/53129ec20d2bef9aac6291638d924a44fa7781c4",
+				"reference": "53129ec20d2bef9aac6291638d924a44fa7781c4",
+				"shasum": ""
+			},
+			"require": {
+				"php": ">=7.0.0",
+				"wptrt/admin-notices": "^1.0"
+			},
+			"type": "library",
+			"autoload": {
+				"psr-4": {
                     "juvo\\WordPressAdminNotices\\": "src/"
                 }
             },
@@ -86,40 +144,40 @@
                 }
             ],
             "description": "A class to create admin-notices for the WordPress dashboard.",
-            "homepage": "https://github.com/WPTRT/admin-notices",
-            "keywords": [
-                "wordpress"
-            ],
-            "support": {
-                "issues": "https://github.com/WPTRT/admin-notices/issues",
-                "source": "https://github.com/WPTT/admin-notices/tree/v1.0.3"
-            },
-            "time": "2020-02-15T10:34:51+00:00"
-        },
-        {
-            "name": "yahnis-elsts/plugin-update-checker",
-            "version": "v4.10",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/YahnisElsts/plugin-update-checker.git",
-                "reference": "0edd15f67822464af8a23285ce367b30d515a855"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/YahnisElsts/plugin-update-checker/zipball/0edd15f67822464af8a23285ce367b30d515a855",
-                "reference": "0edd15f67822464af8a23285ce367b30d515a855",
-                "shasum": ""
-            },
-            "require": {
-                "ext-json": "*",
-                "php": ">=5.2.0"
-            },
-            "type": "library",
-            "autoload": {
-                "files": [
-                    "load-v4p10.php"
-                ]
-            },
+			"homepage": "https://github.com/WPTRT/admin-notices",
+			"keywords": [
+				"wordpress"
+			],
+			"support": {
+				"issues": "https://github.com/WPTRT/admin-notices/issues",
+				"source": "https://github.com/WPTT/admin-notices/tree/v1.0.3"
+			},
+			"time": "2020-02-15T10:34:51+00:00"
+		},
+		{
+			"name": "yahnis-elsts/plugin-update-checker",
+			"version": "v4.11",
+			"source": {
+				"type": "git",
+				"url": "https://github.com/YahnisElsts/plugin-update-checker.git",
+				"reference": "3155f2d3f1ca5e7ed3f25b256f020e370515af43"
+			},
+			"dist": {
+				"type": "zip",
+				"url": "https://api.github.com/repos/YahnisElsts/plugin-update-checker/zipball/3155f2d3f1ca5e7ed3f25b256f020e370515af43",
+				"reference": "3155f2d3f1ca5e7ed3f25b256f020e370515af43",
+				"shasum": ""
+			},
+			"require": {
+				"ext-json": "*",
+				"php": ">=5.2.0"
+			},
+			"type": "library",
+			"autoload": {
+				"files": [
+					"load-v4p11.php"
+				]
+			},
             "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
@@ -134,18 +192,18 @@
             ],
             "description": "A custom update checker for WordPress plugins and themes. Useful if you can't host your plugin in the official WP repository but still want it to support automatic updates.",
             "homepage": "https://github.com/YahnisElsts/plugin-update-checker/",
-            "keywords": [
-                "automatic updates",
-                "plugin updates",
-                "theme updates",
-                "wordpress"
-            ],
-            "support": {
-                "issues": "https://github.com/YahnisElsts/plugin-update-checker/issues",
-                "source": "https://github.com/YahnisElsts/plugin-update-checker/tree/wp55-auto-updates"
-            },
-            "time": "2020-08-21T11:36:45+00:00"
-        }
+			"keywords": [
+				"automatic updates",
+				"plugin updates",
+				"theme updates",
+				"wordpress"
+			],
+			"support": {
+				"issues": "https://github.com/YahnisElsts/plugin-update-checker/issues",
+				"source": "https://github.com/YahnisElsts/plugin-update-checker/tree/v4.11"
+			},
+			"time": "2021-03-15T16:07:52+00:00"
+		}
     ],
     "packages-dev": [],
     "aliases": [],

@@ -4,76 +4,59 @@
 namespace JUVO_MailEditor\Mails;
 
 
+use CMB2;
 use JUVO_MailEditor\Mail_Generator;
-use JUVO_MailEditor\Placeholder;
-use WP_User;
 
 class Generic extends Mail_Generator {
 
-	private string $name = "";
-	private array $placeholder = [];
-	private string $text = "";
-	private string $subject = "";
-	private ?WP_User $user;
+	private $subject = "";
+	private $content = "";
+	private $recipients;
 
 	/**
 	 * Password_Reset constructor.
 	 *
-	 * @param string $name
-	 * @param WP_User|null $user
+	 * @param string $subject
+	 * @param string $content
 	 * @param array $placeholder
 	 */
-	public function __construct( string $name, WP_User $user = null, array $placeholder = [] ) {
-		$this->name    = $name;
-		$this->user    = $user;
-		$this->placeholder = $placeholder;
-		$this->text    = $this->getMessageCustomField();
-		$this->subject = $this->getSubjectCustomField();
-
+	public function __construct( string $subject, string $content, string $recipients ) {
+		$this->subject    = $subject;
+		$this->content    = $content;
+		$this->recipients = $recipients;
 	}
 
-	protected function getMessageCustomField(): string {
-		return get_field( $this->name . "_message", "option" ) ?: "";
+	/**
+	 * @param string|string[] $recipients
+	 */
+	public function send() {
+
+		$this->content = $this->setContentType( $this->content );
+
+		wp_mail( $this->recipients, $this->subject, $this->content );
 	}
 
-	protected function getSubjectCustomField(): string {
-		return get_field( $this->name . "_subject", "option" );
-	}
+	private function setContentType( string $message ): string {
 
-	public function send( string $recipient ) {
+		$type = 'text/plain';
 
-		if ( empty( $this->text ) || empty( $this->subject ) || empty( $recipient ) ) {
-			return;
+		if ( $message != strip_tags( $message ) ) {
+			$type    = "text/html";
+			$message = wpautop( $message );
 		}
 
-		$this->setPlaceholderValues( $this->user, []);
+		add_filter( 'wp_mail_content_type', function( $content_type ) use ( $type ) {
+			return $type;
+		} );
 
-		$this->subject = Placeholder::replacePlaceholder( $this->user, $this->placeholder, $this->subject );
-		$this->text    = Placeholder::replacePlaceholder( $this->user, $this->placeholder, $this->text );
-		$this->text    = $this->setContentType( $this->text );
-
-		wp_mail( $recipient, $this->subject, $this->text );
+		return $message;
 	}
 
-	protected function setPlaceholderValues( WP_User $user, array $options ): void {
-		$placeholder = get_field( $this->name . "_placeholder", "option" );
-		$placeholder = get_object_vars(json_decode( $placeholder ));
-
-		// Merge late passed placeholders values with registered placeholders
-		$placeholder = array_intersect_key($this->placeholder, $placeholder) + $placeholder;
-
-		foreach($placeholder as $key => $v) {
-
-			// Check if is callback
-			if (is_callable( $v)) {
-				$placeholder[$key] = call_user_func($v);
-			} else {
-				// If not same the value in case it is not an array
-				$placeholder[$key] = is_array($v) ? "" : $v;
-			}
-		}
-
-		$this->placeholder = $placeholder;
+	public function addCustomFields( CMB2 $cmb ): CMB2 {
+		// TODO: Implement addCustomFields() method.
 	}
 
+	public function registerTrigger( array $trigger ): array {
+		// TODO: Implement registerTrigger() method.
+	}
 }

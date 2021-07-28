@@ -2,6 +2,9 @@
   "require-dev": {
   },
   "autoload": {
+    "files": [
+      "vendor/cmb2/cmb2/init.php"
+    ],
     "psr-4": {
       "JUVO_MailEditor\\": "src/",
       "JUVO_MailEditor\\Admin\\": "admin/"
@@ -9,6 +12,7 @@
   },
   "require": {
     "yahnis-elsts/plugin-update-checker": "^4.10",
-    "juvo/wp-admin-notices": "^1"
+    "juvo/wp-admin-notices": "^1",
+    "cmb2/cmb2": "^2.9"
   }
 }

@@ -4,38 +4,54 @@
 namespace JUVO_MailEditor;
 
 
-use WP_User;
+use CMB2;
+use CMB2_Field;
 
 abstract class Mail_Generator {
 
 	/**
-	 * Checks if a message contains html and sets the mail content type.
-	 * If html is detected paragraphs will be added for linebreaks
+	 * Add Custom Fields to metabox
 	 *
-	 * @param string $message
+	 * @param CMB2 $cmb
 	 *
-	 * @return string
+	 * @return CMB2
 	 */
-	protected function setContentType( string $message ): string {
+	abstract public function addCustomFields( CMB2 $cmb ): CMB2;
 
-		$type = 'text/plain';
+	/**
+	 * Register Trigger
+	 *
+	 * @param array $triggers
+	 *
+	 * @return Trigger[]
+	 */
+	abstract public function registerTrigger( array $triggers ): array;
 
-		if ( $message != strip_tags( $message ) ) {
-			$type    = "text/html";
-			$message = wpautop( $message );
-		}
-
-		add_filter( 'wp_mail_content_type', function( $content_type ) use ( $type ) {
-			return $type;
-		} );
-
-		return $message;
+	public function postHasTrigger( CMB2_Field $field ): bool {
+		return has_term( $this->getTrigger(), Mail_Trigger_TAX::TAXONOMY_NAME, $field->object_id() );
 	}
 
-	abstract protected function getMessageCustomField(): string;
+	//abstract protected function setPlaceholderValues( WP_User $user, array $options ): void;
 
-	abstract protected function getSubjectCustomField(): string;
+	abstract public function getTrigger(): string;
 
-	abstract protected function setPlaceholderValues( WP_User $user, array $options ): void;
+	/**
+	 * Utility function to auto add show_on_cb callback for trigger
+	 *
+	 * @param array $field
+	 * @param CMB2 $cmb
+	 *
+	 * @return CMB2
+	 */
+	protected function addFieldForTrigger( array $field, CMB2 $cmb ): CMB2 {
+
+		if ( ! isset( $field["show_on_cb"] ) ) {
+			$field["show_on_cb"] = [ $this, "postHasTrigger" ];
+		}
+
+		$cmb->add_field( $field );
+
+		return $cmb;
+	}
 
 }

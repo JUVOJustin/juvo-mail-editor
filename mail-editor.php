@@ -117,13 +117,3 @@ function juvo_mail_editor_checkDependencies(): bool {
 	return true;
 
 }
-
-
-$myUpdateChecker = Puc_v4_Factory::buildUpdateChecker(
-	'https://github.com/JUVOJustin/juvo-mail-editor',
-	__FILE__,
-	'mail-editor'
-);
-
-//Optional: If you're using a private repository, specify the access token like this:
-$myUpdateChecker->setAuthentication( '4fde03cac9ee6017f7d066e16497324378b42c8a' );

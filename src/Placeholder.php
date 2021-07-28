@@ -8,63 +8,61 @@ use WP_User;
 
 class Placeholder {
 
-	private static ?Placeholder $instance = null;
-	private WP_User $user;
+	private static $instance = null;
+	private $context;
 
-	private $globalPlaceholders = [
-		"first_name"             => "",
-		"last_name"              => "",
-		"username"               => "",
-		"userid"                 => "",
-		"fullname_else_username" => "",
-		"user_email"             => "",
-		"site_name"              => "",
-		"site_description"       => "",
-		"admin_email"            => "",
-		"wpurl"                  => ""
-	];
+	private $globalPlaceholders = [];
 
-	private function __construct( WP_User $user ) {
-		$this->user = $user;
+	private function __construct( $context ) {
+		$this->context = $context;
 		$this->setGlobalPlaceholders();
 	}
 
 	private function setGlobalPlaceholders() {
 
-		if ($this->user) {
-			$this->globalPlaceholders["first_name"]             = $this->user->first_name;
-			$this->globalPlaceholders["last_name"]              = $this->user->last_name;
-			$this->globalPlaceholders["username"]               = $this->user->nickname;
-			$this->globalPlaceholders["userid"]                 = $this->user->ID;
-			$this->globalPlaceholders["fullname_else_username"] = empty( $this->user->first_name ) && empty( $user->last_name ) ? $this->user->nickname : $this->user->first_name . " " . $this->user->last_name;
-			$this->globalPlaceholders["user_email"]              = $this->user->user_email;
+		if ( $this->context instanceof WP_User ) {
+			$this->globalPlaceholders["FIRST_NAME"]             = $this->context->first_name;
+			$this->globalPlaceholders["LAST_NAME"]              = $this->context->last_name;
+			$this->globalPlaceholders["USERNAME"]               = $this->context->nickname;
+			$this->globalPlaceholders["USERID"]                 = $this->context->ID;
+			$this->globalPlaceholders["FULLNAME_ELSE_USERNAME"] = empty( $this->context->first_name ) && empty( $user->last_name ) ? $this->context->nickname : $this->context->first_name . " " . $this->context->last_name;
+			$this->globalPlaceholders["USER_EMAIL"]             = $this->context->user_email;
 		}
 
-		$this->globalPlaceholders["site_name"]              = get_bloginfo( "name" );
-		$this->globalPlaceholders["site_description"]       = get_bloginfo( "description" );
-		$this->globalPlaceholders["admin_email"]            = get_bloginfo( "admin_email" );
-		$this->globalPlaceholders["wpurl"]                  = get_bloginfo( "wpurl" );
+		$this->globalPlaceholders["SITE_NAME"]        = get_bloginfo( "name" );
+		$this->globalPlaceholders["SITE_DESCRIPTION"] = get_bloginfo( "description" );
+		$this->globalPlaceholders["ADMIN_EMAIL"]      = get_bloginfo( "admin_email" );
+		$this->globalPlaceholders["WPURL"]            = get_bloginfo( "wpurl" );
 	}
 
-	public static function replacePlaceholder( WP_User $user, array $placeholder, string $text ) {
+	public static function replacePlaceholder( array $placeholder, string $text, $context = null ) {
 
-		$globalPlaceHolder = self::getInstance( $user )->getGlobalPlaceholders();
-		$placeholder       = array_merge( $placeholder, $globalPlaceHolder );
+		$globalPlaceHolder = self::getInstance( $context )->getGlobalPlaceholders();
+		$placeholder       = $placeholder + $globalPlaceHolder;
 
 		foreach ( $placeholder as $key => $value ) {
+
+			// Check if is callback
+			if ( is_callable( $value ) ) {
+				$placeholder[ $key ] = call_user_func( $value );
+			} else {
+				// If not same the value in case it is not an array
+				$placeholder[ $key ] = is_array( $value ) ? "" : $value;
+			}
+
 			$text = str_replace( '{{' . strtoupper( $key ) . '}}', $value, $text );
 		}
 
 		return $text;
 	}
 
-	private function getGlobalPlaceholders() {
+	private function getGlobalPlaceholders(): array {
 		return $this->globalPlaceholders;
 	}
 
-	private static function getInstance( WP_User $user ) {
+	private static function getInstance( $context = null ) {
 		if ( self::$instance == null ) {
-			self::$instance = new static( $user );
+			self::$instance = new static( $context );
 		}
 
 		return self::$instance;

@@ -4,47 +4,62 @@
 namespace JUVO_MailEditor\Mails;
 
 
+use CMB2;
 use JUVO_MailEditor\Mail_Generator;
-use JUVO_MailEditor\Placeholder;
+use JUVO_MailEditor\Relay;
+use JUVO_MailEditor\Trigger;
 use WP_User;
 
 class Password_Reset_Admin extends Mail_Generator {
 
-	private array $placeholder = [];
-	private string $text = "";
-	private string $subject = "";
+	private $placeholders = [];
 
 	/**
-	 * Password_Reset_Admin constructor.
+	 * Sends mailing to admins. Abuses the "retrieve_password_message" hook. Therefore it needs to return $message
+	 *
+	 * @param string $message
+	 * @param string $key
+	 * @param string $user_login
+	 * @param WP_User $user
+	 *
+	 * @return string
 	 */
-	public function __construct() {
-		$this->text    = $this->getMessageCustomField();
-		$this->subject = $this->getSubjectCustomField();
+	function password_reset_email_admin( string $message, string $key, string $user_login, WP_User $user ): string {
+
+		$this->setPlaceholderValues( $user );
+
+		$relay = new Relay( $this->getTrigger(), $this->placeholders, $user );
+		$relay->sendMails();
+
+		return $message;
 	}
 
-	function password_reset_email_message(WP_User $user) {
-
-		if (empty($this->text) || empty($this->subject)) {
-			return;
-		}
-
-		$this->setPlaceholderValues($user, []);
-		$this->subject = Placeholder::replacePlaceholder($user, $this->placeholder, $this->subject);
-		$this->text = Placeholder::replacePlaceholder($user, $this->placeholder, $this->text);
-		$this->text = $this->setContentType($this->text);
-
-		wp_mail(get_bloginfo("admin_email"), $this->subject , $this->text);
+	protected function setPlaceholderValues( WP_User $user ): void {
 	}
 
-	protected function getSubjectCustomField(): string {
-		return get_field("password_reset_subject_admin", "option") ?: "";
+	public function addCustomFields( CMB2 $cmb ): CMB2 {
+		return $cmb;
 	}
 
-	protected function getMessageCustomField(): string {
-		return get_field("password_reset_message_admin", "option") ?: "";
+	public function registerTrigger( array $triggers ): array {
+
+		$message = __( 'Someone has requested a password reset for the following account:' ) . "\r\n\r\n";
+		$message .= sprintf( __( 'Site Name: %s' ), "{{SITE_NAME}}" ) . "\r\n\r\n";
+		$message .= sprintf( __( 'Username: %s' ), "{{USERNAME}}" ) . "\r\n\r\n";
+
+		$trigger = new Trigger( __( "Password Reset (Admin)", 'juvo-mail-editor' ), $this->getTrigger() );
+		$trigger
+			->setSubject( sprintf( __( 'Password Reset for %s', 'juvo-mail-editor' ), "{{USERNAME}}" ) )
+			->setContent( $message )
+			->setRecipients( "{{ADMIN_EMAIL}}" )
+			->setPlaceholders( $this->placeholders );
+
+		$triggers[] = $trigger;
+
+		return $triggers;
 	}
 
-	protected function setPlaceholderValues(WP_User $user , array $options): void {
+	public function getTrigger(): string {
+		return "password_reset_admin";
 	}
-
 }

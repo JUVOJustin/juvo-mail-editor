@@ -76,14 +76,15 @@ class Mails_PT {
 			'show_names'   => true, // Show field names on the left
 		) );
 
-		$cmb->add_field( array(
-			'name'    => __( 'Active', 'juvo-mail-editor' ),
-			'desc'    => __( 'Determines if this mail template should be used for the trigger', 'juvo-mail-editor' ),
-			'id'      => self::POST_TYPE_NAME . '_active',
-			'type'    => 'checkbox',
-			'default' => true,
-			'column'  => true,
-		) );
+		// Same way the post_status works
+//		$cmb->add_field( array(
+//			'name'    => __( 'Active', 'juvo-mail-editor' ),
+//			'desc'    => __( 'Determines if this mail template should be used for the trigger', 'juvo-mail-editor' ),
+//			'id'      => self::POST_TYPE_NAME . '_active',
+//			'type'    => 'checkbox',
+//			'default' => true,
+//			'column'  => true,
+//		) );
 
 		$cmb->add_field( array(
 			'name'    => __( 'Recipients', 'juvo-mail-editor' ),

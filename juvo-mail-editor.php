@@ -7,7 +7,7 @@
  * Author URI:      https://juvo-design.de
  * Text Domain:     juvo-mail-editor
  * Domain Path:     /languages
- * Version:         2.0.0
+ * Version:         
  */
 
 use JUVO_MailEditor\Activator;

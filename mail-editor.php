@@ -100,20 +100,6 @@ function juvo_mail_editor_checkDependencies(): bool {
 		} );
 	}
 
-	// Check if ACF is loaded
-	if ( ! class_exists( 'acf_pro' ) ) {
-		// Add a notice.
-		Manager::add( "juvo_mail_editor_missing_plugin", __( "Required plugin missing", "juvo-mail-editor" ), __( "The advanced custom fields plugin is required for this plugin to work", "juvo-mail-editor" ), [ "type" => "error"	] );
-		return false;
-	} else {
-		Manager::remove( "juvo_mail_editor_missing_plugin");
-
-		// Hide the ACF admin menu item.
-		add_filter( 'acf/settings/show_admin', function( $show_admin ) {
-			return true;
-		} );
-	}
-
 	return true;
 
 }

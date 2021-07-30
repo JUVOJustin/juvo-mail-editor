@@ -23,24 +23,29 @@ class Trigger {
 	private $slug;
 
 	/**
-	 * @var string
+	 * @var bool
 	 */
-	private $recipients;
+	private $alwaysSent = false;
 
 	/**
 	 * @var string
 	 */
-	private $content;
+	private $recipients = "";
 
 	/**
 	 * @var string
 	 */
-	private $subject;
+	private $content = "";
+
+	/**
+	 * @var string
+	 */
+	private $subject = "";
 
 	/**
 	 * @var array
 	 */
-	private $placeholders;
+	private $placeholders = [];
 
 	/**
 	 * Trigger constructor.
@@ -67,6 +72,24 @@ class Trigger {
 	 */
 	public function setRecipients( string $recipients ): Trigger {
 		$this->recipients = $recipients;
+
+		return $this;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function isAlwaysSent(): bool {
+		return $this->alwaysSent;
+	}
+
+	/**
+	 * @param bool $alwaysSent
+	 *
+	 * @return Trigger
+	 */
+	public function setAlwaysSent( bool $alwaysSent ): Trigger {
+		$this->alwaysSent = $alwaysSent;
 
 		return $this;
 	}

@@ -10,7 +10,6 @@
  * Version:         1.0.2
  */
 
-use juvo\WordPressAdminNotices\Manager;
 use JUVO_MailEditor\Activator;
 use JUVO_MailEditor\Deactivator;
 use JUVO_MailEditor\Mail_Editor;
@@ -70,10 +69,6 @@ register_deactivation_hook( __FILE__, 'deactivate_juvo_mail_editor' );
  */
 function run_juvo_mail_editor() {
 
-	if ( ! juvo_mail_editor_checkDependencies() ) {
-		return;
-	}
-
 	$plugin = new Mail_Editor();
 	$plugin->run();
 
@@ -81,25 +76,8 @@ function run_juvo_mail_editor() {
 
 run_juvo_mail_editor();
 
-
-function juvo_mail_editor_checkDependencies(): bool {
-
-	add_action( 'admin_init', function() {
-		$notices = new Manager();
-		$notices->notices();
-	} );
-
-	// Load ACF Pro if not loaded elsewhere
-	if ( ! class_exists( 'acf_pro' ) && file_exists( JUVO_MAIL_EDITOR_PATH . 'includes/acf-pro/acf.php' ) ) {
-		// Include the ACF plugin.
-		include_once( JUVO_MAIL_EDITOR_PATH . 'includes/acf-pro/acf.php' );
-
-		// Customize the url setting to fix incorrect asset URLs.
-		add_filter( 'acf/settings/url', function( $url ) {
-			return JUVO_MAIL_EDITOR_URL . 'includes/acf-pro/';
-		} );
-	}
-
-	return true;
-
-}
+$myUpdateChecker = Puc_v4_Factory::buildUpdateChecker(
+	'https://plugins.juvo-design.de/juvo-mail-editor/details.json',
+	__FILE__,
+	'juvo-mail-editor'
+);

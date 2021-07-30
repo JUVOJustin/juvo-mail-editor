@@ -2,53 +2,68 @@
 
 namespace JUVO_MailEditor\Mails;
 
+use CMB2;
 use JUVO_MailEditor\Mail_Generator;
-use JUVO_MailEditor\Placeholder;
+use JUVO_MailEditor\Relay;
+use JUVO_MailEditor\Trigger;
 use WP_User;
 
 class New_User_Admin extends Mail_Generator {
 
-	private array $placeholder = [];
-	private string $text = "";
-	private string $subject = "";
-
-	/**
-	 * New_User_Admin constructor.
-	 */
-	public function __construct() {
-		$this->text    = $this->getMessageCustomField();
-		$this->subject = $this->getSubjectCustomField();
-	}
+	private $placeholders = [];
 
 	function new_user_notification_email_admin( array $email, WP_User $user ) {
 
-		if (empty($this->text)) {
-			$this->text = $email['message'];
-		}
+		$this->setPlaceholderValues( $user );
 
-		if (empty($this->subject)) {
-			$this->subject = $email['subject'];
-		}
+		$relay            = new Relay( $this->getTrigger(), $this->placeholders, $user );
+		$email["to"]      = $relay->prepareRecipients();
+		$email["subject"] = $relay->prepareSubject();
+		$email["message"] = $relay->prepareContent();
 
-		$this->setPlaceholderValues( $user, [] );
-		$this->subject = Placeholder::replacePlaceholder($user, $this->placeholder, $this->subject);
-		$this->text = Placeholder::replacePlaceholder($user, $this->placeholder, $this->text);
-		$this->text = $this->setContentType($this->text);
-
-		$email['message'] = $this->text;
-		$email['subject'] = $this->subject;
 		return $email;
 	}
 
-	protected function getSubjectCustomField(): string {
-		return get_field("new_user_subject_admin", "option") ?: "";
+	/**
+	 * @param CMB2 $cmb
+	 *
+	 * @return CMB2
+	 */
+	public function addCustomFields( CMB2 $cmb ): CMB2 {
+		return $cmb;
 	}
 
-	protected function getMessageCustomField(): string {
-		return get_field("new_user_message_admin", "option") ?: "";
+	/**
+	 * @param array $triggers
+	 *
+	 * @return Trigger[]
+	 */
+	public function registerTrigger( array $triggers ): array {
+
+		$message = sprintf( __( 'New user registration on your site %s:' ), "{{SITE_NAME}}" ) . "\r\n\r\n";
+		$message .= sprintf( __( 'Username: %s' ), "{{USERNAME}}" ) . "\r\n\r\n";
+		$message .= sprintf( __( 'Email: %s' ), "{{USER_EMAIL}}" ) . "\r\n";
+
+		$trigger = new Trigger( __( "New User (Admin)", 'juvo-mail-editor' ), $this->getTrigger() );
+		$trigger
+			->setAlwaysSent( true )
+			->setSubject( sprintf( __( "%s New User Registration" ), "{{SITE_NAME}}" ) )
+			->setContent( $message )
+			->setRecipients( "{{ADMIN_EMAIL}}" )
+			->setPlaceholders( $this->placeholders );
+
+		$triggers[] = $trigger;
+
+		return $triggers;
 	}
 
-	protected function setPlaceholderValues( WP_User $user, array $options ): void {
+	/**
+	 * @return string
+	 */
+	public function getTrigger(): string {
+		return "new_user_admin";
 	}
 
+	protected function setPlaceholderValues( WP_User $user ): void {
+	}
 }

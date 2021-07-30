@@ -37,7 +37,7 @@ jobs:
 
       # Update Version
       - name: Set env
-          run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+        run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
       - name: Update Version in WordPress Plugin root file
         run: |
           sed -i 's/\(\s*\)\*\(\s*\)Version:\(\s*\)[^,]*/\1*\2Version:\3${{ env.RELEASE_VERSION }}/g' ${{ github.event.repository.name }}.php

@@ -6,6 +6,7 @@ class BuddyBoss {
 
 	public function useTemplate( string $content, string $trigger, $context ) {
 		if ( function_exists( 'bp_is_active' ) ) {
+			/** @phpstan-ignore-next-line */
 			return bp_email_core_wp_get_template( $content, $context );
 		}
 

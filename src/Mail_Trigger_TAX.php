@@ -11,17 +11,17 @@ class Mail_Trigger_TAX {
 	public function registerTaxonomy() {
 
 		$labels = array(
-			'name'              => _x( 'Subjects', 'taxonomy general name' ),
-			'singular_name'     => _x( 'Subject', 'taxonomy singular name' ),
-			'search_items'      => __( 'Search Subjects' ),
-			'all_items'         => __( 'All Subjects' ),
-			'parent_item'       => __( 'Parent Subject' ),
-			'parent_item_colon' => __( 'Parent Subject:' ),
-			'edit_item'         => __( 'Edit Subject' ),
-			'update_item'       => __( 'Update Subject' ),
-			'add_new_item'      => __( 'Add New Subject' ),
-			'new_item_name'     => __( 'New Subject Name' ),
-			'menu_name'         => __( 'Subjects' ),
+			'name'              => _x( 'Triggers', 'taxonomy general name' ),
+			'singular_name'     => _x( 'Trigger', 'taxonomy singular name' ),
+			'search_items'      => __( 'Search Triggers' ),
+			'all_items'         => __( 'All Triggers' ),
+			'parent_item'       => __( 'Parent Trigger' ),
+			'parent_item_colon' => __( 'Parent Trigger:' ),
+			'edit_item'         => __( 'Edit Trigger' ),
+			'update_item'       => __( 'Update Trigger' ),
+			'add_new_item'      => __( 'Add New Trigger' ),
+			'new_item_name'     => __( 'New Trigger Name' ),
+			'menu_name'         => __( 'Triggers' ),
 		);
 
 		register_taxonomy( self::TAXONOMY_NAME, Mails_PT::POST_TYPE_NAME, array(
@@ -45,6 +45,13 @@ class Mail_Trigger_TAX {
 			'context'      => 'normal',
 			'priority'     => 'high',
 			'show_names'   => true, // Show field names on the left
+		) );
+
+		$cmb->add_field( array(
+			'name' => __( 'Always use trigger', 'juvo-mail-editor' ),
+			'desc' => __( 'Use trigger even if no post is associated with it', 'juvo-mail-editor' ),
+			'id'   => self::TAXONOMY_NAME . '_always_send',
+			'type' => 'checkbox'
 		) );
 
 		$cmb->add_field( array(
@@ -97,12 +104,19 @@ class Mail_Trigger_TAX {
 				$term_id = $term->term_id;
 			}
 
+			// Verify Slug or mail
+			if ( empty( $trigger->getName() ) || empty( $trigger->getSlug() ) ) {
+				error_log( "[juvo_mail_editor]: Slug or Name are empty" );
+				continue;
+			}
+
 			$term_id = wp_update_term( $term_id, self::TAXONOMY_NAME, array(
 				'name' => $trigger->getName(),
 				'slug' => $trigger->getSlug()
 			) )["term_id"];
 
-			update_term_meta( $term_id, self::TAXONOMY_NAME . '_default_recipients', $trigger->getRecipients() );
+			update_term_meta( $term_id, self::TAXONOMY_NAME . "_always_send", $trigger->isAlwaysSent() );
+			update_term_meta( $term_id, self::TAXONOMY_NAME . "_default_recipients", $trigger->getRecipients() );
 			update_term_meta( $term_id, self::TAXONOMY_NAME . "_default_subject", $trigger->getSubject() );
 			update_term_meta( $term_id, self::TAXONOMY_NAME . "_default_content", $trigger->getContent() );
 			update_term_meta( $term_id, self::TAXONOMY_NAME . "_placeholders", $trigger->getPlaceholders() );

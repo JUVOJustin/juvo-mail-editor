@@ -155,9 +155,9 @@ class Relay {
 			}
 		}
 
-		$content = apply_filters( "juvo_mail_editor_{$this->trigger}_before_content_placeholder", $content, $this->trigger, $this->context );
+		$content = apply_filters( "juvo_mail_editor_before_content_placeholder", $content, $this->trigger, $this->context );
 		$content = Placeholder::replacePlaceholder( $this->placeholders, $content, $this->context );
-		$content = apply_filters( "juvo_mail_editor_{$this->trigger}_after_content_placeholder", $content, $this->trigger, $this->context );
+		$content = apply_filters( "juvo_mail_editor_after_content_placeholder", $content, $this->trigger, $this->context );
 
 		$this->setContentType( $content );
 
@@ -175,9 +175,9 @@ class Relay {
 			$subject = get_term_meta( $this->term->term_id, Mail_Trigger_TAX::TAXONOMY_NAME . "_default_subject", true );
 		}
 
-		$subject = apply_filters( "juvo_mail_editor_{$this->trigger}_before_subject_placeholder", $subject, $this->trigger, $this->context );
+		$subject = apply_filters( "juvo_mail_editor_before_subject_placeholder", $subject, $this->trigger, $this->context );
 		$subject = Placeholder::replacePlaceholder( $this->placeholders, $subject, $this->context );
-		$subject = apply_filters( "juvo_mail_editor_{$this->trigger}_after_subject_placeholder", $subject, $this->trigger, $this->context );
+		$subject = apply_filters( "juvo_mail_editor_after_subject_placeholder", $subject, $this->trigger, $this->context );
 
 		return $subject;
 	}
@@ -193,13 +193,13 @@ class Relay {
 			$recipients = get_term_meta( $this->term->term_id, Mail_Trigger_TAX::TAXONOMY_NAME . "_default_recipients", true );
 		}
 
-		$recipients   = apply_filters( "juvo_mail_editor_{$this->trigger}_before_recipient_placeholder", $recipients, $this->trigger, $this->context );
+		$recipients   = apply_filters( "juvo_mail_editor_before_recipient_placeholder", $recipients, $this->trigger, $this->context );
 		$placeholders = $this->placeholders;
 		if ( $this->context instanceof WP_User ) {
 			$placeholders["context"] = $this->context->user_email;
 		}
 		$recipients = Placeholder::replacePlaceholder( $placeholders, $recipients, $this->context );
-		$recipients = apply_filters( "juvo_mail_editor_{$this->trigger}_after_recipient_placeholder", $recipients, $this->trigger, $this->context );
+		$recipients = apply_filters( "juvo_mail_editor_after_recipient_placeholder", $recipients, $this->trigger, $this->context );
 
 		return $recipients;
 	}

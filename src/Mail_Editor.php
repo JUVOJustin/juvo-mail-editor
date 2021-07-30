@@ -5,6 +5,7 @@ namespace JUVO_MailEditor;
 
 
 use JUVO_MailEditor\Admin\Admin;
+use JUVO_MailEditor\Integrations\BuddyBoss;
 use JUVO_MailEditor\Mails\New_User;
 use JUVO_MailEditor\Mails\New_User_Admin;
 use JUVO_MailEditor\Mails\Password_Reset;
@@ -150,6 +151,12 @@ class Mail_Editor {
 		$this->loader->add_filter( "juvo_mail_editor_post_metabox", $passwordResetAdmin, "addCustomFields" );
 
 		$this->loader->add_filter( "retrieve_password_message", $passwordResetAdmin, "password_reset_email_admin", 99, 4 );
+
+
+		/**
+		 * Integrations
+		 */
+		$this->loader->add_filter( "juvo_mail_editor_after_content_placeholder", new BuddyBoss(), "useTemplate", 10, 3 );
 
 	}
 

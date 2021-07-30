@@ -9,7 +9,7 @@ on:
       - master
 
 jobs:
-  build:
+  phpstan:
 
     runs-on: ubuntu-latest
 

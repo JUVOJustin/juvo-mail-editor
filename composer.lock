@@ -1,90 +1,90 @@
 {
-	"_readme": [
-		"This file locks the dependencies of your project to a known state",
-		"Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
-		"This file is @generated automatically"
-	],
-	"content-hash": "40a397c0c24334fbb332084eeb2474f6",
-	"packages": [
-		{
-			"name": "cmb2/cmb2",
-			"version": "v2.9.0",
-			"source": {
-				"type": "git",
-				"url": "https://github.com/CMB2/CMB2.git",
-				"reference": "cacbc8cedbfdf8ffe0e840858e6860f9333c33f2"
-			},
-			"dist": {
-				"type": "zip",
-				"url": "https://api.github.com/repos/CMB2/CMB2/zipball/cacbc8cedbfdf8ffe0e840858e6860f9333c33f2",
-				"reference": "cacbc8cedbfdf8ffe0e840858e6860f9333c33f2",
-				"shasum": ""
-			},
-			"require": {
-				"php": ">5.2.4"
-			},
-			"require-dev": {
-				"apigen/apigen": "4.1.2",
-				"awesomemotive/am-cli-tools": ">=1.3.1",
-				"nette/utils": "2.5.3",
-				"phpunit/phpunit": "6.5.13"
-			},
-			"suggest": {
-				"composer/installers": "~1.0"
-			},
-			"type": "wordpress-plugin",
-			"notification-url": "https://packagist.org/downloads/",
-			"license": [
-				"GPL-2.0-or-later"
-			],
-			"authors": [
-				{
-					"name": "Justin Sternberg",
-					"email": "justin@dsgnwrks.pro",
-					"homepage": "https://dsgnwrks.pro",
-					"role": "Developer"
-				},
-				{
-					"name": "WebDevStudios",
-					"email": "contact@webdevstudios.com",
-					"homepage": "https://github.com/WebDevStudios",
-					"role": "Developer"
-				}
-			],
-			"description": "CMB2 is a metabox, custom fields, and forms library for WordPress that will blow your mind.",
-			"homepage": "https://github.com/CMB2/CMB2",
-			"keywords": [
-				"metabox",
-				"plugin",
-				"wordpress"
-			],
-			"support": {
-				"issues": "https://github.com/CMB2/CMB2/issues",
-				"source": "http://wordpress.org/support/plugin/cmb2"
-			},
-			"time": "2021-03-04T02:18:53+00:00"
-		},
-		{
-			"name": "juvo/wp-admin-notices",
-			"version": "v1.0.2",
-			"source": {
-				"type": "git",
-				"url": "https://github.com/JUVOJustin/wp-admin-notices.git",
-				"reference": "53129ec20d2bef9aac6291638d924a44fa7781c4"
-			},
-			"dist": {
-				"type": "zip",
-				"url": "https://api.github.com/repos/JUVOJustin/wp-admin-notices/zipball/53129ec20d2bef9aac6291638d924a44fa7781c4",
-				"reference": "53129ec20d2bef9aac6291638d924a44fa7781c4",
-				"shasum": ""
-			},
-			"require": {
-				"php": ">=7.0.0",
-				"wptrt/admin-notices": "^1.0"
-			},
-			"type": "library",
-			"autoload": {
-				"psr-4": {
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "30e342dbb34f43b6072b0fbf4ac3fdc7",
+    "packages": [
+        {
+            "name": "cmb2/cmb2",
+            "version": "v2.9.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/CMB2/CMB2.git",
+                "reference": "cacbc8cedbfdf8ffe0e840858e6860f9333c33f2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/CMB2/CMB2/zipball/cacbc8cedbfdf8ffe0e840858e6860f9333c33f2",
+                "reference": "cacbc8cedbfdf8ffe0e840858e6860f9333c33f2",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">5.2.4"
+            },
+            "require-dev": {
+                "apigen/apigen": "4.1.2",
+                "awesomemotive/am-cli-tools": ">=1.3.1",
+                "nette/utils": "2.5.3",
+                "phpunit/phpunit": "6.5.13"
+            },
+            "suggest": {
+                "composer/installers": "~1.0"
+            },
+            "type": "wordpress-plugin",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Justin Sternberg",
+                    "email": "justin@dsgnwrks.pro",
+                    "homepage": "https://dsgnwrks.pro",
+                    "role": "Developer"
+                },
+                {
+                    "name": "WebDevStudios",
+                    "email": "contact@webdevstudios.com",
+                    "homepage": "https://github.com/WebDevStudios",
+                    "role": "Developer"
+                }
+            ],
+            "description": "CMB2 is a metabox, custom fields, and forms library for WordPress that will blow your mind.",
+            "homepage": "https://github.com/CMB2/CMB2",
+            "keywords": [
+                "metabox",
+                "plugin",
+                "wordpress"
+            ],
+            "support": {
+                "issues": "https://github.com/CMB2/CMB2/issues",
+                "source": "http://wordpress.org/support/plugin/cmb2"
+            },
+            "time": "2021-03-04T02:18:53+00:00"
+        },
+        {
+            "name": "juvo/wp-admin-notices",
+            "version": "v1.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/JUVOJustin/wp-admin-notices.git",
+                "reference": "53129ec20d2bef9aac6291638d924a44fa7781c4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/JUVOJustin/wp-admin-notices/zipball/53129ec20d2bef9aac6291638d924a44fa7781c4",
+                "reference": "53129ec20d2bef9aac6291638d924a44fa7781c4",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.0.0",
+                "wptrt/admin-notices": "^1.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
                     "juvo\\WordPressAdminNotices\\": "src/"
                 }
             },
@@ -144,40 +144,40 @@
                 }
             ],
             "description": "A class to create admin-notices for the WordPress dashboard.",
-			"homepage": "https://github.com/WPTRT/admin-notices",
-			"keywords": [
-				"wordpress"
-			],
-			"support": {
-				"issues": "https://github.com/WPTRT/admin-notices/issues",
-				"source": "https://github.com/WPTT/admin-notices/tree/v1.0.3"
-			},
-			"time": "2020-02-15T10:34:51+00:00"
-		},
-		{
-			"name": "yahnis-elsts/plugin-update-checker",
-			"version": "v4.11",
-			"source": {
-				"type": "git",
-				"url": "https://github.com/YahnisElsts/plugin-update-checker.git",
-				"reference": "3155f2d3f1ca5e7ed3f25b256f020e370515af43"
-			},
-			"dist": {
-				"type": "zip",
-				"url": "https://api.github.com/repos/YahnisElsts/plugin-update-checker/zipball/3155f2d3f1ca5e7ed3f25b256f020e370515af43",
-				"reference": "3155f2d3f1ca5e7ed3f25b256f020e370515af43",
-				"shasum": ""
-			},
-			"require": {
-				"ext-json": "*",
-				"php": ">=5.2.0"
-			},
-			"type": "library",
-			"autoload": {
-				"files": [
-					"load-v4p11.php"
-				]
-			},
+            "homepage": "https://github.com/WPTRT/admin-notices",
+            "keywords": [
+                "wordpress"
+            ],
+            "support": {
+                "issues": "https://github.com/WPTRT/admin-notices/issues",
+                "source": "https://github.com/WPTT/admin-notices/tree/v1.0.3"
+            },
+            "time": "2020-02-15T10:34:51+00:00"
+        },
+        {
+            "name": "yahnis-elsts/plugin-update-checker",
+            "version": "v4.11",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/YahnisElsts/plugin-update-checker.git",
+                "reference": "3155f2d3f1ca5e7ed3f25b256f020e370515af43"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/YahnisElsts/plugin-update-checker/zipball/3155f2d3f1ca5e7ed3f25b256f020e370515af43",
+                "reference": "3155f2d3f1ca5e7ed3f25b256f020e370515af43",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "php": ">=5.2.0"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "load-v4p11.php"
+                ]
+            },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
@@ -192,20 +192,462 @@
             ],
             "description": "A custom update checker for WordPress plugins and themes. Useful if you can't host your plugin in the official WP repository but still want it to support automatic updates.",
             "homepage": "https://github.com/YahnisElsts/plugin-update-checker/",
-			"keywords": [
-				"automatic updates",
-				"plugin updates",
-				"theme updates",
-				"wordpress"
-			],
-			"support": {
-				"issues": "https://github.com/YahnisElsts/plugin-update-checker/issues",
-				"source": "https://github.com/YahnisElsts/plugin-update-checker/tree/v4.11"
-			},
-			"time": "2021-03-15T16:07:52+00:00"
-		}
+            "keywords": [
+                "automatic updates",
+                "plugin updates",
+                "theme updates",
+                "wordpress"
+            ],
+            "support": {
+                "issues": "https://github.com/YahnisElsts/plugin-update-checker/issues",
+                "source": "https://github.com/YahnisElsts/plugin-update-checker/tree/v4.11"
+            },
+            "time": "2021-03-15T16:07:52+00:00"
+        }
     ],
-    "packages-dev": [],
+    "packages-dev": [
+        {
+            "name": "lipemat/phpstan-wordpress",
+            "version": "1.5.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/lipemat/phpstan-wordpress.git",
+                "reference": "a77696549f67e742777672af4ed556df89ebfb01"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/lipemat/phpstan-wordpress/zipball/a77696549f67e742777672af4ed556df89ebfb01",
+                "reference": "a77696549f67e742777672af4ed556df89ebfb01",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1",
+                "php-stubs/woocommerce-stubs": "^5.1.0",
+                "php-stubs/wp-cli-stubs": "^2.4.0",
+                "phpstan/extension-installer": "^1.1.0",
+                "szepeviktor/phpstan-wordpress": "^0.7.5"
+            },
+            "require-dev": {
+                "composer/composer": "^2.0.12",
+                "giacocorsiglia/stubs-generator": "^0.5.0",
+                "lipemat/cmb2": "~2.9.0.2",
+                "roave/security-advisories": "dev-master"
+            },
+            "type": "phpstan-extension",
+            "extra": {
+                "phpstan": {
+                    "includes": [
+                        "extension.neon"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Lipe\\Lib\\Phpstan\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Phpstan extension for working with WordPress",
+            "support": {
+                "issues": "https://github.com/lipemat/phpstan-wordpress/issues",
+                "source": "https://github.com/lipemat/phpstan-wordpress/tree/1.5.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/lipemat",
+                    "type": "github"
+                }
+            ],
+            "time": "2021-07-08T18:41:26+00:00"
+        },
+        {
+            "name": "php-stubs/woocommerce-stubs",
+            "version": "v5.5.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-stubs/woocommerce-stubs.git",
+                "reference": "b80d16b146a6858b4c53afff116c7af7d59afad5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-stubs/woocommerce-stubs/zipball/b80d16b146a6858b4c53afff116c7af7d59afad5",
+                "reference": "b80d16b146a6858b4c53afff116c7af7d59afad5",
+                "shasum": ""
+            },
+            "require": {
+                "php-stubs/wordpress-stubs": "^5.3.0"
+            },
+            "require-dev": {
+                "giacocorsiglia/stubs-generator": "^0.5.0",
+                "php": "~7.1"
+            },
+            "suggest": {
+                "symfony/polyfill-php73": "Symfony polyfill backporting some PHP 7.3+ features to lower PHP versions",
+                "szepeviktor/phpstan-wordpress": "WordPress extensions for PHPStan"
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "WooCommerce function and class declaration stubs for static analysis.",
+            "homepage": "https://github.com/php-stubs/woocommerce-stubs",
+            "keywords": [
+                "PHPStan",
+                "static analysis",
+                "woocommerce",
+                "wordpress"
+            ],
+            "support": {
+                "issues": "https://github.com/php-stubs/woocommerce-stubs/issues",
+                "source": "https://github.com/php-stubs/woocommerce-stubs/tree/v5.5.0"
+            },
+            "time": "2021-07-12T13:57:36+00:00"
+        },
+        {
+            "name": "php-stubs/wordpress-stubs",
+            "version": "v5.8.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-stubs/wordpress-stubs.git",
+                "reference": "794e6eedfd5f2a334d581214c007fc398be588fe"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-stubs/wordpress-stubs/zipball/794e6eedfd5f2a334d581214c007fc398be588fe",
+                "reference": "794e6eedfd5f2a334d581214c007fc398be588fe",
+                "shasum": ""
+            },
+            "replace": {
+                "giacocorsiglia/wordpress-stubs": "*"
+            },
+            "require-dev": {
+                "giacocorsiglia/stubs-generator": "^0.5.0",
+                "php": "~7.1"
+            },
+            "suggest": {
+                "paragonie/sodium_compat": "Pure PHP implementation of libsodium",
+                "symfony/polyfill-php73": "Symfony polyfill backporting some PHP 7.3+ features to lower PHP versions",
+                "szepeviktor/phpstan-wordpress": "WordPress extensions for PHPStan"
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "WordPress function and class declaration stubs for static analysis.",
+            "homepage": "https://github.com/php-stubs/wordpress-stubs",
+            "keywords": [
+                "PHPStan",
+                "static analysis",
+                "wordpress"
+            ],
+            "support": {
+                "issues": "https://github.com/php-stubs/wordpress-stubs/issues",
+                "source": "https://github.com/php-stubs/wordpress-stubs/tree/v5.8.0"
+            },
+            "time": "2021-07-21T02:34:37+00:00"
+        },
+        {
+            "name": "php-stubs/wp-cli-stubs",
+            "version": "v2.5.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-stubs/wp-cli-stubs.git",
+                "reference": "9140bf3f59d9df1f67f69c0d49d9364ee1684348"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-stubs/wp-cli-stubs/zipball/9140bf3f59d9df1f67f69c0d49d9364ee1684348",
+                "reference": "9140bf3f59d9df1f67f69c0d49d9364ee1684348",
+                "shasum": ""
+            },
+            "require": {
+                "php-stubs/wordpress-stubs": "^4.7 || ^5.0"
+            },
+            "require-dev": {
+                "giacocorsiglia/stubs-generator": "^0.5.0",
+                "php": "~7.1"
+            },
+            "suggest": {
+                "symfony/polyfill-php73": "Symfony polyfill backporting some PHP 7.3+ features to lower PHP versions",
+                "szepeviktor/phpstan-wordpress": "WordPress extensions for PHPStan"
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "WP-CLI function and class declaration stubs for static analysis.",
+            "homepage": "https://github.com/php-stubs/wp-cli-stubs",
+            "keywords": [
+                "PHPStan",
+                "static analysis",
+                "wordpress",
+                "wp-cli"
+            ],
+            "support": {
+                "issues": "https://github.com/php-stubs/wp-cli-stubs/issues",
+                "source": "https://github.com/php-stubs/wp-cli-stubs/tree/v2.5.0"
+            },
+            "time": "2021-05-19T16:06:45+00:00"
+        },
+        {
+            "name": "phpstan/extension-installer",
+            "version": "1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phpstan/extension-installer.git",
+                "reference": "66c7adc9dfa38b6b5838a9fb728b68a7d8348051"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phpstan/extension-installer/zipball/66c7adc9dfa38b6b5838a9fb728b68a7d8348051",
+                "reference": "66c7adc9dfa38b6b5838a9fb728b68a7d8348051",
+                "shasum": ""
+            },
+            "require": {
+                "composer-plugin-api": "^1.1 || ^2.0",
+                "php": "^7.1 || ^8.0",
+                "phpstan/phpstan": ">=0.11.6"
+            },
+            "require-dev": {
+                "composer/composer": "^1.8",
+                "phing/phing": "^2.16.3",
+                "php-parallel-lint/php-parallel-lint": "^1.2.0",
+                "phpstan/phpstan-strict-rules": "^0.11 || ^0.12"
+            },
+            "type": "composer-plugin",
+            "extra": {
+                "class": "PHPStan\\ExtensionInstaller\\Plugin"
+            },
+            "autoload": {
+                "psr-4": {
+                    "PHPStan\\ExtensionInstaller\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Composer plugin for automatic installation of PHPStan extensions",
+            "support": {
+                "issues": "https://github.com/phpstan/extension-installer/issues",
+                "source": "https://github.com/phpstan/extension-installer/tree/1.1.0"
+            },
+            "time": "2020-12-13T13:06:13+00:00"
+        },
+        {
+            "name": "phpstan/phpstan",
+            "version": "0.12.94",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phpstan/phpstan.git",
+                "reference": "3d0ba4c198a24e3c3fc489f3ec6ac9612c4be5d6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/3d0ba4c198a24e3c3fc489f3ec6ac9612c4be5d6",
+                "reference": "3d0ba4c198a24e3c3fc489f3ec6ac9612c4be5d6",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.1|^8.0"
+            },
+            "conflict": {
+                "phpstan/phpstan-shim": "*"
+            },
+            "bin": [
+                "phpstan",
+                "phpstan.phar"
+            ],
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.12-dev"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "bootstrap.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "PHPStan - PHP Static Analysis Tool",
+            "support": {
+                "issues": "https://github.com/phpstan/phpstan/issues",
+                "source": "https://github.com/phpstan/phpstan/tree/0.12.94"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/ondrejmirtes",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/phpstan",
+                    "type": "github"
+                },
+                {
+                    "url": "https://www.patreon.com/phpstan",
+                    "type": "patreon"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/phpstan/phpstan",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2021-07-30T09:05:27+00:00"
+        },
+        {
+            "name": "symfony/polyfill-php73",
+            "version": "v1.23.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/polyfill-php73.git",
+                "reference": "fba8933c384d6476ab14fb7b8526e5287ca7e010"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/polyfill-php73/zipball/fba8933c384d6476ab14fb7b8526e5287ca7e010",
+                "reference": "fba8933c384d6476ab14fb7b8526e5287ca7e010",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "1.23-dev"
+                },
+                "thanks": {
+                    "name": "symfony/polyfill",
+                    "url": "https://github.com/symfony/polyfill"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Polyfill\\Php73\\": ""
+                },
+                "files": [
+                    "bootstrap.php"
+                ],
+                "classmap": [
+                    "Resources/stubs"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nicolas Grekas",
+                    "email": "p@tchwork.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony polyfill backporting some PHP 7.3+ features to lower PHP versions",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "compatibility",
+                "polyfill",
+                "portable",
+                "shim"
+            ],
+            "support": {
+                "source": "https://github.com/symfony/polyfill-php73/tree/v1.23.0"
+            },
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2021-02-19T12:13:01+00:00"
+        },
+        {
+            "name": "szepeviktor/phpstan-wordpress",
+            "version": "v0.7.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/szepeviktor/phpstan-wordpress.git",
+                "reference": "bdbea69b2ba4a69998c3b6fe2b7106d78a23bd72"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/szepeviktor/phpstan-wordpress/zipball/bdbea69b2ba4a69998c3b6fe2b7106d78a23bd72",
+                "reference": "bdbea69b2ba4a69998c3b6fe2b7106d78a23bd72",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.1 || ^8.0",
+                "php-stubs/wordpress-stubs": "^4.7 || ^5.0",
+                "phpstan/phpstan": "^0.12.26",
+                "symfony/polyfill-php73": "^1.12.0"
+            },
+            "require-dev": {
+                "composer/composer": "^1.10.22",
+                "dealerdirect/phpcodesniffer-composer-installer": "^0.7",
+                "php-parallel-lint/php-parallel-lint": "^1.1",
+                "phpstan/phpstan-strict-rules": "^0.12",
+                "szepeviktor/phpcs-psr-12-neutron-hybrid-ruleset": "^0.6"
+            },
+            "type": "phpstan-extension",
+            "extra": {
+                "phpstan": {
+                    "includes": [
+                        "extension.neon"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "SzepeViktor\\PHPStan\\WordPress\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "WordPress extensions for PHPStan",
+            "keywords": [
+                "PHPStan",
+                "code analyse",
+                "code analysis",
+                "static analysis",
+                "wordpress"
+            ],
+            "support": {
+                "issues": "https://github.com/szepeviktor/phpstan-wordpress/issues",
+                "source": "https://github.com/szepeviktor/phpstan-wordpress/tree/v0.7.7"
+            },
+            "funding": [
+                {
+                    "url": "https://www.paypal.me/szepeviktor",
+                    "type": "custom"
+                }
+            ],
+            "time": "2021-07-14T09:19:15+00:00"
+        }
+    ],
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": [],

@@ -22,12 +22,16 @@ class New_User extends Mail_Generator {
 	 * @param WP_User $user
 	 *
 	 */
-	public function new_user_notification_email( array $email, WP_User $user ) {
+	public function new_user_notification_email( array $email, WP_User $user ): array {
 
 		$this->setPlaceholderValues( $user );
 
-		$relay = new Relay( $this->getTrigger(), $this->placeholders, $user );
-		$relay->sendMails();
+		$relay            = new Relay( $this->getTrigger(), $this->placeholders, $user );
+		$email["to"]      = $relay->prepareRecipients();
+		$email["subject"] = $relay->prepareSubject();
+		$email["message"] = $relay->prepareContent();
+
+		return $email;
 	}
 
 	protected function setPlaceholderValues( WP_User $user ): void {
@@ -41,10 +45,8 @@ class New_User extends Mail_Generator {
 	 */
 	public function rest_user_create( WP_User $user ): void {
 
-		$this->setPlaceholderValues( $user );
-
-		$relay = new Relay( $this->getTrigger(), $this->placeholders, $user );
-		$relay->sendMails();
+		$user_id = $user->ID;
+		wp_send_new_user_notifications( $user_id );
 
 	}
 
@@ -55,13 +57,14 @@ class New_User extends Mail_Generator {
 	 */
 	public function registerTrigger( array $triggers ): array {
 
-		$message = __( 'New user registration on your site {{SITE_NAME}}:' ) . "\r\n\r\n";
-		$message .= __( 'Username: {{USERNAME}}' ) . "\r\n\r\n";
-		$message .= __( 'Email: {{USER_EMAIL}}' ) . "\r\n";
+		$message = sprintf( __( 'Username: %s' ), "{{USERNAME}}" ) . "\r\n\r\n";
+		$message .= __( 'To set your password, visit the following address:' ) . "\r\n\r\n";
+		$message .= "{{password_reset_link}}" . "\r\n";
 
-		$trigger = new Trigger( "New User (User)", $this->getTrigger() );
+		$trigger = new Trigger( __( "New User (User)", 'juvo-mail-editor' ), $this->getTrigger() );
 		$trigger
-			->setSubject( "New User Registration" )
+			->setAlwaysSent( true )
+			->setSubject( sprintf( __( '%s Login Details' ), "{{SITE_NAME}}" ) )
 			->setContent( $message )
 			->setRecipients( "{{CONTEXT}}" )
 			->setPlaceholders( $this->placeholders );

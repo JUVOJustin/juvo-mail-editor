@@ -48,14 +48,6 @@ jobs:
           commit-msg: Update Version in Plugin Header
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
-      # Delete Development Files
-      - shell: bash
-        run: |
-          find . -name "composer.json" -type f -delete && find . -name "composer.lock" -type f -delete
-          find . -name "package.json" -type f -delete && find . -name "package-lock.json" -type f -delete
-          rm -rf .git && find . -name ".gitignore" -type f -delete
-          rm -rf .github
-
       # Zip everything
       - shell: bash
         run: |

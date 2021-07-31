@@ -7,3 +7,4 @@ wp-cli.local.yml
 *.tar.gz
 *.zip
 /vendor/
+/composer.lock

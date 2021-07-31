@@ -39,3 +39,8 @@ node_modules
 *.sql
 *.tar.gz
 *.zip
+phpstan.neon
+.github
+
+.distignore
+.gitignore

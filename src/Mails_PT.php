@@ -36,7 +36,7 @@ class Mails_PT {
 			'labels'          => $labels,
 			'public'          => false,
 			'show_ui'         => true,
-			'capability_type' => 'post', // Todo Introduce custom capability
+			'capability_type' => 'manage_options',
 			'has_archive'     => false,
 			'hierarchical'    => false,
 			'menu_position'   => null,

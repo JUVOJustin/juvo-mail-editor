@@ -30,7 +30,12 @@ class Mail_Trigger_TAX {
 			'labels'            => $labels,
 			'show_ui'           => true,
 			'show_in_rest'      => true,
-			'show_admin_column' => true
+			'show_admin_column' => true,
+			'capabilities'      => array(
+				'manage_terms' => false,
+				'edit_terms'   => false,
+				'delete_terms' => false
+			),
 		) );
 
 	}

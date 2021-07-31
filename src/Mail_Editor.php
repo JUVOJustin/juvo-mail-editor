@@ -51,11 +51,7 @@ class Mail_Editor {
 	 * @since    1.0.0
 	 */
 	public function __construct() {
-		if ( defined( 'JUVO_MAIL_EDITOR_VERSION' ) ) {
-			$this->version = JUVO_MAIL_EDITOR_VERSION;
-		} else {
-			$this->version = '1.0.0';
-		}
+
 		$this->plugin_name = 'juvo-mail-editor';
 
 		$this->loader = new Loader();
@@ -92,7 +88,7 @@ class Mail_Editor {
 	 */
 	private function define_admin_hooks() {
 
-		$plugin_admin = new Admin( $this->get_plugin_name(), $this->get_version() );
+		$plugin_admin = new Admin( $this->get_plugin_name() );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
 
@@ -169,16 +165,6 @@ class Mail_Editor {
 	 */
 	public function get_plugin_name() {
 		return $this->plugin_name;
-	}
-
-	/**
-	 * Retrieve the version number of the plugin.
-	 *
-	 * @return    string    The version number of the plugin.
-	 * @since     1.0.0
-	 */
-	public function get_version() {
-		return $this->version;
 	}
 
 	/**

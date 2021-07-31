@@ -1,7 +1,6 @@
 <?php
 /**
  * Plugin Name:     JUVO Mail Editor
- * Plugin URI:      https://juvo-design.de
  * Description:     JUVO Mail Editor helps to modify the standard WordPress Mailings and allows adding dynamic mail triggers
  * Author:          JUVO Webdesign - Justin Vogt
  * Author URI:      https://juvo-design.de
@@ -19,14 +18,6 @@ use JUVO_MailEditor\Mail_Editor;
 if ( ! defined( 'WPINC' ) ) {
 	die;
 }
-
-/**
- * Currently plugin version.
- * Start at version 1.0.0 and use SemVer - https://semver.org
- * Rename this for your plugin and update it as you release new versions.
- */
-define( 'JUVO_MAIL_EDITOR_VERSION', '1.0.0' );
-
 
 /**
  * Plugin absolute path

@@ -1,10 +1,11 @@
 <?php
 /**
- * Plugin Name:     Mail Editor
+ * Plugin Name:     JUVO Mail Editor
  * Plugin URI:      https://juvo-design.de
- * Description:     JUVO Mail Editor helps to configure the standard mail notification system of WordPress
+ * Description:     JUVO Mail Editor helps to modify the standard WordPress Mailings and allows adding dynamic mail triggers
  * Author:          JUVO Webdesign - Justin Vogt
  * Author URI:      https://juvo-design.de
+ * License:         GPL v2 or later
  * Text Domain:     juvo-mail-editor
  * Domain Path:     /languages
  * Version:         2.0.1
@@ -75,9 +76,3 @@ function run_juvo_mail_editor() {
 }
 
 run_juvo_mail_editor();
-
-$myUpdateChecker = Puc_v4_Factory::buildUpdateChecker(
-	'https://plugins.juvo-design.de/juvo-mail-editor/details.json',
-	__FILE__,
-	'juvo-mail-editor'
-);

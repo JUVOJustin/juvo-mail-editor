@@ -33,7 +33,6 @@
     }
   },
   "require": {
-    "yahnis-elsts/plugin-update-checker": "^4.10",
     "juvo/wp-admin-notices": "^1",
     "cmb2/cmb2": "^2.9",
     "php": ">=7.2.0"

@@ -105,7 +105,8 @@ class Mail_Editor {
 		 */
 		$tax = new Mail_Trigger_TAX();
 		$this->loader->add_action( 'init', $tax, 'registerTaxonomy' );
-		$this->loader->add_action( 'init', $tax, 'registerTrigger' );
+		$this->loader->add_action( 'juvo_mail_editor_trigger_init', $tax, 'registerTrigger' );
+		$this->loader->add_action( 'admin_init', $tax, 'registerTrigger' );
 		$this->loader->add_action( 'cmb2_admin_init', $tax, 'addMetaboxes' );
 
 

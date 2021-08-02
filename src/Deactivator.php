@@ -3,14 +3,12 @@
 namespace JUVO_MailEditor;
 
 
-use juvo\WordPressAdminNotices\Manager;
-
 class Deactivator {
 
 	public static function deactivate() {
 
-		// Remove all Notices on Deactivation
-		Manager::remove( "juvo_mail_editor_missing_plugin");
+		$timestamp = wp_next_scheduled( 'bl_cron_hook' );
+		wp_unschedule_event( $timestamp, 'bl_cron_hook' );
 
 	}
 

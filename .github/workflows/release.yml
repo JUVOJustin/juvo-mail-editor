@@ -41,7 +41,7 @@ jobs:
       - name: Update Version in WordPress files
         run: |
           sed -i 's/\(\s*\)\*\(\s*\)Version:\(\s*\)[^,]*/\1*\2Version:\3${{ env.RELEASE_VERSION }}/g' ${{ github.event.repository.name }}.php
-          sed -i 's/\(\s*\)\*\(\s*\)Stable tag:\(\s*\)[^,]*/\1*\2Version:\3${{ env.RELEASE_VERSION }}/g' readme.txt
+          sed -i 's/Stable tag:\(\s*\)[^,]*/Stable tag:\1${{ env.RELEASE_VERSION }}/g' readme.txt
       - name: Update resources
         uses: test-room-7/action-update-file@v1
         with:

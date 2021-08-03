@@ -52,7 +52,7 @@ class New_User_Rest extends Mail_Generator {
 
 		$trigger = new Trigger( __( "New User Rest (User)", 'juvo-mail-editor' ), $this->getTrigger() );
 		$trigger
-			->setAlwaysSent( true )
+			->setAlwaysSent( false )
 			->setSubject( sprintf( __( '%s Login Details' ), "{{SITE_NAME}}" ) )
 			->setContent( $message )
 			->setRecipients( "{{CONTEXT}}" )

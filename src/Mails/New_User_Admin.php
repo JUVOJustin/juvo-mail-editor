@@ -4,7 +4,6 @@ namespace JUVO_MailEditor\Mails;
 
 use CMB2;
 use JUVO_MailEditor\Mail_Generator;
-use JUVO_MailEditor\Mails_PT;
 use JUVO_MailEditor\Relay;
 use JUVO_MailEditor\Trigger;
 use WP_User;
@@ -41,15 +40,7 @@ class New_User_Admin extends Mail_Generator {
 	 * @return CMB2
 	 */
 	public function addCustomFields( CMB2 $cmb ): CMB2 {
-
-		$field = array(
-			'name' => __( 'Trigger on rest', 'juvo-mail-editor' ),
-			'desc' => __( 'Sends email if user is created via Rest API', 'juvo-mail-editor' ),
-			'id'   => Mails_PT::POST_TYPE_NAME . '_rest',
-			'type' => 'checkbox',
-		);
-
-		return $this->addFieldForTrigger( $field, $cmb );
+		return $cmb;
 	}
 
 	/**
@@ -74,15 +65,5 @@ class New_User_Admin extends Mail_Generator {
 		$triggers[] = $trigger;
 
 		return $triggers;
-	}
-
-	/**
-	 * @param WP_User $user
-	 */
-	public function rest_user_create( WP_User $user ): void {
-
-		$user_id = $user->ID;
-		wp_send_new_user_notifications( $user_id, "admin" );
-
 	}
 }

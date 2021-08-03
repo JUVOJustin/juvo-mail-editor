@@ -27,7 +27,7 @@ class New_User_Admin_Rest extends Mail_Generator {
 	 * @return string
 	 */
 	public function getTrigger(): string {
-		return "new_user_admin";
+		return "new_user_admin_rest";
 	}
 
 	/**
@@ -52,7 +52,7 @@ class New_User_Admin_Rest extends Mail_Generator {
 
 		$trigger = new Trigger( __( "New User Rest (Admin)", 'juvo-mail-editor' ), $this->getTrigger() );
 		$trigger
-			->setAlwaysSent( true )
+			->setAlwaysSent( false )
 			->setSubject( sprintf( __( "%s New User Registration" ), "{{SITE_NAME}}" ) )
 			->setContent( $message )
 			->setRecipients( "{{ADMIN_EMAIL}}" )

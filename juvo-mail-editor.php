@@ -7,7 +7,7 @@
  * License:         GPL v2 or later
  * Text Domain:     juvo-mail-editor
  * Domain Path:     /languages
- * Version:         2.0.2
+ * Version:         2.0.3
  */
 
 use JUVO_MailEditor\Activator;

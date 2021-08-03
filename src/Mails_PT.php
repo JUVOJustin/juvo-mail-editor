@@ -11,7 +11,7 @@ class Mails_PT {
 	public const POST_TYPE_NAME = "juvo-mail";
 
 	public function registerPostType() {
-		$labels = array(
+		$labels = [
 			'name'                  => _x( 'Mail', 'Post type general name', 'juvo-mail-editor' ),
 			'singular_name'         => _x( 'Mail', 'Post type singular name', 'juvo-mail-editor' ),
 			'menu_name'             => _x( 'Mails', 'Admin Menu text', 'juvo-mail-editor' ),
@@ -30,13 +30,13 @@ class Mails_PT {
 			'filter_items_list'     => _x( 'Filter mail list', 'Screen reader text for the filter links heading on the post type listing screen. Default “Filter posts list”/”Filter pages list”. Added in 4.4', 'juvo-mail-editor' ),
 			'items_list_navigation' => _x( 'Mails list navigation', 'Screen reader text for the pagination heading on the post type listing screen. Default “Posts list navigation”/”Pages list navigation”. Added in 4.4', 'juvo-mail-editor' ),
 			'items_list'            => _x( 'Mails list', 'Screen reader text for the items list heading on the post type listing screen. Default “Posts list”/”Pages list”. Added in 4.4', 'juvo-mail-editor' ),
-		);
+		];
 
 		$args = array(
 			'labels'          => $labels,
 			'public'          => false,
 			'show_ui'         => true,
-			'capability_type' => 'manage_options',
+			'capability_type' => 'post',
 			'has_archive'     => false,
 			'hierarchical'    => false,
 			'menu_position'   => null,
@@ -50,18 +50,18 @@ class Mails_PT {
 	/**
 	 * @param bool|array $allowed_block_types
 	 * @param WP_Block_Editor_Context $block_editor_context
+	 *
+	 * @return string[]
 	 */
-	public function limitBlocks( $allowed_block_types, WP_Block_Editor_Context $block_editor_context ) {
+	public function limitBlocks( $allowed_block_types, WP_Block_Editor_Context $block_editor_context ): array {
 
-		$allowed_block_types = [
+		return [
 			'core/image',
 			'core/paragraph',
 			'core/heading',
 			'core/list',
 			'core/table'
 		];
-
-		return $allowed_block_types;
 
 	}
 
@@ -91,7 +91,6 @@ class Mails_PT {
 			'desc'    => __( 'Comma seperated list of mail addresses<br><code>{{CONTEXT}}</code><code>{{ADMIN_EMAIL}}</code>', 'juvo-mail-editor' ),
 			'id'      => self::POST_TYPE_NAME . '_recipients',
 			'type'    => 'text',
-			'default' => '{{CONTEXT}}'
 		) );
 
 		$cmb->add_field( array(
@@ -101,7 +100,7 @@ class Mails_PT {
 			'type' => 'text',
 		) );
 
-		$cmb = apply_filters( "juvo_mail_editor_post_metabox", $cmb );
+		apply_filters( "juvo_mail_editor_post_metabox", $cmb );
 	}
 
 }

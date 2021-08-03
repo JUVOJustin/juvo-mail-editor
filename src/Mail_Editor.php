@@ -8,6 +8,8 @@ use JUVO_MailEditor\Admin\Admin;
 use JUVO_MailEditor\Integrations\BuddyBoss;
 use JUVO_MailEditor\Mails\New_User;
 use JUVO_MailEditor\Mails\New_User_Admin;
+use JUVO_MailEditor\Mails\New_User_Admin_Rest;
+use JUVO_MailEditor\Mails\New_User_Rest;
 use JUVO_MailEditor\Mails\Password_Reset;
 use JUVO_MailEditor\Mails\Password_Reset_Admin;
 
@@ -116,10 +118,13 @@ class Mail_Editor {
 		$newUser = new New_User();
 		$this->loader->add_filter( "juvo_mail_editor_trigger", $newUser, "registerTrigger" );
 		$this->loader->add_filter( "juvo_mail_editor_post_metabox", $newUser, "addCustomFields" );
-		// Rest
-		$this->loader->add_action( "rest_insert_user", $newUser, "rest_user_create", 12, 1 );
-		// User Notification https://developer.wordpress.org/reference/hooks/wp_new_user_notification_email/
 		$this->loader->add_action( 'wp_new_user_notification_email', $newUser, 'new_user_notification_email', 10, 2 );
+
+		// Rest
+		$newUserRest = new New_User_Rest();
+		$this->loader->add_filter( "juvo_mail_editor_trigger", $newUserRest, "registerTrigger" );
+		$this->loader->add_filter( "juvo_mail_editor_post_metabox", $newUserRest, "addCustomFields" );
+		$this->loader->add_action( 'rest_insert_user', $newUserRest, 'new_user_notification_email', 12, 1 );
 
 		/**
 		 * New User Notification Admin
@@ -127,8 +132,13 @@ class Mail_Editor {
 		$newUserAdmin = new New_User_Admin();
 		$this->loader->add_filter( "juvo_mail_editor_trigger", $newUserAdmin, "registerTrigger" );
 		$this->loader->add_filter( "juvo_mail_editor_post_metabox", $newUserAdmin, "addCustomFields" );
-		// User Notification https://developer.wordpress.org/reference/hooks/wp_new_user_notification_email/
 		$this->loader->add_action( 'wp_new_user_notification_email_admin', $newUserAdmin, 'new_user_notification_email_admin', 10, 2 );
+
+		// Rest
+		$newUserAdminRest = new New_User_Admin_Rest();
+		$this->loader->add_filter( "juvo_mail_editor_trigger", $newUserAdminRest, "registerTrigger" );
+		$this->loader->add_filter( "juvo_mail_editor_post_metabox", $newUserAdminRest, "addCustomFields" );
+		$this->loader->add_action( 'rest_insert_user', $newUserAdminRest, 'new_user_notification_email_admin', 12, 1 );
 
 		/**
 		 * Password Reset

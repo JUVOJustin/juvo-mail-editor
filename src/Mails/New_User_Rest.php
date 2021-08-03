@@ -8,7 +8,7 @@ use JUVO_MailEditor\Relay;
 use JUVO_MailEditor\Trigger;
 use WP_User;
 
-class New_User extends Mail_Generator {
+class New_User_Rest extends Mail_Generator {
 
 	private $placeholders = [
 		"password_reset_link" => ""
@@ -17,27 +17,26 @@ class New_User extends Mail_Generator {
 	/**
 	 * Callback for wordpresss native user trigger
 	 *
-	 * @param array $email
 	 * @param WP_User $user
 	 *
-	 * @return array
+	 * @return void
 	 */
-	public function new_user_notification_email( array $email, WP_User $user ): array {
+	public function new_user_notification_email( WP_User $user ) {
 
 		$this->setPlaceholderValues( $user );
 
-		$relay            = new Relay( $this->getTrigger(), $this->placeholders, $user );
-		$email["to"]      = $relay->prepareRecipients();
-		$email["subject"] = $relay->prepareSubject();
-		$email["message"] = $relay->prepareContent();
-
-		return $email;
+		$relay = new Relay( $this->getTrigger(), $this->placeholders, $user );
+		$relay->sendMails();
 	}
 
 	protected function setPlaceholderValues( WP_User $user ): void {
 		$adt_rp_key                                = get_password_reset_key( $user );
 		$user_login                                = $user->user_login;
 		$this->placeholders["password_reset_link"] = '<a href="' . network_site_url( "wp-login.php?action=rp&key=$adt_rp_key&login=" . rawurlencode( $user_login ), 'login' ) . '">' . network_site_url( "wp-login.php?action=rp&key=$adt_rp_key&login=" . rawurlencode( $user_login ), 'login' ) . '</a>';
+	}
+
+	public function getTrigger(): string {
+		return "new_user_rest";
 	}
 
 	/**
@@ -51,7 +50,7 @@ class New_User extends Mail_Generator {
 		$message .= __( 'To set your password, visit the following address:' ) . "\r\n\r\n";
 		$message .= "{{password_reset_link}}" . "\r\n";
 
-		$trigger = new Trigger( __( "New User (User)", 'juvo-mail-editor' ), $this->getTrigger() );
+		$trigger = new Trigger( __( "New User Rest (User)", 'juvo-mail-editor' ), $this->getTrigger() );
 		$trigger
 			->setAlwaysSent( true )
 			->setSubject( sprintf( __( '%s Login Details' ), "{{SITE_NAME}}" ) )
@@ -74,9 +73,5 @@ class New_User extends Mail_Generator {
 	 */
 	public function addCustomFields( CMB2 $cmb ): CMB2 {
 		return $cmb;
-	}
-
-	public function getTrigger(): string {
-		return "new_user";
 	}
 }

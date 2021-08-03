@@ -8,6 +8,7 @@
 .git
 .gitignore
 .gitlab-ci.yml
+.github
 .travis.yml
 .DS_Store
 Thumbs.db
@@ -40,7 +41,6 @@ node_modules
 *.tar.gz
 *.zip
 phpstan.neon
-.github
 
 .distignore
 .gitignore

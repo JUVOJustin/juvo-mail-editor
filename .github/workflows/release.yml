@@ -38,14 +38,17 @@ jobs:
       # Update Version
       - name: Set env
         run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
-      - name: Update Version in WordPress Plugin root file
+      - name: Update Version in WordPress files
         run: |
           sed -i 's/\(\s*\)\*\(\s*\)Version:\(\s*\)[^,]*/\1*\2Version:\3${{ env.RELEASE_VERSION }}/g' ${{ github.event.repository.name }}.php
+          sed -i 's/\(\s*\)\*\(\s*\)Stable tag:\(\s*\)[^,]*/\1*\2Version:\3${{ env.RELEASE_VERSION }}/g' readme.txt
       - name: Update resources
         uses: test-room-7/action-update-file@v1
         with:
-          file-path: ${{ github.event.repository.name }}.php
-          commit-msg: Update Version in Plugin Header
+          file-path: |
+            ${{ github.event.repository.name }}.php
+            readme.txt
+          commit-msg: Update Version in WordPress specific files
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       # Zip everything

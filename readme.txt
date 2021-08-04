@@ -2,7 +2,7 @@
 Contributors: juvodesign
 Tags: mail,editor,framework
 License: GPLv2 or later
-Tested up to: 5.6.2
+Tested up to: 5.8
 Stable tag: 2.0.3
 
 JUVO Mail Editor helps to modify the standard WordPress Mailings and allows adding dynamic mail triggers.

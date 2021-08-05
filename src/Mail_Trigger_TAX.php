@@ -4,6 +4,8 @@
 namespace JUVO_MailEditor;
 
 
+use WP_Error;
+
 class Mail_Trigger_TAX {
 
 	public const TAXONOMY_NAME = "juvo-mail-trigger";
@@ -32,9 +34,9 @@ class Mail_Trigger_TAX {
 			'show_in_rest'      => true,
 			'show_admin_column' => true,
 			'capabilities'      => array(
-				'manage_terms' => false,
-				'edit_terms'   => false,
-				'delete_terms' => false
+				'manage_terms' => true,
+				'edit_terms'   => true,
+				'delete_terms' => true
 			),
 		) );
 
@@ -87,46 +89,55 @@ class Mail_Trigger_TAX {
 		) );
 	}
 
+	/**
+	 * @return void|WP_Error
+	 */
 	public function registerTrigger() {
 
 		$triggers = [];
+		$errors   = new WP_Error();
 
 		$triggers = apply_filters( "juvo_mail_editor_trigger", $triggers );
 
 		foreach ( $triggers as $trigger ) {
 
 			if ( ! $trigger instanceof Trigger ) {
-				error_log( "[juvo_mail_editor]: Provided trigger is no instance of JUVO_MailEditor\Trigger and therefore skipped" );
+				$errors->add( "juvo_mail_editor_invalid_trigger", "Provided trigger is no instance of JUVO_MailEditor\Trigger and therefore skipped" );
 				continue;
 			}
 
+			// Create or Update Term
 			$term = get_term_by( 'slug', $trigger->getSlug(), self::TAXONOMY_NAME );
-
-			$term_id = null;
 			if ( ! $term ) {
-				$term_id = wp_insert_term( $trigger->getName(), self::TAXONOMY_NAME, [ "slug" => $trigger->getSlug() ] )["term_id"];
+				$term = wp_insert_term(
+					$trigger->getName(),
+					self::TAXONOMY_NAME,
+					[ "slug" => $trigger->getSlug() ]
+				);
 			} else {
-				$term_id = $term->term_id;
+				$term = wp_update_term( $term->term_id, self::TAXONOMY_NAME, array(
+					'name' => $trigger->getName(),
+					'slug' => $trigger->getSlug()
+				) );
 			}
-
-			// Verify Slug or mail
-			if ( empty( $trigger->getName() ) || empty( $trigger->getSlug() ) ) {
-				error_log( "[juvo_mail_editor]: Slug or Name are empty" );
+			if ( is_wp_error( $term ) ) {
+				$errors->add( "juvo_mail_editor_term_error", $term->get_error_message() );
 				continue;
 			}
 
-			$term_id = wp_update_term( $term_id, self::TAXONOMY_NAME, array(
-				'name' => $trigger->getName(),
-				'slug' => $trigger->getSlug()
-			) )["term_id"];
-
-			update_term_meta( $term_id, self::TAXONOMY_NAME . "_always_send", $trigger->isAlwaysSent() );
-			update_term_meta( $term_id, self::TAXONOMY_NAME . "_default_recipients", $trigger->getRecipients() );
-			update_term_meta( $term_id, self::TAXONOMY_NAME . "_default_subject", $trigger->getSubject() );
-			update_term_meta( $term_id, self::TAXONOMY_NAME . "_default_content", $trigger->getContent() );
-			update_term_meta( $term_id, self::TAXONOMY_NAME . "_placeholders", $trigger->getPlaceholders() );
-
+			// Update meta and log errors
+			update_term_meta( $term->term_id, self::TAXONOMY_NAME . "_always_send", $trigger->isAlwaysSent() );
+			update_term_meta( $term->term_id, self::TAXONOMY_NAME . "_default_recipients", $trigger->getRecipients() );
+			update_term_meta( $term->term_id, self::TAXONOMY_NAME . "_default_subject", $trigger->getSubject() );
+			update_term_meta( $term->term_id, self::TAXONOMY_NAME . "_default_content", $trigger->getContent() );
+			update_term_meta( $term->term_id, self::TAXONOMY_NAME . "_placeholders", $trigger->getPlaceholders() );
 		}
+
+		foreach ( $errors->get_error_messages() as $error ) {
+			error_log( "[juvo_mail_editor]: {$error}" );
+		}
+
+		return $errors;
 
 	}
 

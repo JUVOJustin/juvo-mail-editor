@@ -34,9 +34,9 @@ class Mail_Trigger_TAX {
 			'show_in_rest'      => true,
 			'show_admin_column' => true,
 			'capabilities'      => array(
-				'manage_terms' => true,
-				'edit_terms'   => true,
-				'delete_terms' => true
+				'manage_terms' => false,
+				'edit_terms'   => false,
+				'delete_terms' => false
 			),
 		) );
 
@@ -125,12 +125,20 @@ class Mail_Trigger_TAX {
 				continue;
 			}
 
+			// wp_insert_term returns an error while wp_update_term return an instance of WP_Term... thanks for nothing
+			// normalize $term to be the term_id
+			if ( is_array( $term ) ) {
+				$term = $term["term_id"];
+			} else { // @phpstan-ignore-line
+				$term = $term->term_id;
+			}
+
 			// Update meta and log errors
-			update_term_meta( $term->term_id, self::TAXONOMY_NAME . "_always_send", $trigger->isAlwaysSent() );
-			update_term_meta( $term->term_id, self::TAXONOMY_NAME . "_default_recipients", $trigger->getRecipients() );
-			update_term_meta( $term->term_id, self::TAXONOMY_NAME . "_default_subject", $trigger->getSubject() );
-			update_term_meta( $term->term_id, self::TAXONOMY_NAME . "_default_content", $trigger->getContent() );
-			update_term_meta( $term->term_id, self::TAXONOMY_NAME . "_placeholders", $trigger->getPlaceholders() );
+			update_term_meta( $term, self::TAXONOMY_NAME . "_always_send", $trigger->isAlwaysSent() );
+			update_term_meta( $term, self::TAXONOMY_NAME . "_default_recipients", $trigger->getRecipients() );
+			update_term_meta( $term, self::TAXONOMY_NAME . "_default_subject", $trigger->getSubject() );
+			update_term_meta( $term, self::TAXONOMY_NAME . "_default_content", $trigger->getContent() );
+			update_term_meta( $term, self::TAXONOMY_NAME . "_placeholders", $trigger->getPlaceholders() );
 		}
 
 		foreach ( $errors->get_error_messages() as $error ) {

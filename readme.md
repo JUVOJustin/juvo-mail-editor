@@ -1,23 +1,11 @@
-=== Plugin Name ===
-Contributors: juvodesign
-Requires at least: 5.5
-Tested up to: 5.5
-Requires PHP: 7.4
-License: GPLv2 or later
-License URI: https://www.gnu.org/licenses/gpl-2.0.html
+#JUVO Mail Editor
+[![Release](https://github.com/JUVOJustin/juvo-mail-editor/actions/workflows/release.yml/badge.svg?branch=master)](https://github.com/JUVOJustin/juvo-mail-editor/actions/workflows/release.yml)
+[![PHP Test/Analyse](https://github.com/JUVOJustin/juvo-mail-editor/actions/workflows/test-analyse.yml/badge.svg?branch=master)](https://github.com/JUVOJustin/juvo-mail-editor/actions/workflows/test-analyse.yml)
 
-JUVO Mail Editor is a handy framework to enable e-mail templating for most standard WordPress mails and custom ones.
+With JUVO Mail Editor you can edit emails triggered by WordPress using the Gutenberg Editor. By using placeholders, the emails become highly dynamic.
 
-== Description ==
-JUVO Mail Editor utilizes the power of a wysiwyg editor with a placeholder system to make your WordPress Mails truly customizable. This Plugin is perfect for developers, as it alowys 
+Simply create a mailing and connect it to the desired trigger. Triggers are either predefined or can be defined by plugin authors.
 
+For more information about placeholders, triggers and extensibility of the plugin check out the GitHub Wiki.
 
-== Frequently Asked Questions ==
-
-= A question that someone might have =
-
-An answer to that question.
-
-= What about foo bar? =
-
-Answer to foo bar dilemma.
+### [**Download from wordpress repository**](https://wordpress.org/plugins/juvo-mail-editor/)

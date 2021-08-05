@@ -51,41 +51,9 @@ jobs:
           commit-msg: Update Version in WordPress specific files
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
-      # Zip everything
-      - shell: bash
-        run: |
-          cd ..
-          sudo apt-get install zip
-          zip -r ${{ github.event.repository.name }}.zip ./*
-          mkdir ${{ github.workspace }}/dist
-          mv ${{ github.event.repository.name }}.zip ${{ github.workspace }}/dist
-
-      - name: Install SSH key
-        uses: shimataro/ssh-key-action@v2
-        with:
-          key: ${{ secrets.SSH_PRIVATE_KEY_PEM }}
-          known_hosts: ${{ secrets.KNOWN_HOSTS }}
-
-      - name: Keyscan Target Host
-        run: |
-          ssh-keyscan ${{ secrets.HOST }}
-
-      - name: Display structure of downloaded files
-        run: ls -R
-
-      - name: Upload
-        shell: bash
-        run: |
-          scp -r ${{ github.workspace }}/dist/${{ github.event.repository.name }}.zip ${{ secrets.USER }}@${{ secrets.HOST }}:${{ secrets.PATH }}
-      - name: Set env
-        run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
-
-      - name: Update Version
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY_PEM }}
-          port: 22
-          script: |
-            sed -i 's/"version":[^,]*/"version": "${{ env.RELEASE_VERSION }}"/g' ${{ secrets.PATH }}/details.json
+      - name: WordPress Plugin Deploy
+        uses: 10up/action-wordpress-plugin-deploy@stable
+        env:
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+          SLUG: juvo-mail-editor

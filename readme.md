@@ -1,4 +1,4 @@
-#JUVO Mail Editor
+# JUVO Mail Editor
 [![Release](https://github.com/JUVOJustin/juvo-mail-editor/actions/workflows/release.yml/badge.svg?branch=master)](https://github.com/JUVOJustin/juvo-mail-editor/actions/workflows/release.yml)
 [![PHP Test/Analyse](https://github.com/JUVOJustin/juvo-mail-editor/actions/workflows/test-analyse.yml/badge.svg?branch=master)](https://github.com/JUVOJustin/juvo-mail-editor/actions/workflows/test-analyse.yml)
 

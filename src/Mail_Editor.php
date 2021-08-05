@@ -95,6 +95,13 @@ class Mail_Editor {
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
 
 		/**
+		 * Options
+		 */
+		$options = new Options_Page();
+		$this->loader->add_action( 'cmb2_admin_init', $options, 'yourprefix_register_options_submenu_for_page_post_type' );
+		$this->loader->add_action( 'wp_ajax_juvo-mail-editor-sync-triggers', $options, "ajax_sync_triggers" );
+
+		/**
 		 * Post Type
 		 */
 		$pt = new Mails_PT();
@@ -107,10 +114,8 @@ class Mail_Editor {
 		 */
 		$tax = new Mail_Trigger_TAX();
 		$this->loader->add_action( 'init', $tax, 'registerTaxonomy' );
-		$this->loader->add_action( 'juvo_mail_editor_trigger_init', $tax, 'registerTrigger' );
-		$this->loader->add_action( 'admin_init', $tax, 'registerTrigger' );
+		$this->loader->add_action( 'juvo_mail_editor_trigger_init', $tax, 'registerTrigger' ); // Called by trigger
 		$this->loader->add_action( 'cmb2_admin_init', $tax, 'addMetaboxes' );
-
 
 		/**
 		 * New User Notification for enduser

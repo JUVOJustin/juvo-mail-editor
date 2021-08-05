@@ -1,0 +1,37 @@
+.juvo-mail-editor .trigger-mute ul {
+	columns: 2;
+	-webkit-columns: 2;
+	-moz-columns: 2;
+}
+
+.juvo-mail-editor .sync-triggers-wrapper {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.juvo-mail-editor .button-wrapper {
+	margin-bottom: 5px;
+	width: 100%;
+}
+
+.juvo-mail-editor .button-wrapper > * {
+	display: block;
+}
+
+.juvo-mail-editor .button-wrapper small,
+.juvo-mail-editor .button-wrapper small code {
+	font-size: 11px;
+}
+
+.juvo-mail-editor .sync-triggers-wrapper .message li {
+	margin: 0;
+}
+
+
+@media screen and (max-width: 720px) {
+	.juvo-mail-editor .trigger-mute ul {
+		columns: 1;
+		-webkit-columns: 1;
+		-moz-columns: 1;
+	}
+}

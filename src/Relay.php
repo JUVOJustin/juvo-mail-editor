@@ -38,6 +38,7 @@ class Relay {
 	 *
 	 * @param string $trigger
 	 * @param array $placeholders
+	 * @param mixed $context
 	 */
 	public function __construct( string $trigger, array $placeholders, $context = null ) {
 		$this->trigger      = $trigger;
@@ -177,9 +178,8 @@ class Relay {
 
 		$subject = apply_filters( "juvo_mail_editor_before_subject_placeholder", $subject, $this->trigger, $this->context );
 		$subject = Placeholder::replacePlaceholder( $this->placeholders, $subject, $this->context );
-		$subject = apply_filters( "juvo_mail_editor_after_subject_placeholder", $subject, $this->trigger, $this->context );
 
-		return $subject;
+		return apply_filters( "juvo_mail_editor_after_subject_placeholder", $subject, $this->trigger, $this->context );
 	}
 
 	/**
@@ -199,9 +199,8 @@ class Relay {
 			$placeholders["context"] = $this->context->user_email;
 		}
 		$recipients = Placeholder::replacePlaceholder( $placeholders, $recipients, $this->context );
-		$recipients = apply_filters( "juvo_mail_editor_after_recipient_placeholder", $recipients, $this->trigger, $this->context );
 
-		return $recipients;
+		return apply_filters( "juvo_mail_editor_after_recipient_placeholder", $recipients, $this->trigger, $this->context );
 	}
 
 	/**

@@ -40,8 +40,9 @@ class Mails_PT {
 			'has_archive'     => false,
 			'hierarchical'    => false,
 			'menu_position'   => null,
-			'supports'        => array( 'title', 'editor', 'author', 'revisions', 'custom-fields' ),
-			'show_in_rest'    => true
+			'supports'        => array( 'title', 'editor', 'author', 'revisions' ),
+			'show_in_rest'    => true,
+			'menu_icon'       => 'dashicons-email'
 		);
 
 		register_post_type( self::POST_TYPE_NAME, $args );
@@ -76,28 +77,20 @@ class Mails_PT {
 			'show_names'   => true, // Show field names on the left
 		) );
 
-		// Same way the post_status works
-//		$cmb->add_field( array(
-//			'name'    => __( 'Active', 'juvo-mail-editor' ),
-//			'desc'    => __( 'Determines if this mail template should be used for the trigger', 'juvo-mail-editor' ),
-//			'id'      => self::POST_TYPE_NAME . '_active',
-//			'type'    => 'checkbox',
-//			'default' => true,
-//			'column'  => true,
-//		) );
-
 		$cmb->add_field( array(
-			'name'    => __( 'Recipients', 'juvo-mail-editor' ),
-			'desc'    => __( 'Comma seperated list of mail addresses<br><code>{{CONTEXT}}</code><code>{{ADMIN_EMAIL}}</code>', 'juvo-mail-editor' ),
-			'id'      => self::POST_TYPE_NAME . '_recipients',
-			'type'    => 'text',
+			'name'   => __( 'Recipients', 'juvo-mail-editor' ),
+			'desc'   => __( 'Comma seperated list of mail addresses<br><code>{{CONTEXT}}</code><code>{{ADMIN_EMAIL}}</code>', 'juvo-mail-editor' ),
+			'id'     => self::POST_TYPE_NAME . '_recipients',
+			'type'   => 'text',
+			'column' => true,
 		) );
 
 		$cmb->add_field( array(
-			'name' => __( 'Subject', 'juvo-mail-editor' ),
-			'desc' => __( 'E-Mail subject', 'juvo-mail-editor' ),
-			'id'   => self::POST_TYPE_NAME . '_subject',
-			'type' => 'text',
+			'name'   => __( 'Subject', 'juvo-mail-editor' ),
+			'desc'   => __( 'E-Mail subject', 'juvo-mail-editor' ),
+			'id'     => self::POST_TYPE_NAME . '_subject',
+			'type'   => 'text',
+			'column' => true,
 		) );
 
 		apply_filters( "juvo_mail_editor_post_metabox", $cmb );

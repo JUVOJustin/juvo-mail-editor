@@ -20,6 +20,8 @@ class Password_Reset extends Mail_Generator {
 
 	function password_reset_email_message( string $message, string $key, string $user_login, WP_User $user ): string {
 
+		$this->setPlaceholderValues($user, ["key"=>$key]);
+
 		$relay    = new Relay( $this->getTrigger(), $this->placeholders, $user );
 		$template = $relay->getPosts();
 

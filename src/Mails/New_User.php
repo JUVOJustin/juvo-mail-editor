@@ -24,6 +24,11 @@ class New_User extends Mail_Generator {
 	 */
 	public function new_user_notification_email( array $email, WP_User $user ): array {
 
+		// Add Muted Capability
+		if ( Relay::triggerIsMuted( $this->getTrigger() ) ) {
+			return [];
+		}
+
 		$this->setPlaceholderValues( $user );
 
 		$relay            = new Relay( $this->getTrigger(), $this->placeholders, $user );

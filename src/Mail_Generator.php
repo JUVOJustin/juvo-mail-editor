@@ -53,5 +53,4 @@ abstract class Mail_Generator {
 
 		return $cmb;
 	}
-
 }

@@ -56,6 +56,11 @@ class Relay {
 	 */
 	public function sendMails() {
 
+		// Add Muted Capability
+		if ( self::triggerIsMuted( $this->trigger ) ) {
+			return false;
+		}
+
 		if ( ! empty( $this->posts ) ) {
 			foreach ( $this->posts as $post ) {
 
@@ -77,7 +82,7 @@ class Relay {
 			// Some triggers might only send mails if a post is associated
 			$alwaysSent = get_term_meta( $this->term->term_id, Mail_Trigger_TAX::TAXONOMY_NAME . "_always_send", true );
 			if ( ! $alwaysSent ) {
-				return;
+				return false;
 			}
 
 			/// Fallback if not posts are found for configured trigger
@@ -88,6 +93,8 @@ class Relay {
 			$mail = new Generic( $subject, $content, $recipients );
 			$mail->send();
 		}
+
+		return true;
 	}
 
 	/**
@@ -232,6 +239,21 @@ class Relay {
 		}, 10 );
 
 		return $message;
+	}
+
+	/**
+	 * Checks if the given trigger is globally muted.
+	 * Might be called manually if the mail is not send using the 'Relay' class but eg. with a filter.
+	 *
+	 * @param string $trigger
+	 *
+	 * @return bool
+	 */
+	public static function triggerIsMuted( string $trigger ): bool {
+		$pluginSettings = get_option( 'settings' );
+		$mutedTriggers  = $pluginSettings['trigger_mute'];
+
+		return in_array( $trigger, $mutedTriggers );
 	}
 
 }

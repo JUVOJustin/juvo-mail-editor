@@ -12,7 +12,12 @@ class New_User_Admin extends Mail_Generator {
 
 	private $placeholders = [];
 
-	function new_user_notification_email_admin( array $email, WP_User $user ) {
+	function new_user_notification_email_admin( array $email, WP_User $user ): array {
+
+		// Add Muted Capability
+		if ( Relay::triggerIsMuted( $this->getTrigger() ) ) {
+			return [];
+		}
 
 		$this->setPlaceholderValues( $user );
 

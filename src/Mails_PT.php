@@ -54,16 +54,19 @@ class Mails_PT {
 	 *
 	 * @return string[]
 	 */
-	public function limitBlocks( $allowed_block_types, WP_Block_Editor_Context $block_editor_context ): array {
+	public function limitBlocks( $allowed_block_types, WP_Block_Editor_Context $block_editor_context ) {
 
-		return [
-			'core/image',
-			'core/paragraph',
-			'core/heading',
-			'core/list',
-			'core/table'
-		];
+		if (isset($block_editor_context->post) && $block_editor_context->post->post_type === self::POST_TYPE_NAME) {
+			return [
+				'core/image',
+				'core/paragraph',
+				'core/heading',
+				'core/list',
+				'core/table'
+			];
+		}
 
+		return $allowed_block_types;
 	}
 
 	public function addMetaboxes() {

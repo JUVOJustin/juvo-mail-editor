@@ -49,7 +49,6 @@ class Password_Reset_Admin extends Mail_Generator {
 
 		$trigger = new Trigger( __( "Password Reset (Admin)", 'juvo-mail-editor' ), $this->getTrigger() );
 		$trigger
-			->setAlwaysSent( true )
 			->setSubject( sprintf( __( 'Password Reset for %s', 'juvo-mail-editor' ), "{{USERNAME}}" ) )
 			->setContent( $message )
 			->setRecipients( "{{ADMIN_EMAIL}}" )

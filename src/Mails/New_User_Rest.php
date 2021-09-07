@@ -48,7 +48,7 @@ class New_User_Rest extends Mail_Generator {
 
 		$message = sprintf( __( 'Username: %s' ), "{{USERNAME}}" ) . "\r\n\r\n";
 		$message .= __( 'To set your password, visit the following address:' ) . "\r\n\r\n";
-		$message .= "{{password_reset_link}}" . "\r\n";
+		$message .= "{{PASSWORD_RESET_LINK}}" . "\r\n";
 
 		$trigger = new Trigger( __( "New User Rest (User)", 'juvo-mail-editor' ), $this->getTrigger() );
 		$trigger

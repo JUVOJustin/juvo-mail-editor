@@ -35,6 +35,8 @@ abstract class Mail_Generator {
 
 	abstract public function getTrigger(): string;
 
+	abstract public function demoContext(): string;
+
 	/**
 	 * Utility function to auto add show_on_cb callback for trigger
 	 *

@@ -1,0 +1,1 @@
+tippy('[data-tippy-content]');

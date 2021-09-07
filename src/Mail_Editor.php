@@ -108,6 +108,7 @@ class Mail_Editor {
 		$this->loader->add_action( 'init', $pt, 'registerPostType' );
 		$this->loader->add_filter( 'allowed_block_types_all', $pt, 'limitBlocks', 10, 2 );
 		$this->loader->add_action( 'cmb2_admin_init', $pt, 'addMetaboxes' );
+		$this->loader->add_action( 'add_meta_boxes', $pt, 'info_metabox_output');
 
 		/**
 		 * Taxonomy

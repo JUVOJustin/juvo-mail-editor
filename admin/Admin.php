@@ -77,7 +77,9 @@ class Admin {
 		 */
 
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/ajax.js', array( 'jquery' ), null, true );
-
+		wp_enqueue_script( "popper", JUVO_MAIL_EDITOR_URL . 'node_modules/@popperjs/core/dist/umd/popper.min.js', array(), null, true );
+		wp_enqueue_script( "tippy", JUVO_MAIL_EDITOR_URL . 'node_modules/tippy.js/dist/tippy-bundle.umd.min.js', array( 'popper' ), null, true );
+		wp_enqueue_script( $this->plugin_name."_tippy-config", plugin_dir_url( __FILE__ ) . 'js/tippy-config.js', array( 'tippy' ), null, true );
 	}
 
 }

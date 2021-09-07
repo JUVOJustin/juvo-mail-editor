@@ -4,6 +4,8 @@
 namespace JUVO_MailEditor;
 
 
+use WP_Term;
+
 /**
  * Transportobject for mail trigger terms
  *

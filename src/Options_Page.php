@@ -16,7 +16,7 @@ class Options_Page {
 			'option_key'   => 'settings',
 			'parent_slug'  => 'edit.php?post_type=' . Mails_PT::POST_TYPE_NAME,
 			//'capability'      => 'post', // Cap required to view options-page.
-			'display_cb'   => [ $this, 'yourprefix_theme_options_page_output' ],
+			'display_cb'   => [ $this, 'juvo_options_page_output' ],
 		) );
 
 		$cmb->add_field( array(
@@ -33,7 +33,7 @@ class Options_Page {
 
 	}
 
-	function yourprefix_theme_options_page_output( $hookup ) {
+	function juvo_options_page_output( $hookup ) {
 		// Output custom markup for the options-page.
 		?>
 		<div class="wrap juvo-mail-editor cmb2-options-page option-<?php echo $hookup->option_key; ?>">

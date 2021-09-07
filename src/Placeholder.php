@@ -56,7 +56,18 @@ class Placeholder {
 		return $text;
 	}
 
-	private function getGlobalPlaceholders(): array {
+	public static function getDemoPlaceholder( string $context = null ) {
+
+		if ($context == "user") {
+			$context = wp_get_current_user();
+		}
+
+		$globalPlaceHolder = self::getInstance( $context )->getGlobalPlaceholders();
+
+		return $globalPlaceHolder;
+	}
+
+	public function getGlobalPlaceholders(): array {
 		return $this->globalPlaceholders;
 	}
 

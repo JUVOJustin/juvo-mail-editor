@@ -96,4 +96,36 @@ class Mails_PT {
 		apply_filters( "juvo_mail_editor_post_metabox", $cmb );
 	}
 
+	public function info_metabox_output() {
+		add_meta_box(
+			"mail-editor-info",
+			__( 'Placeholder', 'juvo-mail-editor' ),
+			function($post) {
+
+				$placeholder = [];
+
+				$triggers = get_the_terms( $post, Mail_Trigger_TAX::TAXONOMY_NAME );
+				if (!$triggers) {
+					echo "<strong>". __( 'You need to select a trigger first', 'juvo-mail-editor' ) . "</strong>";
+					return;
+				}
+
+				foreach($triggers as $trigger) {
+					$placeholder = $placeholder + Placeholder::getDemoPlaceholder("user");
+					$placeholder = $placeholder + get_term_meta( $trigger->term_id, Mail_Trigger_TAX::TAXONOMY_NAME . "_placeholders", true);
+				}
+
+				// ToDo implement copy on click
+				// Echo Placeholders
+				foreach($placeholder as $placeholder => $val) {
+					$tippy = $val ? "data-tippy-content='$val'" : null;
+					echo "<code $tippy>{{". strtoupper($placeholder)."}}</code>";
+				}
+			},
+			self::POST_TYPE_NAME,
+			'side'
+		);
+	}
+
+
 }

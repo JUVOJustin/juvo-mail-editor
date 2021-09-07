@@ -1,3 +1,13 @@
+#mail-editor-info .inside {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+#mail-editor-info .inside code {
+	margin: 2px;
+	font-size: 0.9em;
+}
+
 .juvo-mail-editor .trigger-mute ul {
 	columns: 2;
 	-webkit-columns: 2;

@@ -253,9 +253,7 @@ class Relay {
 		$pluginSettings = get_option( 'settings' );
 
 		if ( isset( $pluginSettings['trigger_mute'] ) ) {
-			$mutedTriggers = $pluginSettings['trigger_mute'];
-
-			return in_array( $trigger, $mutedTriggers );
+			return in_array( $trigger, $pluginSettings['trigger_mute'] );
 		}
 
 		return false;

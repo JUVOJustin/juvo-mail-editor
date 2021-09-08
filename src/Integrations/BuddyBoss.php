@@ -4,13 +4,16 @@ namespace JUVO_MailEditor\Integrations;
 
 class BuddyBoss {
 
-	public function useTemplate( string $content, string $trigger, $context ) {
+	public function useTemplate( array $args ): array {
 		if ( function_exists( 'bp_is_active' ) ) {
-			/** @phpstan-ignore-next-line */
-			return bp_email_core_wp_get_template( $content, $context );
+			// BoddyBoss might have already applied the template
+			if ( isset( $args["message"] ) && strpos( $args["message"], '<!DOCTYPE html>' ) === false ) {
+				/** @phpstan-ignore-next-line */
+				$args["message"] = bp_email_core_wp_get_template( $args["message"] );
+			}
 		}
 
-		return $content;
+		return $args;
 	}
 
 }

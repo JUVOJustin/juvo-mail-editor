@@ -168,8 +168,7 @@ class Mail_Editor {
 		/**
 		 * Integrations
 		 */
-		$this->loader->add_filter( "juvo_mail_editor_after_content_placeholder", new BuddyBoss(), "useTemplate", 10, 3 );
-
+		$this->loader->add_filter( "wp_mail", new BuddyBoss(), "useTemplate", 99, 1 );
 	}
 
 	/**

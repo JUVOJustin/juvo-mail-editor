@@ -10,6 +10,7 @@ use JUVO_MailEditor\Mails\New_User;
 use JUVO_MailEditor\Mails\New_User_Admin;
 use JUVO_MailEditor\Mails\New_User_Admin_Rest;
 use JUVO_MailEditor\Mails\New_User_Rest;
+use JUVO_MailEditor\Mails\Password_Changed;
 use JUVO_MailEditor\Mails\Password_Reset;
 use JUVO_MailEditor\Mails\Password_Reset_Admin;
 
@@ -152,8 +153,7 @@ class Mail_Editor {
 		$this->loader->add_filter( "juvo_mail_editor_trigger", $passwordReset, "registerTrigger" );
 		$this->loader->add_filter( "juvo_mail_editor_post_metabox", $passwordReset, "addCustomFields" );
 
-		$this->loader->add_filter( 'retrieve_password_message', $passwordReset, 'password_reset_email_message', 10, 4 );
-		$this->loader->add_filter( 'retrieve_password_title', $passwordReset, 'password_reset_email_subject', 10, 4 );
+		$this->loader->add_filter( 'retrieve_password_message', $passwordReset, 'password_changed_email', 10, 2 );
 
 		/**
 		 * Password Reset Admin
@@ -163,6 +163,15 @@ class Mail_Editor {
 		$this->loader->add_filter( "juvo_mail_editor_post_metabox", $passwordResetAdmin, "addCustomFields" );
 
 		$this->loader->add_filter( "retrieve_password_message", $passwordResetAdmin, "password_reset_email_admin", 99, 4 );
+
+		/**
+		 * Password Changed
+		 */
+		$passwordChanged = new Password_Changed();
+		$this->loader->add_filter( "juvo_mail_editor_trigger", $passwordChanged, "registerTrigger" );
+		$this->loader->add_filter( "juvo_mail_editor_post_metabox", $passwordChanged, "addCustomFields" );
+
+		$this->loader->add_filter( 'password_change_email', $passwordChanged, 'password_changed_email', 10, 2 );
 
 
 		/**

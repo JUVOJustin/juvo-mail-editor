@@ -251,9 +251,14 @@ class Relay {
 	 */
 	public static function triggerIsMuted( string $trigger ): bool {
 		$pluginSettings = get_option( 'settings' );
-		$mutedTriggers  = $pluginSettings['trigger_mute'];
 
-		return in_array( $trigger, $mutedTriggers );
+		if ( isset( $pluginSettings['trigger_mute'] ) ) {
+			$mutedTriggers = $pluginSettings['trigger_mute'];
+
+			return in_array( $trigger, $mutedTriggers );
+		}
+
+		return false;
 	}
 
 }

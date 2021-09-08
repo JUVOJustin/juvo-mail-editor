@@ -31,10 +31,14 @@ class New_User extends Mail_Generator {
 
 		$this->setPlaceholderValues( $user );
 
-		$relay            = new Relay( $this->getTrigger(), $this->placeholders, $user );
-		$email["to"]      = $relay->prepareRecipients();
-		$email["subject"] = $relay->prepareSubject();
-		$email["message"] = $relay->prepareContent();
+		$relay    = new Relay( $this->getTrigger(), $this->placeholders, $user );
+		$template = $relay->getPosts();
+
+		if ( ! empty( $template ) ) {
+			$email["to"]      = $relay->prepareRecipients( $template[0] );
+			$email["subject"] = $relay->prepareSubject( $template[0] );
+			$email["message"] = $relay->prepareContent( $template[0] );
+		}
 
 		return $email;
 	}

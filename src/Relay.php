@@ -49,6 +49,48 @@ class Relay {
 	}
 
 	/**
+	 * @return false|WP_Term
+	 */
+	private function setTerm() {
+		return get_term_by( "slug", $this->trigger, Mail_Trigger_TAX::TAXONOMY_NAME );
+	}
+
+	/**
+	 * @return WP_Post[]
+	 */
+	private function setPostsForTrigger(): array {
+
+		return get_posts( [
+			'post_type'   => Mails_PT::POST_TYPE_NAME,
+			'post_status' => 'publish',
+			'numberposts' => - 1,
+			'tax_query'   => [
+				[
+					'taxonomy' => Mail_Trigger_TAX::TAXONOMY_NAME,
+					'field'    => 'id',
+					'terms'    => $this->term
+				]
+			]
+		] );
+
+	}
+
+	/**
+	 * @param array $placeholders
+	 *
+	 * @return array
+	 */
+	public function preparePlaceholders( array $placeholders ): array {
+		$defaultPlaceholders = get_term_meta( $this->term->term_id, Mail_Trigger_TAX::TAXONOMY_NAME . "_placeholders", true );
+
+		if ( ! $defaultPlaceholders ) {
+			return $defaultPlaceholders;
+		}
+
+		return $placeholders + $defaultPlaceholders;
+	}
+
+	/**
 	 * Sends mails for all posts that are associated with the trigger.
 	 * To send mails even if not post is associated set the "alwaysSend" flag.
 	 *
@@ -98,51 +140,21 @@ class Relay {
 	}
 
 	/**
-	 * @return array
+	 * Checks if the given trigger is globally muted.
+	 * Might be called manually if the mail is not send using the 'Relay' class but eg. with a filter.
+	 *
+	 * @param string $trigger
+	 *
+	 * @return bool
 	 */
-	public function getPlaceholders(): array {
-		return $this->placeholders;
-	}
+	public static function triggerIsMuted( string $trigger ): bool {
+		$pluginSettings = get_option( 'settings' );
 
-	/**
-	 * @return WP_Term
-	 */
-	public function getTerm() {
-		return $this->term;
-	}
+		if ( isset( $pluginSettings['trigger_mute'] ) ) {
+			return in_array( $trigger, $pluginSettings['trigger_mute'] );
+		}
 
-	/**
-	 * @return WP_Post[]
-	 */
-	public function getPosts(): array {
-		return $this->posts;
-	}
-
-	/**
-	 * @return WP_Post[]
-	 */
-	private function setPostsForTrigger(): array {
-
-		return get_posts( [
-			'post_type'   => Mails_PT::POST_TYPE_NAME,
-			'post_status' => 'publish',
-			'numberposts' => - 1,
-			'tax_query'   => [
-				[
-					'taxonomy' => Mail_Trigger_TAX::TAXONOMY_NAME,
-					'field'    => 'id',
-					'terms'    => $this->term
-				]
-			]
-		] );
-
-	}
-
-	/**
-	 * @return false|WP_Term
-	 */
-	private function setTerm() {
-		return get_term_by( "slug", $this->trigger, Mail_Trigger_TAX::TAXONOMY_NAME );
+		return false;
 	}
 
 	/**
@@ -167,9 +179,21 @@ class Relay {
 		$content = Placeholder::replacePlaceholder( $this->placeholders, $content, $this->context );
 		$content = apply_filters( "juvo_mail_editor_after_content_placeholder", $content, $this->trigger, $this->context );
 
-		$this->setContentType( $content );
+		$content = $this->setContentType( $content );
 
 		return $content;
+	}
+
+	public function setContentType( string $message ): string {
+
+		$type    = "text/html";
+		$message = wpautop( $message );
+
+		add_filter( 'wp_mail_content_type', function( $content_type ) use ( $type ) {
+			return $type;
+		}, 10 );
+
+		return $message;
 	}
 
 	/**
@@ -211,54 +235,24 @@ class Relay {
 	}
 
 	/**
-	 * @param array $placeholders
-	 *
 	 * @return array
 	 */
-	public function preparePlaceholders( array $placeholders ): array {
-		$defaultPlaceholders = get_term_meta( $this->term->term_id, Mail_Trigger_TAX::TAXONOMY_NAME . "_placeholders", true );
-
-		if ( ! $defaultPlaceholders ) {
-			return $defaultPlaceholders;
-		}
-
-		return $placeholders + $defaultPlaceholders;
-	}
-
-	public function setContentType( string $message ): string {
-
-		$type = 'text/plain';
-
-		if ( $message != strip_tags( $message ) ) {
-			$type    = "text/html";
-			$message = wpautop( $message );
-		}
-
-		add_filter( 'wp_mail_content_type', function( $content_type ) use ( $type ) {
-			return $type;
-		}, 10 );
-
-		return $message;
+	public function getPlaceholders(): array {
+		return $this->placeholders;
 	}
 
 	/**
-	 * Checks if the given trigger is globally muted.
-	 * Might be called manually if the mail is not send using the 'Relay' class but eg. with a filter.
-	 *
-	 * @param string $trigger
-	 *
-	 * @return bool
+	 * @return WP_Term
 	 */
-	public static function triggerIsMuted( string $trigger ): bool {
-		$pluginSettings = get_option( 'settings' );
+	public function getTerm() {
+		return $this->term;
+	}
 
-		if ( isset( $pluginSettings['trigger_mute'] ) ) {
-			$mutedTriggers = $pluginSettings['trigger_mute'];
-
-			return in_array( $trigger, $mutedTriggers );
-		}
-
-		return false;
+	/**
+	 * @return WP_Post[]
+	 */
+	public function getPosts(): array {
+		return $this->posts;
 	}
 
 }

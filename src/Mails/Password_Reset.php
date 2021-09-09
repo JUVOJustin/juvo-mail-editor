@@ -18,23 +18,22 @@ class Password_Reset extends Mail_Generator {
 		"PASSWORD_RESET_LINK" => "",
 	];
 
+	/**
+	 * @param string $message
+	 * @param string $key
+	 * @param string $user_login
+	 * @param WP_User $user
+	 *
+	 * @return string Empty string to prevent default wordpress mail from being sent
+	 */
 	function password_reset_email_message( string $message, string $key, string $user_login, WP_User $user ): string {
-
-		// Add Muted Capability
-		if ( Relay::triggerIsMuted( $this->getTrigger() ) ) {
-			return "";
-		}
 
 		$this->setPlaceholderValues( $user, [ "key" => $key ] );
 
-		$relay    = new Relay( $this->getTrigger(), $this->placeholders, $user );
-		$template = $relay->getPosts();
+		$relay = new Relay( $this->getTrigger(), $this->placeholders, $user );
+		$relay->sendMails();
 
-		if ( ! empty( $template ) ) {
-			return $relay->prepareContent( $template[0] );
-		} else {
-			return $relay->prepareContent();
-		}
+		return "";
 
 	}
 
@@ -46,20 +45,6 @@ class Password_Reset extends Mail_Generator {
 
 	public function getTrigger(): string {
 		return "password_reset";
-	}
-
-	function password_reset_email_subject( string $title, string $user_login, WP_User $user ): string {
-		$this->setPlaceholderValues( $user );
-		$relay    = new Relay( $this->getTrigger(), $this->placeholders, $user );
-		$template = $relay->getPosts();
-
-		if ( ! empty( $template ) ) {
-			return $relay->prepareSubject( $template[0] );
-		} else {
-			return $relay->prepareSubject();
-		}
-
-
 	}
 
 	public function addCustomFields( CMB2 $cmb ): CMB2 {

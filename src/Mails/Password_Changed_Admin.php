@@ -12,7 +12,7 @@ use JUVO_MailEditor\Relay;
 use JUVO_MailEditor\Trigger;
 use WP_User;
 
-class Password_Changed extends Mail_Generator {
+class Password_Changed_Admin extends Mail_Generator {
 
 	private $placeholders = [
 	];
@@ -20,13 +20,11 @@ class Password_Changed extends Mail_Generator {
 	/**
 	 *
 	 * @param array $email
-	 * @param array $user
+	 * @param WP_User $user
 	 *
 	 * @return array
 	 */
-	public function password_changed_email( array $email, array $user ): array {
-
-		$user = get_user_by( 'id', $user['ID'] );
+	public function password_changed_admin_email( array $email, WP_User $user ): array {
 
 		$this->setPlaceholderValues( $user );
 
@@ -36,11 +34,11 @@ class Password_Changed extends Mail_Generator {
 		return [];
 	}
 
-	public function getTrigger(): string {
-		return "password_changed";
+	protected function setPlaceholderValues( WP_User $user, array $options = [] ): void {
 	}
 
-	protected function setPlaceholderValues( WP_User $user, array $options = [] ): void {
+	public function getTrigger(): string {
+		return "password_changed_admin";
 	}
 
 	public function addCustomFields( CMB2 $cmb ): CMB2 {
@@ -58,33 +56,9 @@ class Password_Changed extends Mail_Generator {
 	 */
 	public function registerTrigger( array $triggers ): array {
 
-		$message = __(
-			'Hi ###USERNAME###,
+		$message = sprintf( __( 'Password changed for user: %s' ), '{{USERNAME}}' ) . "\r\n";
 
-This notice confirms that your password was changed on ###SITENAME###.
-
-If you did not change your password, please contact the Site Administrator at
-###ADMIN_EMAIL###
-
-This email has been sent to ###EMAIL###
-
-Regards,
-All at ###SITENAME###
-###SITEURL###'
-		);
-
-		$message = str_replace( [
-			'###USERNAME###',
-			'###SITENAME###',
-			'###ADMIN_EMAIL###',
-			'###SITEURL###',
-			'###EMAIL###'
-		],
-			[ '{{USERNAME}}', '{{SITE_NAME}}', '{{ADMIN_EMAIL}}', '{{WPURL}}', '{{USER_EMAIL}}' ],
-			$message
-		);
-
-		$trigger = new Trigger( __( "Password Changed (User)", 'juvo-mail-editor' ), $this->getTrigger() );
+		$trigger = new Trigger( __( "Password Changed (Admin)", 'juvo-mail-editor' ), $this->getTrigger() );
 		$trigger
 			->setAlwaysSent( true )
 			->setSubject( sprintf( __( "%s Password Changed" ), "{{SITE_NAME}}" ) )

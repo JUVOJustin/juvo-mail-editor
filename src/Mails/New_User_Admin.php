@@ -14,23 +14,12 @@ class New_User_Admin extends Mail_Generator {
 
 	function new_user_notification_email_admin( array $email, WP_User $user ): array {
 
-		// Add Muted Capability
-		if ( Relay::triggerIsMuted( $this->getTrigger() ) ) {
-			return [];
-		}
-
 		$this->setPlaceholderValues( $user );
 
-		$relay    = new Relay( $this->getTrigger(), $this->placeholders, $user );
-		$template = $relay->getPosts();
+		$relay = new Relay( $this->getTrigger(), $this->placeholders, $user );
+		$relay->sendMails();
 
-		if ( ! empty( $template ) ) {
-			$email["to"]      = $relay->prepareRecipients( $template[0] );
-			$email["subject"] = $relay->prepareSubject( $template[0] );
-			$email["message"] = $relay->prepareContent( $template[0] );
-		}
-
-		return $email;
+		return [];
 	}
 
 	protected function setPlaceholderValues( WP_User $user ): void {

@@ -31,7 +31,7 @@ class Password_Reset_Admin extends Mail_Generator {
 		$relay = new Relay( $this->getTrigger(), $this->placeholders, $user );
 		$relay->sendMails();
 
-		return $message;
+		return "";
 	}
 
 	protected function setPlaceholderValues( WP_User $user ): void {

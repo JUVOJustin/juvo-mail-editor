@@ -1,5 +1,5 @@
 # JUVO Mail Editor
-[![Release](https://github.com/JUVOJustin/juvo-mail-editor/actions/workflows/release.yml/badge.svg?branch=master)](https://github.com/JUVOJustin/juvo-mail-editor/actions/workflows/release.yml)
+[![Actions Status](https://github.com/JUVOJustin/juvo-mail-editor/workflows/Release/badge.svg)](https://github.com/JUVOJustin/juvo-mail-editor/actions/workflows/release.yml)
 [![PHP Test/Analyse](https://github.com/JUVOJustin/juvo-mail-editor/actions/workflows/test-analyse.yml/badge.svg?branch=master)](https://github.com/JUVOJustin/juvo-mail-editor/actions/workflows/test-analyse.yml)
 
 With JUVO Mail Editor you can edit emails triggered by WordPress using the Gutenberg Editor. By using placeholders, the emails become highly dynamic.

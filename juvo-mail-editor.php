@@ -61,8 +61,18 @@ register_deactivation_hook( __FILE__, 'deactivate_juvo_mail_editor' );
  */
 function run_juvo_mail_editor() {
 
-	$plugin = new Mail_Editor();
-	$plugin->run();
+	if ( !defined('ABSPATH') ) {
+		return;
+	}
+
+	// Make sure only loaded once
+	if ( class_exists('\WP') && !defined('JUVO_MAIL_EDITOR_LOADED') ) {
+
+		$plugin = new Mail_Editor();
+		$plugin->run();
+
+		define('JUVO_MAIL_EDITOR_LOADED', true);
+	}
 
 }
 

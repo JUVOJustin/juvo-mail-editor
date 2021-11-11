@@ -24,9 +24,6 @@
     "lipemat/phpstan-wordpress": "^1.5"
   },
   "autoload": {
-    "files": [
-      "vendor/cmb2/cmb2/init.php"
-    ],
     "psr-4": {
       "JUVO_MailEditor\\": "src/",
       "JUVO_MailEditor\\Admin\\": "admin/"

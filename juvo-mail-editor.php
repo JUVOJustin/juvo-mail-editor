@@ -31,6 +31,12 @@ define( 'JUVO_MAIL_EDITOR_URL', plugin_dir_url( __FILE__ ) );
 require plugin_dir_path( __FILE__ ) . 'vendor/autoload.php';
 
 /**
+ * Load cmb2 manually and not by composer because file autoloading does not work
+ * when used as sub-dependency
+ */
+require_once plugin_dir_path( __FILE__ ) . 'vendor/cmb2/cmb2/init.php';
+
+/**
  * The code that runs during plugin activation.
  * This action is documented in includes/class-plugin-name-activator.php
  */

@@ -4,41 +4,16 @@
 namespace JUVO_MailEditor;
 
 
+use Timber\Term;
+use Timber\Timber;
+use Timber\User;
+use WP_Post;
+use WP_Term;
 use WP_User;
 
 class Placeholder {
 
-	private static $instance = null;
-	private $context;
-
-	private $globalPlaceholders = [];
-
-	private function __construct( $context ) {
-		$this->context = $context;
-		$this->setGlobalPlaceholders();
-	}
-
-	private function setGlobalPlaceholders() {
-
-		if ( $this->context instanceof WP_User ) {
-			$this->globalPlaceholders["FIRST_NAME"]             = $this->context->first_name;
-			$this->globalPlaceholders["LAST_NAME"]              = $this->context->last_name;
-			$this->globalPlaceholders["USERNAME"]               = $this->context->nickname;
-			$this->globalPlaceholders["USERID"]                 = $this->context->ID;
-			$this->globalPlaceholders["FULLNAME_ELSE_USERNAME"] = empty( $this->context->first_name ) && empty( $user->last_name ) ? $this->context->nickname : $this->context->first_name . " " . $this->context->last_name;
-			$this->globalPlaceholders["USER_EMAIL"]             = $this->context->user_email;
-		}
-
-		$this->globalPlaceholders["SITE_NAME"]        = get_bloginfo( "name" );
-		$this->globalPlaceholders["SITE_DESCRIPTION"] = get_bloginfo( "description" );
-		$this->globalPlaceholders["ADMIN_EMAIL"]      = get_bloginfo( "admin_email" );
-		$this->globalPlaceholders["WPURL"]            = get_bloginfo( "wpurl" );
-	}
-
-	public static function replacePlaceholder( array $placeholder, string $text, $context = null ) {
-
-		$globalPlaceHolder = self::getInstance( $context )->getGlobalPlaceholders();
-		$placeholder       = $placeholder + $globalPlaceHolder;
+	public static function replacePlaceholder( array $placeholder, string $text, array $context = [] ) {
 
 		foreach ( $placeholder as $key => $value ) {
 
@@ -50,22 +25,50 @@ class Placeholder {
 				$placeholder[ $key ] = is_array( $value ) ? "" : $value;
 			}
 
-			$text = str_replace( '{{' . strtoupper( $key ) . '}}', $value, $text );
+			$text = str_replace( '{{' . $key . '}}', $value, $text ); // Without space before brackets
+			$text = str_replace( '{{ ' . $key . ' }}', $value, $text );
+		}
+
+		// Parse context for timber
+		$renderContext = Timber::context();
+		apply_filters( 'juvo_mail_editor_timber_context', $renderContext );
+
+		foreach ( $context as $key => $item ) {
+			if ( $item instanceof WP_User ) {
+				$renderContext[ $key ] = new User( $item );
+			} elseif ( $item instanceof WP_Post ) {
+				$renderContext[ $key ] = Timber::get_post( $item->ID );
+			} elseif ( $item instanceof WP_Term ) {
+				$renderContext[ $key ] = new Term( $item->term_id );
+			} else {
+				$renderContext[ $key ] = $item;
+			}
+		}
+
+		// Parse text with timber/twig to add logic and advanced placeholder support
+		if ( $compiled = Timber::compile_string( $text, $renderContext ) ) {
+			return $compiled;
 		}
 
 		return $text;
 	}
 
-	private function getGlobalPlaceholders(): array {
-		return $this->globalPlaceholders;
+	/**
+	 * Remove some of the default context variables timber sets
+	 *
+	 * @param array $context
+	 *
+	 * @return array
+	 */
+	public function filterTimberContext( array $context ): array {
+
+		unset( $context["body_class"] );
+		unset( $context["request"] );
+		unset( $context["wp_head"] );
+		unset( $context["wp_footer"] );
+		unset( $context["posts"] );
+
+		return $context;
+
 	}
-
-	private static function getInstance( $context = null ) {
-		if ( self::$instance == null ) {
-			self::$instance = new static( $context );
-		}
-
-		return self::$instance;
-	}
-
 }

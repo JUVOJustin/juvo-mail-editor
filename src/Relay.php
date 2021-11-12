@@ -7,7 +7,6 @@ namespace JUVO_MailEditor;
 use JUVO_MailEditor\Mails\Generic;
 use WP_Post;
 use WP_Term;
-use WP_User;
 
 class Relay {
 
@@ -38,9 +37,9 @@ class Relay {
 	 *
 	 * @param string $trigger
 	 * @param array $placeholders
-	 * @param mixed $context
+	 * @param array $context
 	 */
-	public function __construct( string $trigger, array $placeholders, $context = null ) {
+	public function __construct( string $trigger, array $placeholders, array $context = [] ) {
 		$this->trigger      = $trigger;
 		$this->context      = $context;
 		$this->term         = $this->setTerm();
@@ -224,12 +223,8 @@ class Relay {
 			$recipients = get_term_meta( $this->term->term_id, Mail_Trigger_TAX::TAXONOMY_NAME . "_default_recipients", true );
 		}
 
-		$recipients   = apply_filters( "juvo_mail_editor_before_recipient_placeholder", $recipients, $this->trigger, $this->context );
-		$placeholders = $this->placeholders;
-		if ( $this->context instanceof WP_User ) {
-			$placeholders["context"] = $this->context->user_email;
-		}
-		$recipients = Placeholder::replacePlaceholder( $placeholders, $recipients, $this->context );
+		$recipients = apply_filters( "juvo_mail_editor_before_recipient_placeholder", $recipients, $this->trigger, $this->context );
+		$recipients = Placeholder::replacePlaceholder( $this->placeholders, $recipients, $this->context );
 
 		return apply_filters( "juvo_mail_editor_after_recipient_placeholder", $recipients, $this->trigger, $this->context );
 	}

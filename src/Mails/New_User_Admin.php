@@ -48,16 +48,16 @@ class New_User_Admin extends Mail_Generator {
 	 */
 	public function registerTrigger( array $triggers ): array {
 
-		$message = sprintf( __( 'New user registration on your site %s:' ), "{{SITE_NAME}}" ) . "\r\n\r\n";
-		$message .= sprintf( __( 'Username: %s' ), "{{USERNAME}}" ) . "\r\n\r\n";
-		$message .= sprintf( __( 'Email: %s' ), "{{USER_EMAIL}}" ) . "\r\n";
+		$message = sprintf( __( 'New user registration on your site %s:' ), "{{site.name}}" ) . "\r\n\r\n";
+		$message .= sprintf( __( 'Username: %s' ), "{{user.name}}" ) . "\r\n\r\n";
+		$message .= sprintf( __( 'Email: %s' ), "{{user.user_email}}" ) . "\r\n";
 
 		$trigger = new Trigger( __( "New User (Admin)", 'juvo-mail-editor' ), $this->getTrigger() );
 		$trigger
 			->setAlwaysSent( true )
-			->setSubject( sprintf( __( "%s New User Registration" ), "{{SITE_NAME}}" ) )
+			->setSubject( sprintf( __( "%s New User Registration" ), "{{site.name}}" ) )
 			->setContent( $message )
-			->setRecipients( "{{ADMIN_EMAIL}}" )
+			->setRecipients( "{{site.admin_email}}" )
 			->setPlaceholders( $this->placeholders );
 
 		$triggers[] = $trigger;

@@ -15,7 +15,7 @@ use WP_User;
 class Password_Reset extends Mail_Generator {
 
 	private $placeholders = [
-		"PASSWORD_RESET_LINK" => "",
+		"password_reset_link" => "",
 	];
 
 	/**
@@ -30,7 +30,7 @@ class Password_Reset extends Mail_Generator {
 
 		$this->setPlaceholderValues( $user, [ "key" => $key ] );
 
-		$relay = new Relay( $this->getTrigger(), $this->placeholders, $user );
+		$relay = new Relay( $this->getTrigger(), $this->placeholders, [ "user" => $user ] );
 		$relay->sendMails();
 
 		return "";
@@ -63,8 +63,8 @@ class Password_Reset extends Mail_Generator {
 	public function registerTrigger( array $triggers ): array {
 
 		$message = __( 'Someone has requested a password reset for the following account:' ) . "\r\n\r\n";
-		$message .= sprintf( __( 'Site Name: %s' ), "{{SITE_NAME}}" ) . "\r\n\r\n";
-		$message .= sprintf( __( 'Username: %s' ), "{{USERNAME}}" ) . "\r\n\r\n";
+		$message .= sprintf( __( 'Site Name: %s' ), "{{ site.name }}" ) . "\r\n\r\n";
+		$message .= sprintf( __( 'Username: %s' ), "{{ user.name }}" ) . "\r\n\r\n";
 		$message .= __( 'If this was a mistake, ignore this email and nothing will happen.' ) . "\r\n\r\n";
 		$message .= __( 'To reset your password, visit the following address:' ) . "\r\n\r\n";
 		$message .= __( '{{PASSWORD_RESET_LINK}}' ) . "\r\n\r\n";
@@ -74,7 +74,7 @@ class Password_Reset extends Mail_Generator {
 			->setAlwaysSent( true )
 			->setSubject( __( "Password Reset", 'juvo-mail-editor' ) )
 			->setContent( $message )
-			->setRecipients( "{{CONTEXT}}" )
+			->setRecipients( "{{ user.user_email }}" )
 			->setPlaceholders( $this->placeholders );
 
 		$triggers[] = $trigger;

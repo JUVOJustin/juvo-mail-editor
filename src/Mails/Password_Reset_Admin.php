@@ -28,7 +28,7 @@ class Password_Reset_Admin extends Mail_Generator {
 
 		$this->setPlaceholderValues( $user );
 
-		$relay = new Relay( $this->getTrigger(), $this->placeholders, $user );
+		$relay = new Relay( $this->getTrigger(), $this->placeholders, [ "user" => $user ] );
 		$relay->sendMails();
 
 		return "";
@@ -44,15 +44,15 @@ class Password_Reset_Admin extends Mail_Generator {
 	public function registerTrigger( array $triggers ): array {
 
 		$message = __( 'Someone has requested a password reset for the following account:' ) . "\r\n\r\n";
-		$message .= sprintf( __( 'Site Name: %s' ), "{{SITE_NAME}}" ) . "\r\n\r\n";
-		$message .= sprintf( __( 'Username: %s' ), "{{USERNAME}}" ) . "\r\n\r\n";
+		$message .= sprintf( __( 'Site Name: %s' ), "{{ site.name}}" ) . "\r\n\r\n";
+		$message .= sprintf( __( 'Username: %s' ), "{{ user.name }}" ) . "\r\n\r\n";
 
 		$trigger = new Trigger( __( "Password Reset (Admin)", 'juvo-mail-editor' ), $this->getTrigger() );
 		$trigger
 			->setAlwaysSent( true )
-			->setSubject( sprintf( __( 'Password Reset for %s', 'juvo-mail-editor' ), "{{USERNAME}}" ) )
+			->setSubject( sprintf( __( 'Password Reset for %s', 'juvo-mail-editor' ), "{{ user.name }}" ) )
 			->setContent( $message )
-			->setRecipients( "{{ADMIN_EMAIL}}" )
+			->setRecipients( "{{ site.admin_email}}" )
 			->setPlaceholders( $this->placeholders );
 
 		$triggers[] = $trigger;

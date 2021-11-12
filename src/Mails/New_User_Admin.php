@@ -16,7 +16,7 @@ class New_User_Admin extends Mail_Generator {
 
 		$this->setPlaceholderValues( $user );
 
-		$relay = new Relay( $this->getTrigger(), $this->placeholders, $user );
+		$relay = new Relay( $this->getTrigger(), $this->placeholders, [ "user" => $user ] );
 		$relay->sendMails();
 
 		return [];

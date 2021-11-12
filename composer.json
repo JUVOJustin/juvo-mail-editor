@@ -6,7 +6,6 @@
     "mail",
     "editor"
   ],
-  "type": "wordpress-plugin",
   "license": "GPL-3.0-or-later",
   "support": {
     "issues": "https://github.com/JUVOJustin/juvo-mail-editor/issues"

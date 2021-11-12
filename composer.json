@@ -31,7 +31,8 @@
   },
   "require": {
     "cmb2/cmb2": "^2.9",
-    "php": ">=7.2.0"
+    "php": ">=7.2.0",
+    "timber/timber": "^1.19"
   },
   "scripts": {
     "static-analyse": "@php ./vendor/bin/phpstan analyse src",

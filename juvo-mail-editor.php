@@ -10,6 +10,7 @@
  * Version:         2.0.9
  */
 
+use Composer\Autoload\ClassLoader;
 use JUVO_MailEditor\Activator;
 use JUVO_MailEditor\Deactivator;
 use JUVO_MailEditor\Mail_Editor;
@@ -27,8 +28,22 @@ define( 'JUVO_MAIL_EDITOR_URL', plugin_dir_url( __FILE__ ) );
 
 /**
  * Use Composer PSR-4 Autoloading
+ * Add file check to avoid autoloading if included as sub-package
  */
-require plugin_dir_path( __FILE__ ) . 'vendor/autoload.php';
+if ( file_exists( plugin_dir_path( __FILE__ ) . 'vendor/autoload.php' ) ) {
+	require plugin_dir_path( __FILE__ ) . 'vendor/autoload.php';
+}
+
+/**
+ * Load cmb2 manually and not by composer because file autoloading does not work
+ * when used as sub-package. Reflection Class is used to determine the path to
+ * the vendor folder no matter is used as standalone plugin or as dependency.
+ *
+ * Found: https://stackoverflow.com/questions/37925437/how-to-get-the-root-package-path-using-composer/45364136
+ */
+$reflection = new ReflectionClass( ClassLoader::class );
+$vendorDir  = dirname( $reflection->getFileName(), 2 );
+require_once $vendorDir . '/cmb2/cmb2/init.php';
 
 /**
  * The code that runs during plugin activation.

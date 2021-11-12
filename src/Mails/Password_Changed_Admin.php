@@ -28,7 +28,7 @@ class Password_Changed_Admin extends Mail_Generator {
 
 		$this->setPlaceholderValues( $user );
 
-		$relay = new Relay( $this->getTrigger(), $this->placeholders, $user );
+		$relay = new Relay( $this->getTrigger(), $this->placeholders, [ "user" => $user ] );
 		$relay->sendMails();
 
 		return [];
@@ -56,14 +56,14 @@ class Password_Changed_Admin extends Mail_Generator {
 	 */
 	public function registerTrigger( array $triggers ): array {
 
-		$message = sprintf( __( 'Password changed for user: %s' ), '{{USERNAME}}' ) . "\r\n";
+		$message = sprintf( __( 'Password changed for user: %s' ), '{{user.name}}' ) . "\r\n";
 
 		$trigger = new Trigger( __( "Password Changed (Admin)", 'juvo-mail-editor' ), $this->getTrigger() );
 		$trigger
 			->setAlwaysSent( true )
-			->setSubject( sprintf( __( "%s Password Changed" ), "{{SITE_NAME}}" ) )
+			->setSubject( sprintf( __( "%s Password Changed" ), "{{site.name}}" ) )
 			->setContent( $message )
-			->setRecipients( "{{CONTEXT}}" )
+			->setRecipients( "{{site.admin_email}}" )
 			->setPlaceholders( $this->placeholders );
 
 		$triggers[] = $trigger;

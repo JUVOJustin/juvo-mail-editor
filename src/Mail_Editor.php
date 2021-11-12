@@ -120,6 +120,11 @@ class Mail_Editor {
 		$this->loader->add_action( 'cmb2_admin_init', $tax, 'addMetaboxes' );
 
 		/**
+		 * Placeholders
+		 */
+		$this->loader->add_filter( "juvo_mail_editor_timber_context", new Placeholder(), "filterTimberContext" );
+
+		/**
 		 * New User Notification for enduser
 		 */
 		$newUser = new New_User();

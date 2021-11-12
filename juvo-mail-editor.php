@@ -46,12 +46,6 @@ $vendorDir  = dirname( $reflection->getFileName(), 2 );
 require_once $vendorDir . '/cmb2/cmb2/init.php';
 
 /**
- * Load cmb2 manually and not by composer because file autoloading does not work
- * when used as sub-dependency
- */
-require_once plugin_dir_path( __FILE__ ) . 'vendor/cmb2/cmb2/init.php';
-
-/**
  * The code that runs during plugin activation.
  * This action is documented in includes/class-plugin-name-activator.php
  */

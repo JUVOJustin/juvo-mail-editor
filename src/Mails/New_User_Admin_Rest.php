@@ -5,30 +5,8 @@ namespace JUVO_MailEditor\Mails;
 use CMB2;
 use JUVO_MailEditor\Mail_Generator;
 use JUVO_MailEditor\Relay;
-use JUVO_MailEditor\Trigger;
-use WP_User;
 
 class New_User_Admin_Rest extends Mail_Generator {
-
-	private $placeholders = [];
-
-	function new_user_notification_email_admin( WP_User $user ) {
-
-		$this->setPlaceholderValues( $user );
-
-		$relay = new Relay( $this->getTrigger(), $this->placeholders, [ "user" => $user ] );
-		$relay->sendMails();
-	}
-
-	protected function setPlaceholderValues( WP_User $user ): void {
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getTrigger(): string {
-		return "new_user_admin_rest";
-	}
 
 	/**
 	 * @param CMB2 $cmb
@@ -39,27 +17,61 @@ class New_User_Admin_Rest extends Mail_Generator {
 		return $cmb;
 	}
 
-	/**
-	 * @param array $triggers
-	 *
-	 * @return Trigger[]
-	 */
-	public function registerTrigger( array $triggers ): array {
+	public function send( ...$params ) {
+		list( $user ) = $params;
 
+		$placeholders = $this->getPlaceholderValues();
+
+		$relay = new Relay( $this->getTrigger(), $placeholders, [ "user" => $user ] );
+		$relay->sendMails();
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	protected function getPlaceholderValues(): array {
+		return [];
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getTrigger(): string {
+		return "new_user_admin_rest";
+	}
+
+	public function getSubject(): string {
+		return sprintf( __( "%s New User Registration" ), "{{site.name}}" );
+	}
+
+	public function getMessage(): string {
 		$message = sprintf( __( 'New user registration on your site %s:' ), "{{site.name}}" ) . "\r\n\r\n";
 		$message .= sprintf( __( 'Username: %s' ), "{{user.name}}" ) . "\r\n\r\n";
 		$message .= sprintf( __( 'Email: %s' ), "{{user.user_email}}" ) . "\r\n";
 
-		$trigger = new Trigger( __( "New User Rest (Admin)", 'juvo-mail-editor' ), $this->getTrigger() );
-		$trigger
-			->setAlwaysSent( false )
-			->setSubject( sprintf( __( "%s New User Registration" ), "{{site.name}}" ) )
-			->setContent( $message )
-			->setRecipients( "{{site.admin_email}}" )
-			->setPlaceholders( $this->placeholders );
+		return $message;
+	}
 
-		$triggers[] = $trigger;
+	public function getRecipient(): string {
+		return "{{site.admin_email}}";
+	}
 
-		return $triggers;
+	protected function getName(): string {
+		return "New User Rest (Admin)";
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function getDefaultPlaceholder(): array {
+		return [];
+	}
+
+	public function getAlwaysSent(): bool {
+		return false;
+	}
+
+	public function getLanguage( string $language, array $context ): string {
+		return $language;
 	}
 }

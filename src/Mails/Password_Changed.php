@@ -9,38 +9,12 @@ use JUVO_MailEditor\Mail_Generator;
 use JUVO_MailEditor\Mail_Trigger_TAX;
 use JUVO_MailEditor\Mails_PT;
 use JUVO_MailEditor\Relay;
-use JUVO_MailEditor\Trigger;
 use WP_User;
 
 class Password_Changed extends Mail_Generator {
 
-	private $placeholders = [
-	];
-
-	/**
-	 *
-	 * @param array $email
-	 * @param array $user
-	 *
-	 * @return array
-	 */
-	public function password_changed_email( array $email, array $user ): array {
-
-		$user = get_user_by( 'id', $user['ID'] );
-
-		$this->setPlaceholderValues( $user );
-
-		$relay = new Relay( $this->getTrigger(), $this->placeholders, [ "user" => $user ] );
-		$relay->sendMails();
-
-		return [];
-	}
-
 	public function getTrigger(): string {
 		return "password_changed";
-	}
-
-	protected function setPlaceholderValues( WP_User $user, array $options = [] ): void {
 	}
 
 	public function addCustomFields( CMB2 $cmb ): CMB2 {
@@ -51,13 +25,11 @@ class Password_Changed extends Mail_Generator {
 		return $cmb;
 	}
 
-	/**
-	 * @param array $triggers
-	 *
-	 * @return Trigger[]
-	 */
-	public function registerTrigger( array $triggers ): array {
+	function getSubject(): string {
+		return sprintf( __( "%s Password Changed" ), "{{site.name}}" );
+	}
 
+	function getMessage(): string {
 		$message = __(
 			'Hi ###USERNAME###,
 
@@ -84,17 +56,52 @@ All at ###SITENAME###
 			$message
 		);
 
-		$trigger = new Trigger( __( "Password Changed (User)", 'juvo-mail-editor' ), $this->getTrigger() );
-		$trigger
-			->setAlwaysSent( true )
-			->setSubject( sprintf( __( "%s Password Changed" ), "{{site.name}}" ) )
-			->setContent( $message )
-			->setRecipients( "{{user.user_email}}" )
-			->setPlaceholders( $this->placeholders );
+		return $message;
+	}
 
-		$triggers[] = $trigger;
+	function getRecipient(): string {
+		return "{{user.user_email}}";
+	}
 
-		return $triggers;
+	public function send( ...$params ) {
+		list( $email, $user ) = $params;
 
+		$placeholders = $this->getPlaceholderValues();
+
+		$relay = new Relay( $this->getTrigger(), $placeholders, [ "user" => $user ] );
+		$relay->sendMails();
+
+		return [];
+	}
+
+	protected function getName(): string {
+		return "Password Changed (User)";
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function getDefaultPlaceholder(): array {
+		return [];
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	protected function getPlaceholderValues(): array {
+		return [];
+	}
+
+	public function getAlwaysSent(): bool {
+		return true;
+	}
+
+	public function getLanguage( string $language, array $context ): string {
+
+		if ( isset( $context["user"] ) && $context["user"] instanceof WP_User ) {
+			return get_user_locale( $context["user"]->ID );
+		}
+
+		return $language;
 	}
 }

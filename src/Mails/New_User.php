@@ -5,62 +5,14 @@ namespace JUVO_MailEditor\Mails;
 use CMB2;
 use JUVO_MailEditor\Mail_Generator;
 use JUVO_MailEditor\Relay;
-use JUVO_MailEditor\Trigger;
 use WP_User;
 
 class New_User extends Mail_Generator {
 
-	private $placeholders = [
-		"password_reset_link" => ""
-	];
+	protected WP_User $user;
 
-	/**
-	 * Callback for wordpresss native user trigger
-	 *
-	 * @param array $email
-	 * @param WP_User $user
-	 *
-	 * @return array
-	 */
-	public function new_user_notification_email( array $email, WP_User $user ): array {
-
-		$this->setPlaceholderValues( $user );
-
-		$relay = new Relay( $this->getTrigger(), $this->placeholders, [ "user" => $user ] );
-		$relay->sendMails();
-
-		return [];
-	}
-
-	protected function setPlaceholderValues( WP_User $user ): void {
-		$adt_rp_key                                = get_password_reset_key( $user );
-		$user_login                                = $user->user_login;
-		$this->placeholders["password_reset_link"] = '<a href="' . network_site_url( "wp-login.php?action=rp&key=$adt_rp_key&login=" . rawurlencode( $user_login ), 'login' ) . '">' . network_site_url( "wp-login.php?action=rp&key=$adt_rp_key&login=" . rawurlencode( $user_login ), 'login' ) . '</a>';
-	}
-
-	/**
-	 * @param array $triggers
-	 *
-	 * @return Trigger[]
-	 */
-	public function registerTrigger( array $triggers ): array {
-
-		$message = sprintf( __( 'Username: %s' ), "{{user.name}}" ) . "\r\n\r\n";
-		$message .= __( 'To set your password, visit the following address:' ) . "\r\n\r\n";
-		$message .= "{{password_reset_link}}" . "\r\n";
-
-		$trigger = new Trigger( __( "New User (User)", 'juvo-mail-editor' ), $this->getTrigger() );
-		$trigger
-			->setAlwaysSent( true )
-			->setSubject( sprintf( __( '%s Login Details' ), "{{site.name}}" ) )
-			->setContent( $message )
-			->setRecipients( "{{user.user_email}}" )
-			->setPlaceholders( $this->placeholders );
-
-		$triggers[] = $trigger;
-
-		return $triggers;
-
+	public function getTrigger(): string {
+		return "new_user";
 	}
 
 	/**
@@ -74,7 +26,71 @@ class New_User extends Mail_Generator {
 		return $cmb;
 	}
 
-	public function getTrigger(): string {
-		return "new_user";
+	public function send( ...$params ) {
+		list( $email, $user ) = $params;
+
+		$this->user = $user;
+
+		$placeholders = $this->getPlaceholderValues();
+
+		$relay = new Relay( $this->getTrigger(), $placeholders, [ "user" => $user ] );
+		$relay->sendMails();
+
+		return [];
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	protected function getPlaceholderValues(): array {
+		$placeholders = $this->getDefaultPlaceholder();
+
+		$adt_rp_key                          = get_password_reset_key( $this->user );
+		$user_login                          = $this->user->user_login;
+		$placeholders["password_reset_link"] = '<a href="' . network_site_url( "wp-login.php?action=rp&key=$adt_rp_key&login=" . rawurlencode( $user_login ), 'login' ) . '">' . network_site_url( "wp-login.php?action=rp&key=$adt_rp_key&login=" . rawurlencode( $user_login ), 'login' ) . '</a>';
+
+		return $placeholders;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function getDefaultPlaceholder(): array {
+		return [
+			"password_reset_link" => ""
+		];
+	}
+
+	public function getSubject(): string {
+		return sprintf( __( '%s Login Details' ), "{{site.name}}" );
+	}
+
+	public function getMessage(): string {
+		$message = sprintf( __( 'Username: %s' ), "{{user.name}}" ) . "\r\n\r\n";
+		$message .= __( 'To set your password, visit the following address:' ) . "\r\n\r\n";
+		$message .= "{{password_reset_link}}" . "\r\n";
+
+		return $message;
+	}
+
+	public function getRecipient(): string {
+		return "{{user.user_email}}";
+	}
+
+	protected function getName(): string {
+		return "New User (User)";
+	}
+
+	public function getAlwaysSent(): bool {
+		return true;
+	}
+
+	public function getLanguage( string $language, array $context ): string {
+
+		if ( isset( $context["user"] ) && $context["user"] instanceof WP_User ) {
+			return get_user_locale( $context["user"]->ID );
+		}
+
+		return $language;
 	}
 }

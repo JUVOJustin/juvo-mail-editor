@@ -9,39 +9,12 @@ use JUVO_MailEditor\Mail_Generator;
 use JUVO_MailEditor\Mail_Trigger_TAX;
 use JUVO_MailEditor\Mails_PT;
 use JUVO_MailEditor\Relay;
-use JUVO_MailEditor\Trigger;
 use WP_User;
 
 class Password_Reset extends Mail_Generator {
 
-	private $placeholders = [
-		"password_reset_link" => "",
-	];
-
-	/**
-	 * @param string $message
-	 * @param string $key
-	 * @param string $user_login
-	 * @param WP_User $user
-	 *
-	 * @return string Empty string to prevent default wordpress mail from being sent
-	 */
-	function password_reset_email_message( string $message, string $key, string $user_login, WP_User $user ): string {
-
-		$this->setPlaceholderValues( $user, [ "key" => $key ] );
-
-		$relay = new Relay( $this->getTrigger(), $this->placeholders, [ "user" => $user ] );
-		$relay->sendMails();
-
-		return "";
-
-	}
-
-	protected function setPlaceholderValues( WP_User $user, array $options = [] ): void {
-		if ( ! empty( $options ) && isset( $options["key"] ) ) {
-			$this->placeholders["PASSWORD_RESET_LINK"] = '<a href="' . network_site_url( "wp-login.php?action=rp&key={$options["key"]}&login=" . rawurlencode( $user->user_login ), 'login' ) . '">' . network_site_url( "wp-login.php?action=rp&key={$options["key"]}&login=" . rawurlencode( $user->user_login ), 'login' ) . '</a>';
-		}
-	}
+	protected WP_User $user;
+	protected string $key;
 
 	public function getTrigger(): string {
 		return "password_reset";
@@ -55,13 +28,25 @@ class Password_Reset extends Mail_Generator {
 		return $cmb;
 	}
 
-	/**
-	 * @param array $triggers
-	 *
-	 * @return Trigger[]
-	 */
-	public function registerTrigger( array $triggers ): array {
+	public function send( ...$params ) {
+		list( $message, $key, $user_login, $user ) = $params;
 
+		$this->user = $user;
+		$this->key  = $key;
+
+		$placeholders = $this->getPlaceholderValues();
+
+		$relay = new Relay( $this->getTrigger(), $placeholders, [ "user" => $user ] );
+		$relay->sendMails();
+
+		return "";
+	}
+
+	public function getSubject(): string {
+		return __( "Password Reset", 'juvo-mail-editor' );
+	}
+
+	public function getMessage(): string {
 		$message = __( 'Someone has requested a password reset for the following account:' ) . "\r\n\r\n";
 		$message .= sprintf( __( 'Site Name: %s' ), "{{ site.name }}" ) . "\r\n\r\n";
 		$message .= sprintf( __( 'Username: %s' ), "{{ user.name }}" ) . "\r\n\r\n";
@@ -69,17 +54,50 @@ class Password_Reset extends Mail_Generator {
 		$message .= __( 'To reset your password, visit the following address:' ) . "\r\n\r\n";
 		$message .= __( '{{PASSWORD_RESET_LINK}}' ) . "\r\n\r\n";
 
-		$trigger = new Trigger( __( "Password Reset (User)", 'juvo-mail-editor' ), $this->getTrigger() );
-		$trigger
-			->setAlwaysSent( true )
-			->setSubject( __( "Password Reset", 'juvo-mail-editor' ) )
-			->setContent( $message )
-			->setRecipients( "{{ user.user_email }}" )
-			->setPlaceholders( $this->placeholders );
+		return $message;
+	}
 
-		$triggers[] = $trigger;
+	public function getRecipient(): string {
+		return "{{ user.user_email }}";
+	}
 
-		return $triggers;
+	protected function getName(): string {
+		return "Password Reset (User)";
+	}
 
+	/**
+	 * @inheritDoc
+	 */
+	public function getDefaultPlaceholder(): array {
+		return [
+			"password_reset_link" => "",
+		];
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	protected function getPlaceholderValues(): array {
+
+		$placeholders = $this->getDefaultPlaceholder();
+
+		if ( ! empty( $this->key ) ) {
+			$placeholders["password_reset_link"] = '<a href="' . network_site_url( "wp-login.php?action=rp&key={$this->key}&login=" . rawurlencode( $this->user->user_login ), 'login' ) . '">' . network_site_url( "wp-login.php?action=rp&key={$this->key}&login=" . rawurlencode( $this->user->user_login ), 'login' ) . '</a>';
+		}
+
+		return $placeholders;
+	}
+
+	public function getAlwaysSent(): bool {
+		return true;
+	}
+
+	public function getLanguage( string $language, array $context ): string {
+
+		if ( isset( $context["user"] ) && $context["user"] instanceof WP_User ) {
+			return get_user_locale( $context["user"]->ID );
+		}
+
+		return $language;
 	}
 }

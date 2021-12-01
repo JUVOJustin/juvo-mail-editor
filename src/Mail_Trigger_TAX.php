@@ -69,20 +69,6 @@ class Mail_Trigger_TAX {
 		) );
 
 		$cmb->add_field( array(
-			'name' => __( 'Default Subject', 'juvo-mail-editor' ),
-			'desc' => __( 'Default subject of the mail', 'juvo-mail-editor' ),
-			'id'   => self::TAXONOMY_NAME . '_default_subject',
-			'type' => 'text'
-		) );
-
-		$cmb->add_field( array(
-			'name' => __( 'Default Content', 'juvo-mail-editor' ),
-			'desc' => __( 'Default content of the mail', 'juvo-mail-editor' ),
-			'id'   => self::TAXONOMY_NAME . '_default_content',
-			'type' => 'textarea'
-		) );
-
-		$cmb->add_field( array(
 			'name' => __( 'Additional Placeholders', 'juvo-mail-editor' ),
 			'id'   => self::TAXONOMY_NAME . '_placeholders',
 			'type' => 'textarea'
@@ -133,12 +119,6 @@ class Mail_Trigger_TAX {
 				$term = $term->term_id;
 			}
 
-			// Update meta and log errors
-			update_term_meta( $term, self::TAXONOMY_NAME . "_always_send", $trigger->isAlwaysSent() );
-			update_term_meta( $term, self::TAXONOMY_NAME . "_default_recipients", $trigger->getRecipients() );
-			update_term_meta( $term, self::TAXONOMY_NAME . "_default_subject", $trigger->getSubject() );
-			update_term_meta( $term, self::TAXONOMY_NAME . "_default_content", $trigger->getContent() );
-			update_term_meta( $term, self::TAXONOMY_NAME . "_placeholders", $trigger->getPlaceholders() );
 		}
 
 		foreach ( $errors->get_error_messages() as $error ) {

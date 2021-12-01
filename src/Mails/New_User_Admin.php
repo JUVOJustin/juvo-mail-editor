@@ -5,25 +5,11 @@ namespace JUVO_MailEditor\Mails;
 use CMB2;
 use JUVO_MailEditor\Mail_Generator;
 use JUVO_MailEditor\Relay;
-use JUVO_MailEditor\Trigger;
 use WP_User;
 
 class New_User_Admin extends Mail_Generator {
 
-	private $placeholders = [];
-
-	function new_user_notification_email_admin( array $email, WP_User $user ): array {
-
-		$this->setPlaceholderValues( $user );
-
-		$relay = new Relay( $this->getTrigger(), $this->placeholders, [ "user" => $user ] );
-		$relay->sendMails();
-
-		return [];
-	}
-
-	protected function setPlaceholderValues( WP_User $user ): void {
-	}
+	protected WP_User $user;
 
 	/**
 	 * @return string
@@ -41,27 +27,58 @@ class New_User_Admin extends Mail_Generator {
 		return $cmb;
 	}
 
-	/**
-	 * @param array $triggers
-	 *
-	 * @return Trigger[]
-	 */
-	public function registerTrigger( array $triggers ): array {
+	public function send( ...$params ) {
+		list( $email, $user ) = $params;
 
+		$this->user = $user;
+
+		$placeholders = $this->getPlaceholderValues();
+
+		$relay = new Relay( $this->getTrigger(), $placeholders, [ "user" => $user ] );
+		$relay->sendMails();
+
+		return [];
+	}
+
+	public function getSubject(): string {
+		return sprintf( __( "%s New User Registration" ), "{{site.name}}" );
+	}
+
+	public function getMessage(): string {
 		$message = sprintf( __( 'New user registration on your site %s:' ), "{{site.name}}" ) . "\r\n\r\n";
 		$message .= sprintf( __( 'Username: %s' ), "{{user.name}}" ) . "\r\n\r\n";
 		$message .= sprintf( __( 'Email: %s' ), "{{user.user_email}}" ) . "\r\n";
 
-		$trigger = new Trigger( __( "New User (Admin)", 'juvo-mail-editor' ), $this->getTrigger() );
-		$trigger
-			->setAlwaysSent( true )
-			->setSubject( sprintf( __( "%s New User Registration" ), "{{site.name}}" ) )
-			->setContent( $message )
-			->setRecipients( "{{site.admin_email}}" )
-			->setPlaceholders( $this->placeholders );
+		return $message;
+	}
 
-		$triggers[] = $trigger;
+	public function getRecipient(): string {
+		return "{{site.admin_email}}";
+	}
 
-		return $triggers;
+	protected function getName(): string {
+		return "New User (Admin)";
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function getDefaultPlaceholder(): array {
+		return [];
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	protected function getPlaceholderValues(): array {
+		return [];
+	}
+
+	public function getAlwaysSent(): bool {
+		return true;
+	}
+
+	public function getLanguage( string $language, array $context ): string {
+		return $language;
 	}
 }

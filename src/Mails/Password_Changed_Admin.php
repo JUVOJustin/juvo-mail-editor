@@ -9,30 +9,9 @@ use JUVO_MailEditor\Mail_Generator;
 use JUVO_MailEditor\Mail_Trigger_TAX;
 use JUVO_MailEditor\Mails_PT;
 use JUVO_MailEditor\Relay;
-use JUVO_MailEditor\Trigger;
 use WP_User;
 
 class Password_Changed_Admin extends Mail_Generator {
-
-	private $placeholders = [
-	];
-
-	/**
-	 *
-	 * @param array $email
-	 * @param WP_User $user
-	 *
-	 * @return array
-	 */
-	public function password_changed_admin_email( array $email, WP_User $user ): array {
-
-		$this->setPlaceholderValues( $user );
-
-		$relay = new Relay( $this->getTrigger(), $this->placeholders, [ "user" => $user ] );
-		$relay->sendMails();
-
-		return [];
-	}
 
 	protected function setPlaceholderValues( WP_User $user, array $options = [] ): void {
 	}
@@ -49,26 +28,52 @@ class Password_Changed_Admin extends Mail_Generator {
 		return $cmb;
 	}
 
+	function getSubject(): string {
+		return sprintf( __( "%s Password Changed" ), "{{site.name}}" );
+	}
+
+	function getMessage(): string {
+		return sprintf( __( 'Password changed for user: %s' ), '{{user.name}}' ) . "\r\n";
+	}
+
+	function getRecipient(): string {
+		return "{{site.admin_email}}";
+	}
+
+	public function send( ...$params ) {
+		list( $email, $user ) = $params;
+
+		$placeholders = $this->getPlaceholderValues();
+
+		$relay = new Relay( $this->getTrigger(), $placeholders, [ "user" => $user ] );
+		$relay->sendMails();
+
+		return [];
+	}
+
+	protected function getName(): string {
+		return "Password Changed (Admin)";
+	}
+
 	/**
-	 * @param array $triggers
-	 *
-	 * @return Trigger[]
+	 * @inheritDoc
 	 */
-	public function registerTrigger( array $triggers ): array {
+	public function getDefaultPlaceholder(): array {
+		return [];
+	}
 
-		$message = sprintf( __( 'Password changed for user: %s' ), '{{user.name}}' ) . "\r\n";
+	/**
+	 * @inheritDoc
+	 */
+	protected function getPlaceholderValues(): array {
+		return [];
+	}
 
-		$trigger = new Trigger( __( "Password Changed (Admin)", 'juvo-mail-editor' ), $this->getTrigger() );
-		$trigger
-			->setAlwaysSent( true )
-			->setSubject( sprintf( __( "%s Password Changed" ), "{{site.name}}" ) )
-			->setContent( $message )
-			->setRecipients( "{{site.admin_email}}" )
-			->setPlaceholders( $this->placeholders );
+	public function getAlwaysSent(): bool {
+		return true;
+	}
 
-		$triggers[] = $trigger;
-
-		return $triggers;
-
+	public function getLanguage( string $language, array $context ): string {
+		return $language;
 	}
 }

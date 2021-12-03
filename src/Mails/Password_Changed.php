@@ -13,16 +13,16 @@ use WP_User;
 
 class Password_Changed extends Mail_Generator {
 
-	public function getTrigger(): string {
-		return "password_changed";
-	}
-
 	public function addCustomFields( CMB2 $cmb ): CMB2 {
 		if ( has_term( $this->getTrigger(), Mail_Trigger_TAX::TAXONOMY_NAME, $cmb->object_id() ) ) {
 			$cmb->remove_field( Mails_PT::POST_TYPE_NAME . '_recipients' );
 		}
 
 		return $cmb;
+	}
+
+	public function getTrigger(): string {
+		return "password_changed";
 	}
 
 	function getSubject(): string {
@@ -71,24 +71,20 @@ All at ###SITENAME###
 		$relay = new Relay( $this->getTrigger(), $placeholders, [ "user" => $user ] );
 		$relay->sendMails();
 
-		return [];
-	}
-
-	protected function getName(): string {
-		return "Password Changed (User)";
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public function getDefaultPlaceholder(): array {
-		return [];
+		return $this->emptyMailArray( $email );
 	}
 
 	/**
 	 * @inheritDoc
 	 */
 	protected function getPlaceholderValues(): array {
+		return [];
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function getDefaultPlaceholder(): array {
 		return [];
 	}
 
@@ -103,5 +99,9 @@ All at ###SITENAME###
 		}
 
 		return $language;
+	}
+
+	protected function getName(): string {
+		return "Password Changed (User)";
 	}
 }

@@ -40,6 +40,7 @@ class Mails_PT {
 			'has_archive'     => false,
 			'hierarchical'    => false,
 			'menu_position'   => null,
+			'query_var'       => true,
 			'supports'        => array( 'title', 'editor', 'author', 'revisions' ),
 			'show_in_rest'    => true,
 			'menu_icon'       => 'dashicons-email'
@@ -56,7 +57,7 @@ class Mails_PT {
 	 */
 	public function limitBlocks( $allowed_block_types, WP_Block_Editor_Context $block_editor_context ) {
 
-		if (isset($block_editor_context->post) && $block_editor_context->post->post_type === self::POST_TYPE_NAME) {
+		if ( isset( $block_editor_context->post ) && $block_editor_context->post->post_type === self::POST_TYPE_NAME ) {
 			return [
 				'core/image',
 				'core/paragraph',

@@ -10,7 +10,6 @@
  * Version:         2.0.9
  */
 
-use Composer\Autoload\ClassLoader;
 use JUVO_MailEditor\Activator;
 use JUVO_MailEditor\Deactivator;
 use JUVO_MailEditor\Mail_Editor;
@@ -30,20 +29,24 @@ define( 'JUVO_MAIL_EDITOR_URL', plugin_dir_url( __FILE__ ) );
  * Use Composer PSR-4 Autoloading
  * Add file check to avoid autoloading if included as sub-package
  */
-if ( file_exists( plugin_dir_path( __FILE__ ) . 'vendor/autoload.php' ) ) {
+$pluginDir = plugin_dir_path( __FILE__ );
+if ( file_exists( $pluginDir . 'vendor/autoload.php' ) ) {
 	require plugin_dir_path( __FILE__ ) . 'vendor/autoload.php';
 }
 
 /**
  * Load cmb2 manually and not by composer because file autoloading does not work
- * when used as sub-package. Reflection Class is used to determine the path to
- * the vendor folder no matter is used as standalone plugin or as dependency.
- *
- * Found: https://stackoverflow.com/questions/37925437/how-to-get-the-root-package-path-using-composer/45364136
  */
-$reflection = new ReflectionClass( ClassLoader::class );
-$vendorDir  = dirname( $reflection->getFileName(), 2 );
-require_once $vendorDir . '/cmb2/cmb2/init.php';
+if ( file_exists( $pluginDir . 'vendor/cmb2/cmb2/init.php' ) ) {
+	// Path for standalone plugin. Load from local vendor folder
+	require plugin_dir_path( __FILE__ ) . 'vendor/cmb2/cmb2/init.php';
+} else {
+	// Lookup vendor folder when included as library
+	preg_match( '/(.*)vendor/U', $pluginDir, $matches );
+	if ( file_exists( $matches[1] . 'vendor/cmb2/cmb2/init.php' ) ) {
+		require $matches[1] . 'vendor/cmb2/cmb2/init.php';
+	}
+}
 
 /**
  * The code that runs during plugin activation.
@@ -76,17 +79,17 @@ register_deactivation_hook( __FILE__, 'deactivate_juvo_mail_editor' );
  */
 function run_juvo_mail_editor() {
 
-	if ( !defined('ABSPATH') ) {
+	if ( ! defined( 'ABSPATH' ) ) {
 		return;
 	}
 
 	// Make sure only loaded once
-	if ( class_exists('\WP') && !defined('JUVO_MAIL_EDITOR_LOADED') ) {
+	if ( class_exists( '\WP' ) && ! defined( 'JUVO_MAIL_EDITOR_LOADED' ) ) {
 
 		$plugin = new Mail_Editor();
 		$plugin->run();
 
-		define('JUVO_MAIL_EDITOR_LOADED', true);
+		define( 'JUVO_MAIL_EDITOR_LOADED', true );
 	}
 
 }

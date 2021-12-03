@@ -41,7 +41,7 @@ class New_User_Admin_Rest extends Mail_Generator {
 	}
 
 	public function getSubject(): string {
-		return sprintf( __( "%s New User Registration" ), "{{site.name}}" );
+		return sprintf( __( "[%s] New User Registration" ), "{{site.name}}" );
 	}
 
 	public function getMessage(): string {

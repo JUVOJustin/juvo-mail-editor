@@ -61,10 +61,11 @@ class Relay {
 	private function setPostsForTrigger(): array {
 
 		return get_posts( [
-			'post_type'   => Mails_PT::POST_TYPE_NAME,
-			'post_status' => 'publish',
-			'numberposts' => - 1,
-			'tax_query'   => [
+			'post_type'        => Mails_PT::POST_TYPE_NAME,
+			'post_status'      => 'publish',
+			'numberposts'      => - 1,
+			'suppress_filters' => false,
+			'tax_query'        => [
 				[
 					'taxonomy' => Mail_Trigger_TAX::TAXONOMY_NAME,
 					'field'    => 'id',
@@ -103,17 +104,27 @@ class Relay {
 			return false;
 		}
 
+		// Store blog language defaults
 		restore_previous_locale();
-		$blogLang = get_locale();
+		$blogLocale = get_locale();
+		$blogLang   = locale_get_primary_language( $blogLocale );
 
 		if ( ! empty( $this->posts ) ) {
 			// If templates were created for trigger
 
 			foreach ( $this->posts as $post ) {
 
-				$lang = apply_filters( "juvo_mail_editor_{$this->trigger}_language", $blogLang, $this->context );
+				$locale = apply_filters( "juvo_mail_editor_{$this->trigger}_language", $blogLocale, $this->context );
+				$lang   = locale_get_primary_language( $locale );
 
-				$switched_locale = switch_to_locale( $lang );
+				// Switch language context
+				$switched_locale = switch_to_locale( $locale );
+
+				// Get translated post with WPML
+				$translationId = apply_filters( 'wpml_object_id', $post->ID, Mails_PT::POST_TYPE_NAME, true, $lang );
+				if ( $translationId && $translationId !== $post->ID && get_post_status( $translationId ) === "publish" ) {
+					$post = get_post( $translationId );
+				}
 
 				// Recipients
 				$recipients = $this->prepareRecipients( $post );
@@ -124,6 +135,7 @@ class Relay {
 				// Subject
 				$subject = $this->prepareSubject( $post );
 
+				// Restore language context
 				if ( $switched_locale ) {
 					restore_previous_locale();
 				}
@@ -141,7 +153,7 @@ class Relay {
 				return false;
 			}
 
-			$lang = apply_filters( "juvo_mail_editor_{$this->trigger}_language", $blogLang, $this->context );
+			$lang = apply_filters( "juvo_mail_editor_{$this->trigger}_language", $blogLocale, $this->context );
 
 			$switched_locale = switch_to_locale( $lang );
 
@@ -187,7 +199,7 @@ class Relay {
 	 */
 	public function prepareContent( WP_Post $post = null ): string {
 
-		if ( ! $post || ! $content = $post->post_content ) {
+		if ( ! $post || ! $content = get_the_content( null, false, $post ) ) {
 			$content = apply_filters( "juvo_mail_editor_{$this->trigger}_message", "" );
 		} else {
 			$blocks  = parse_blocks( $content );

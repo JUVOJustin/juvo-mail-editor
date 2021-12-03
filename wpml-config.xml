@@ -1,0 +1,8 @@
+<wpml-config>
+	<custom-types>
+		<custom-type translate="1" display-as-translated="1">juvo-mail</custom-type>
+	</custom-types>
+	<custom-fields>
+		<custom-field action="translate">juvo-mail_subject</custom-field>
+	</custom-fields>
+</wpml-config>

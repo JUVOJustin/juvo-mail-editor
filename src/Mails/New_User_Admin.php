@@ -37,11 +37,11 @@ class New_User_Admin extends Mail_Generator {
 		$relay = new Relay( $this->getTrigger(), $placeholders, [ "user" => $user ] );
 		$relay->sendMails();
 
-		return [];
+		return $this->emptyMailArray( $email );
 	}
 
 	public function getSubject(): string {
-		return sprintf( __( "%s New User Registration" ), "{{site.name}}" );
+		return sprintf( __( "[%s] New User Registration" ), "{{site.name}}" );
 	}
 
 	public function getMessage(): string {

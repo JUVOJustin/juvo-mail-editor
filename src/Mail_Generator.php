@@ -81,4 +81,12 @@ abstract class Mail_Generator implements Mail {
 
 		return $cmb;
 	}
+
+	protected function emptyMailArray( array $email, $val = null ): array {
+		foreach ( $email as $key => $item ) {
+			$email[ $key ] = $val;
+		}
+
+		return $email;
+	}
 }

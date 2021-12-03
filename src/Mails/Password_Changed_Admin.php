@@ -48,7 +48,7 @@ class Password_Changed_Admin extends Mail_Generator {
 		$relay = new Relay( $this->getTrigger(), $placeholders, [ "user" => $user ] );
 		$relay->sendMails();
 
-		return [];
+		return $this->emptyMailArray( $email );
 	}
 
 	protected function getName(): string {

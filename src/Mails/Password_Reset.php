@@ -52,7 +52,7 @@ class Password_Reset extends Mail_Generator {
 		$message .= sprintf( __( 'Username: %s' ), "{{ user.name }}" ) . "\r\n\r\n";
 		$message .= __( 'If this was a mistake, ignore this email and nothing will happen.' ) . "\r\n\r\n";
 		$message .= __( 'To reset your password, visit the following address:' ) . "\r\n\r\n";
-		$message .= __( '{{PASSWORD_RESET_LINK}}' ) . "\r\n\r\n";
+		$message .= __( '{{password_reset_link}}' ) . "\r\n\r\n";
 
 		return $message;
 	}

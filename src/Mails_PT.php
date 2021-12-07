@@ -40,7 +40,6 @@ class Mails_PT {
 			'has_archive'     => false,
 			'hierarchical'    => false,
 			'menu_position'   => null,
-			'query_var'       => true,
 			'supports'        => array( 'title', 'editor', 'author', 'revisions' ),
 			'show_in_rest'    => true,
 			'menu_icon'       => 'dashicons-email'

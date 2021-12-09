@@ -20,6 +20,7 @@ For more information about placeholders, triggers and extensibility of the plugi
 * Uses default Gutenberg blocks to style mail content
 * Use global or trigger specific placeholders to make your mails dynamic
 * Seamless integration to any mail styling plugin - even buddyboss.
+* Multilanguage support
 
 == Frequently Asked Questions ==
 = Can i modify the styling of mails with this plugin? =

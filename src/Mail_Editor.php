@@ -103,6 +103,10 @@ class Mail_Editor {
 		$this->loader->add_action( 'cmb2_admin_init', $options, 'yourprefix_register_options_submenu_for_page_post_type' );
 		$this->loader->add_action( 'wp_ajax_juvo-mail-editor-sync-triggers', $options, "ajax_sync_triggers" );
 
+		$template = new Template();
+		$this->loader->add_filter( "wp_mail", $template, "maybeAddGlobalTemplate" );
+		$this->loader->add_action( 'wp_ajax_juvo-mail-editor-template-preview', $template, 'previewTemplateAjax' );
+
 		/**
 		 * Post Type
 		 */

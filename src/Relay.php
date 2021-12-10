@@ -183,7 +183,7 @@ class Relay {
 	 * @return bool
 	 */
 	public static function triggerIsMuted( string $trigger ): bool {
-		$pluginSettings = get_option( 'settings' );
+		$pluginSettings = get_option( 'mail-editor-settings' );
 
 		if ( isset( $pluginSettings['trigger_mute'] ) ) {
 			return in_array( $trigger, $pluginSettings['trigger_mute'] );

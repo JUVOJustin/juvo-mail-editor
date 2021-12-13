@@ -31,10 +31,6 @@ jobs:
         if: steps.composer-cache.outputs.cache-hit != 'true'
         run: composer install --no-dev --prefer-dist --no-progress --no-suggest --ignore-platform-reqs
 
-      # Node Install
-      - name: Node install Dependencies
-        run: npm install
-
       # Update Version
       - name: Set env
         run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV

@@ -22,9 +22,9 @@ jobs:
         uses: actions/cache@v2
         with:
           path: vendor
-          key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+          key: ${{ runner.os }}-prod-php-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
-            ${{ runner.os }}-php-
+            ${{ runner.os }}-prod-php-
 
       # Composer Install
       - name: Install dependencies

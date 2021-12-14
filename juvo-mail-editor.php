@@ -29,20 +29,20 @@ define( 'JUVO_MAIL_EDITOR_URL', plugin_dir_url( __FILE__ ) );
  * Use Composer PSR-4 Autoloading
  * Add file check to avoid autoloading if included as sub-package
  */
-$pluginDir = plugin_dir_path( __FILE__ );
-if ( file_exists( $pluginDir . 'vendor/autoload.php' ) ) {
+$juvo_mail_editor_plugin_dir = plugin_dir_path( __FILE__ );
+if ( file_exists( $juvo_mail_editor_plugin_dir . 'vendor/autoload.php' ) ) {
 	require plugin_dir_path( __FILE__ ) . 'vendor/autoload.php';
 }
 
 /**
  * Load cmb2 manually and not by composer because file autoloading does not work
  */
-if ( file_exists( $pluginDir . 'vendor/cmb2/cmb2/init.php' ) ) {
+if ( file_exists( $juvo_mail_editor_plugin_dir . 'vendor/cmb2/cmb2/init.php' ) ) {
 	// Path for standalone plugin. Load from local vendor folder
 	require plugin_dir_path( __FILE__ ) . 'vendor/cmb2/cmb2/init.php';
 } else {
 	// Lookup vendor folder when included as library
-	preg_match( '/(.*)vendor/U', $pluginDir, $matches );
+	preg_match( '/(.*)vendor/U', $juvo_mail_editor_plugin_dir, $matches );
 	if ( file_exists( $matches[1] . 'vendor/cmb2/cmb2/init.php' ) ) {
 		require $matches[1] . 'vendor/cmb2/cmb2/init.php';
 	}
@@ -52,7 +52,7 @@ if ( file_exists( $pluginDir . 'vendor/cmb2/cmb2/init.php' ) ) {
  * The code that runs during plugin activation.
  * This action is documented in includes/class-plugin-name-activator.php
  */
-function activate_juvo_mail_editor() {
+function juvo_mail_editor_activate() {
 	Activator::activate();
 }
 
@@ -60,12 +60,12 @@ function activate_juvo_mail_editor() {
  * The code that runs during plugin deactivation.
  * This action is documented in includes/class-plugin-name-deactivator.php
  */
-function deactivate_juvo_mail_editor() {
+function juvo_mail_editor_deactivate() {
 	Deactivator::deactivate();
 }
 
-register_activation_hook( __FILE__, 'activate_juvo_mail_editor' );
-register_deactivation_hook( __FILE__, 'deactivate_juvo_mail_editor' );
+register_activation_hook( __FILE__, 'juvo_mail_editor_activate' );
+register_deactivation_hook( __FILE__, 'juvo_mail_editor_deactivate' );
 
 
 /**
@@ -77,7 +77,7 @@ register_deactivation_hook( __FILE__, 'deactivate_juvo_mail_editor' );
  *
  * @since    1.0.0
  */
-function run_juvo_mail_editor() {
+function juvo_mail_editor_run() {
 
 	if ( ! defined( 'ABSPATH' ) ) {
 		return;
@@ -94,4 +94,4 @@ function run_juvo_mail_editor() {
 
 }
 
-run_juvo_mail_editor();
+juvo_mail_editor_run();

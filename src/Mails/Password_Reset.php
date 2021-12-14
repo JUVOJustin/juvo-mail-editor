@@ -3,7 +3,6 @@
 
 namespace JUVO_MailEditor\Mails;
 
-
 use CMB2;
 use JUVO_MailEditor\Mail_Generator;
 use JUVO_MailEditor\Mail_Trigger_TAX;
@@ -17,7 +16,7 @@ class Password_Reset extends Mail_Generator {
 	protected string $key;
 
 	public function getTrigger(): string {
-		return "password_reset";
+		return 'password_reset';
 	}
 
 	public function addCustomFields( CMB2 $cmb ): CMB2 {
@@ -36,42 +35,42 @@ class Password_Reset extends Mail_Generator {
 
 		$placeholders = $this->getPlaceholderValues();
 
-		$relay = new Relay( $this->getTrigger(), $placeholders, [ "user" => $user ] );
+		$relay = new Relay( $this->getTrigger(), $placeholders, array( 'user' => $user ) );
 		$relay->sendMails();
 
-		return "";
+		return '';
 	}
 
 	public function getSubject(): string {
-		return __( "Password Reset", 'juvo-mail-editor' );
+		return __( 'Password Reset', 'juvo-mail-editor' );
 	}
 
 	public function getMessage(): string {
-		$message = __( 'Someone has requested a password reset for the following account:' ) . "\r\n\r\n";
-		$message .= sprintf( __( 'Site Name: %s' ), "{{ site.name }}" ) . "\r\n\r\n";
-		$message .= sprintf( __( 'Username: %s' ), "{{ user.name }}" ) . "\r\n\r\n";
-		$message .= __( 'If this was a mistake, ignore this email and nothing will happen.' ) . "\r\n\r\n";
-		$message .= __( 'To reset your password, visit the following address:' ) . "\r\n\r\n";
-		$message .= __( '{{password_reset_link}}' ) . "\r\n\r\n";
+		$message = __( 'Someone has requested a password reset for the following account:', 'default' ) . "\r\n\r\n";
+		$message .= sprintf( __( 'Site Name: %s', 'default' ), '{{ site.name }}' ) . "\r\n\r\n";
+		$message .= sprintf( __( 'Username: %s', 'default' ), '{{ user.name }}' ) . "\r\n\r\n";
+		$message .= __( 'If this was a mistake, ignore this email and nothing will happen.', 'default' ) . "\r\n\r\n";
+		$message .= __( 'To reset your password, visit the following address:', 'default' ) . "\r\n\r\n";
+		$message .= '{{password_reset_link}}' . "\r\n\r\n";
 
 		return $message;
 	}
 
 	public function getRecipient(): string {
-		return "{{ user.user_email }}";
+		return '{{ user.user_email }}';
 	}
 
 	protected function getName(): string {
-		return "Password Reset (User)";
+		return 'Password Reset (User)';
 	}
 
 	/**
 	 * @inheritDoc
 	 */
 	public function getDefaultPlaceholder(): array {
-		return [
-			"password_reset_link" => "",
-		];
+		return array(
+			'password_reset_link' => '',
+		);
 	}
 
 	/**
@@ -82,7 +81,7 @@ class Password_Reset extends Mail_Generator {
 		$placeholders = $this->getDefaultPlaceholder();
 
 		if ( ! empty( $this->key ) ) {
-			$placeholders["password_reset_link"] = '<a href="' . network_site_url( "wp-login.php?action=rp&key={$this->key}&login=" . rawurlencode( $this->user->user_login ), 'login' ) . '">' . network_site_url( "wp-login.php?action=rp&key={$this->key}&login=" . rawurlencode( $this->user->user_login ), 'login' ) . '</a>';
+			$placeholders['password_reset_link'] = '<a href="' . network_site_url( "wp-login.php?action=rp&key={$this->key}&login=" . rawurlencode( $this->user->user_login ), 'login' ) . '">' . network_site_url( "wp-login.php?action=rp&key={$this->key}&login=" . rawurlencode( $this->user->user_login ), 'login' ) . '</a>';
 		}
 
 		return $placeholders;
@@ -94,8 +93,8 @@ class Password_Reset extends Mail_Generator {
 
 	public function getLanguage( string $language, array $context ): string {
 
-		if ( isset( $context["user"] ) && $context["user"] instanceof WP_User ) {
-			return get_user_locale( $context["user"]->ID );
+		if ( isset( $context['user'] ) && $context['user'] instanceof WP_User ) {
+			return get_user_locale( $context['user']->ID );
 		}
 
 		return $language;

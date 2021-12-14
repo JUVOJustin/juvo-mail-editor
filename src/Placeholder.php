@@ -3,7 +3,6 @@
 
 namespace JUVO_MailEditor;
 
-
 use Timber\Term;
 use Timber\Timber;
 use Timber\User;
@@ -13,7 +12,7 @@ use WP_User;
 
 class Placeholder {
 
-	public static function replacePlaceholder( array $placeholder, string $text, array $context = [] ) {
+	public static function replacePlaceholder( array $placeholder, string $text, array $context = array() ) {
 
 		foreach ( $placeholder as $key => $value ) {
 
@@ -22,7 +21,7 @@ class Placeholder {
 				$placeholder[ $key ] = call_user_func( $value );
 			} else {
 				// If not same the value in case it is not an array
-				$placeholder[ $key ] = is_array( $value ) ? "" : $value;
+				$placeholder[ $key ] = is_array( $value ) ? '' : $value;
 			}
 
 			$text = str_replace( '{{' . $key . '}}', $value, $text ); // Without space before brackets
@@ -46,6 +45,7 @@ class Placeholder {
 		}
 
 		// Parse text with timber/twig to add logic and advanced placeholder support
+		// phpcs:ignore Squiz.PHP.DisallowMultipleAssignments.FoundInControlStructure
 		if ( $compiled = Timber::compile_string( $text, $renderContext ) ) {
 			return $compiled;
 		}
@@ -62,11 +62,11 @@ class Placeholder {
 	 */
 	public function filterTimberContext( array $context ): array {
 
-		unset( $context["body_class"] );
-		unset( $context["request"] );
-		unset( $context["wp_head"] );
-		unset( $context["wp_footer"] );
-		unset( $context["posts"] );
+		unset( $context['body_class'] );
+		unset( $context['request'] );
+		unset( $context['wp_head'] );
+		unset( $context['wp_footer'] );
+		unset( $context['posts'] );
 
 		return $context;
 

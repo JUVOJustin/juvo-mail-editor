@@ -3,7 +3,6 @@
 
 namespace JUVO_MailEditor;
 
-
 use JUVO_MailEditor\Admin\Admin;
 use JUVO_MailEditor\Integrations\BuddyBoss;
 use JUVO_MailEditor\Mails\New_User;
@@ -77,7 +76,7 @@ class Mail_Editor {
 	 */
 	private function set_locale() {
 
-		$plugin_i18n = new i18n();
+		$plugin_i18n = new I18N();
 
 		$this->loader->add_action( 'plugins_loaded', $plugin_i18n, 'load_plugin_textdomain' );
 
@@ -101,7 +100,7 @@ class Mail_Editor {
 		 */
 		$options = new Options_Page();
 		$this->loader->add_action( 'cmb2_admin_init', $options, 'yourprefix_register_options_submenu_for_page_post_type' );
-		$this->loader->add_action( 'wp_ajax_juvo-mail-editor-sync-triggers', $options, "ajax_sync_triggers" );
+		$this->loader->add_action( 'wp_ajax_juvo-mail-editor-sync-triggers', $options, 'ajax_sync_triggers' );
 
 		/**
 		 * Post Type
@@ -122,73 +121,72 @@ class Mail_Editor {
 		/**
 		 * Placeholders
 		 */
-		$this->loader->add_filter( "juvo_mail_editor_timber_context", new Placeholder(), "filterTimberContext" );
+		$this->loader->add_filter( 'juvo_mail_editor_timber_context', new Placeholder(), 'filterTimberContext' );
 
 		/**
 		 * New User Notification for enduser
 		 */
 		$newUser = new New_User();
-		$this->loader->add_filter( "juvo_mail_editor_trigger", $newUser, "registerTrigger" );
-		$this->loader->add_filter( "juvo_mail_editor_post_metabox", $newUser, "addCustomFields" );
+		$this->loader->add_filter( 'juvo_mail_editor_trigger', $newUser, 'registerTrigger' );
+		$this->loader->add_filter( 'juvo_mail_editor_post_metabox', $newUser, 'addCustomFields' );
 		$this->loader->add_action( 'wp_new_user_notification_email', $newUser, 'send', 10, 2 );
 
 		// Rest
 		$newUserRest = new New_User_Rest();
-		$this->loader->add_filter( "juvo_mail_editor_trigger", $newUserRest, "registerTrigger" );
-		$this->loader->add_filter( "juvo_mail_editor_post_metabox", $newUserRest, "addCustomFields" );
+		$this->loader->add_filter( 'juvo_mail_editor_trigger', $newUserRest, 'registerTrigger' );
+		$this->loader->add_filter( 'juvo_mail_editor_post_metabox', $newUserRest, 'addCustomFields' );
 		$this->loader->add_action( 'rest_insert_user', $newUserRest, 'send', 12, 1 );
 
 		/**
 		 * New User Notification Admin
 		 */
 		$newUserAdmin = new New_User_Admin();
-		$this->loader->add_filter( "juvo_mail_editor_trigger", $newUserAdmin, "registerTrigger" );
-		$this->loader->add_filter( "juvo_mail_editor_post_metabox", $newUserAdmin, "addCustomFields" );
+		$this->loader->add_filter( 'juvo_mail_editor_trigger', $newUserAdmin, 'registerTrigger' );
+		$this->loader->add_filter( 'juvo_mail_editor_post_metabox', $newUserAdmin, 'addCustomFields' );
 		$this->loader->add_action( 'wp_new_user_notification_email_admin', $newUserAdmin, 'send', 10, 2 );
 
 		// Rest
 		$newUserAdminRest = new New_User_Admin_Rest();
-		$this->loader->add_filter( "juvo_mail_editor_trigger", $newUserAdminRest, "registerTrigger" );
-		$this->loader->add_filter( "juvo_mail_editor_post_metabox", $newUserAdminRest, "addCustomFields" );
+		$this->loader->add_filter( 'juvo_mail_editor_trigger', $newUserAdminRest, 'registerTrigger' );
+		$this->loader->add_filter( 'juvo_mail_editor_post_metabox', $newUserAdminRest, 'addCustomFields' );
 		$this->loader->add_action( 'rest_insert_user', $newUserAdminRest, 'send', 12, 1 );
 
 		/**
 		 * Password Reset
 		 */
 		$passwordReset = new Password_Reset();
-		$this->loader->add_filter( "juvo_mail_editor_trigger", $passwordReset, "registerTrigger" );
-		$this->loader->add_filter( "juvo_mail_editor_post_metabox", $passwordReset, "addCustomFields" );
+		$this->loader->add_filter( 'juvo_mail_editor_trigger', $passwordReset, 'registerTrigger' );
+		$this->loader->add_filter( 'juvo_mail_editor_post_metabox', $passwordReset, 'addCustomFields' );
 		$this->loader->add_filter( 'retrieve_password_message', $passwordReset, 'send', 10, 4 );
 
 		/**
 		 * Password Reset Admin
 		 */
 		$passwordResetAdmin = new Password_Reset_Admin();
-		$this->loader->add_filter( "juvo_mail_editor_trigger", $passwordResetAdmin, "registerTrigger" );
-		$this->loader->add_filter( "juvo_mail_editor_post_metabox", $passwordResetAdmin, "addCustomFields" );
-		$this->loader->add_filter( "retrieve_password_message", $passwordResetAdmin, "send", 99, 4 );
+		$this->loader->add_filter( 'juvo_mail_editor_trigger', $passwordResetAdmin, 'registerTrigger' );
+		$this->loader->add_filter( 'juvo_mail_editor_post_metabox', $passwordResetAdmin, 'addCustomFields' );
+		$this->loader->add_filter( 'retrieve_password_message', $passwordResetAdmin, 'send', 99, 4 );
 
 		/**
 		 * Password Changed
 		 */
 		$passwordChanged = new Password_Changed();
-		$this->loader->add_filter( "juvo_mail_editor_trigger", $passwordChanged, "registerTrigger" );
-		$this->loader->add_filter( "juvo_mail_editor_post_metabox", $passwordChanged, "addCustomFields" );
+		$this->loader->add_filter( 'juvo_mail_editor_trigger', $passwordChanged, 'registerTrigger' );
+		$this->loader->add_filter( 'juvo_mail_editor_post_metabox', $passwordChanged, 'addCustomFields' );
 		$this->loader->add_filter( 'password_change_email', $passwordChanged, 'send', 10, 2 );
 
 		/**
 		 * Password Changed Admin
 		 */
 		$passwordChangedAdmin = new Password_Changed_Admin();
-		$this->loader->add_filter( "juvo_mail_editor_trigger", $passwordChangedAdmin, "registerTrigger" );
-		$this->loader->add_filter( "juvo_mail_editor_post_metabox", $passwordChangedAdmin, "addCustomFields" );
+		$this->loader->add_filter( 'juvo_mail_editor_trigger', $passwordChangedAdmin, 'registerTrigger' );
+		$this->loader->add_filter( 'juvo_mail_editor_post_metabox', $passwordChangedAdmin, 'addCustomFields' );
 		$this->loader->add_filter( 'wp_password_change_notification_email', $passwordChangedAdmin, 'send', 10, 2 );
-
 
 		/**
 		 * Integrations
 		 */
-		$this->loader->add_filter( "wp_mail", new BuddyBoss(), "useTemplate", 99, 1 );
+		$this->loader->add_filter( 'wp_mail', new BuddyBoss(), 'useTemplate', 99, 1 );
 	}
 
 	/**

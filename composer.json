@@ -22,7 +22,10 @@
     "phpstan/phpstan": "^0.12.88",
     "szepeviktor/phpstan-wordpress": "^0.7.5",
     "phpstan/extension-installer": "^1.1",
-    "lipemat/phpstan-wordpress": "^1.5"
+    "lipemat/phpstan-wordpress": "^1.5",
+    "squizlabs/php_codesniffer": "*",
+    "dealerdirect/phpcodesniffer-composer-installer": "*",
+    "wp-coding-standards/wpcs": "*"
   },
   "autoload": {
     "psr-4": {
@@ -33,10 +36,18 @@
   "require": {
     "cmb2/cmb2": "^2.9",
     "php": ">=7.2.0",
-    "timber/timber": "^1.19"
+    "timber/timber": "^1.19",
+    "symfony/polyfill-mbstring": "1.20.0"
   },
   "scripts": {
     "static-analyse": "@php ./vendor/bin/phpstan analyse src",
     "test": "@php ./vendor/phpunit/phpunit/phpunit"
+  },
+  "extra": {
+    "installer-paths": {
+      "vendor/{$vendor}/{$name}/": [
+        "type:wordpress-plugin"
+      ]
+    }
   }
 }

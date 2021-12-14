@@ -3,76 +3,87 @@
 
 namespace JUVO_MailEditor;
 
-
 use WP_Error;
 
 class Mail_Trigger_TAX {
 
-	public const TAXONOMY_NAME = "juvo-mail-trigger";
+	public const TAXONOMY_NAME = 'juvo-mail-trigger';
 
 	public function registerTaxonomy() {
 
 		$labels = array(
-			'name'              => _x( 'Triggers', 'taxonomy general name' ),
-			'singular_name'     => _x( 'Trigger', 'taxonomy singular name' ),
-			'search_items'      => __( 'Search Triggers' ),
-			'all_items'         => __( 'All Triggers' ),
-			'parent_item'       => __( 'Parent Trigger' ),
-			'parent_item_colon' => __( 'Parent Trigger:' ),
-			'edit_item'         => __( 'Edit Trigger' ),
-			'update_item'       => __( 'Update Trigger' ),
-			'add_new_item'      => __( 'Add New Trigger' ),
-			'new_item_name'     => __( 'New Trigger Name' ),
-			'menu_name'         => __( 'Triggers' ),
+			'name'              => _x( 'Triggers', 'taxonomy general name', 'juvo-mail-editor' ),
+			'singular_name'     => _x( 'Trigger', 'taxonomy singular name', 'juvo-mail-editor' ),
+			'search_items'      => __( 'Search Triggers', 'juvo-mail-editor' ),
+			'all_items'         => __( 'All Triggers', 'juvo-mail-editor' ),
+			'parent_item'       => __( 'Parent Trigger', 'juvo-mail-editor' ),
+			'parent_item_colon' => __( 'Parent Trigger:', 'juvo-mail-editor' ),
+			'edit_item'         => __( 'Edit Trigger', 'juvo-mail-editor' ),
+			'update_item'       => __( 'Update Trigger', 'juvo-mail-editor' ),
+			'add_new_item'      => __( 'Add New Trigger', 'juvo-mail-editor' ),
+			'new_item_name'     => __( 'New Trigger Name', 'juvo-mail-editor' ),
+			'menu_name'         => __( 'Triggers', 'juvo-mail-editor' ),
 		);
 
-		register_taxonomy( self::TAXONOMY_NAME, Mails_PT::POST_TYPE_NAME, array(
-			'public'            => false,
-			'hierarchical'      => false,
-			'labels'            => $labels,
-			'show_ui'           => true,
-			'show_in_rest'      => true,
-			'show_admin_column' => true,
-			'capabilities'      => array(
-				'manage_terms' => false,
-				'edit_terms'   => false,
-				'delete_terms' => false
-			),
-		) );
+		register_taxonomy(
+			self::TAXONOMY_NAME,
+			Mails_PT::POST_TYPE_NAME,
+			array(
+				'public'            => false,
+				'hierarchical'      => false,
+				'labels'            => $labels,
+				'show_ui'           => true,
+				'show_in_rest'      => true,
+				'show_admin_column' => true,
+				'capabilities'      => array(
+					'manage_terms' => false,
+					'edit_terms'   => false,
+					'delete_terms' => false,
+				),
+			)
+		);
 
 	}
 
 	public function addMetaboxes() {
 
-		$cmb = new_cmb2_box( array(
-			'id'           => self::TAXONOMY_NAME . '_metabox',
-			'title'        => __( 'Mail Settings', 'juvo-mail-editor' ),
-			'object_types' => array( 'term' ), // Tells CMB2 to use term_meta vs post_meta
-			'taxonomies'   => array( self::TAXONOMY_NAME ),
-			'context'      => 'normal',
-			'priority'     => 'high',
-			'show_names'   => true, // Show field names on the left
-		) );
+		$cmb = new_cmb2_box(
+			array(
+				'id'           => self::TAXONOMY_NAME . '_metabox',
+				'title'        => __( 'Mail Settings', 'juvo-mail-editor' ),
+				'object_types' => array( 'term' ), // Tells CMB2 to use term_meta vs post_meta
+				'taxonomies'   => array( self::TAXONOMY_NAME ),
+				'context'      => 'normal',
+				'priority'     => 'high',
+				'show_names'   => true, // Show field names on the left
+			)
+		);
 
-		$cmb->add_field( array(
-			'name' => __( 'Always use trigger', 'juvo-mail-editor' ),
-			'desc' => __( 'Use trigger even if no post is associated with it', 'juvo-mail-editor' ),
-			'id'   => self::TAXONOMY_NAME . '_always_send',
-			'type' => 'checkbox'
-		) );
+		$cmb->add_field(
+			array(
+				'name' => __( 'Always use trigger', 'juvo-mail-editor' ),
+				'desc' => __( 'Use trigger even if no post is associated with it', 'juvo-mail-editor' ),
+				'id'   => self::TAXONOMY_NAME . '_always_send',
+				'type' => 'checkbox',
+			)
+		);
 
-		$cmb->add_field( array(
-			'name' => __( 'Default Recipients', 'juvo-mail-editor' ),
-			'desc' => __( 'Default recipients of the mail', 'juvo-mail-editor' ),
-			'id'   => self::TAXONOMY_NAME . '_default_recipients',
-			'type' => 'text'
-		) );
+		$cmb->add_field(
+			array(
+				'name' => __( 'Default Recipients', 'juvo-mail-editor' ),
+				'desc' => __( 'Default recipients of the mail', 'juvo-mail-editor' ),
+				'id'   => self::TAXONOMY_NAME . '_default_recipients',
+				'type' => 'text',
+			)
+		);
 
-		$cmb->add_field( array(
-			'name' => __( 'Additional Placeholders', 'juvo-mail-editor' ),
-			'id'   => self::TAXONOMY_NAME . '_placeholders',
-			'type' => 'textarea'
-		) );
+		$cmb->add_field(
+			array(
+				'name' => __( 'Additional Placeholders', 'juvo-mail-editor' ),
+				'id'   => self::TAXONOMY_NAME . '_placeholders',
+				'type' => 'textarea',
+			)
+		);
 	}
 
 	/**
@@ -80,15 +91,15 @@ class Mail_Trigger_TAX {
 	 */
 	public function registerTrigger() {
 
-		$triggers = [];
+		$triggers = array();
 		$errors   = new WP_Error();
 
-		$triggers = apply_filters( "juvo_mail_editor_trigger", $triggers );
+		$triggers = apply_filters( 'juvo_mail_editor_trigger', $triggers );
 
 		foreach ( $triggers as $trigger ) {
 
 			if ( ! $trigger instanceof Trigger ) {
-				$errors->add( "juvo_mail_editor_invalid_trigger", "Provided trigger is no instance of JUVO_MailEditor\Trigger and therefore skipped" );
+				$errors->add( 'juvo_mail_editor_invalid_trigger', 'Provided trigger is no instance of JUVO_MailEditor\Trigger and therefore skipped' );
 				continue;
 			}
 
@@ -98,27 +109,30 @@ class Mail_Trigger_TAX {
 				$term = wp_insert_term(
 					$trigger->getName(),
 					self::TAXONOMY_NAME,
-					[ "slug" => $trigger->getSlug() ]
+					array( 'slug' => $trigger->getSlug() )
 				);
 			} else {
-				$term = wp_update_term( $term->term_id, self::TAXONOMY_NAME, array(
-					'name' => $trigger->getName(),
-					'slug' => $trigger->getSlug()
-				) );
+				$term = wp_update_term(
+					$term->term_id,
+					self::TAXONOMY_NAME,
+					array(
+						'name' => $trigger->getName(),
+						'slug' => $trigger->getSlug(),
+					)
+				);
 			}
 			if ( is_wp_error( $term ) ) {
-				$errors->add( "juvo_mail_editor_term_error", $term->get_error_message() );
+				$errors->add( 'juvo_mail_editor_term_error', $term->get_error_message() );
 				continue;
 			}
 
 			// wp_insert_term returns an error while wp_update_term return an instance of WP_Term... thanks for nothing
 			// normalize $term to be the term_id
 			if ( is_array( $term ) ) {
-				$term = $term["term_id"];
+				$term = $term['term_id'];
 			} else { // @phpstan-ignore-line
 				$term = $term->term_id;
 			}
-
 		}
 
 		foreach ( $errors->get_error_messages() as $error ) {

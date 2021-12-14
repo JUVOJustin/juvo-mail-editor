@@ -4,13 +4,13 @@ namespace JUVO_MailEditor\Mails;
 
 interface Mail {
 
-	function getSubject(): string;
+	public function getSubject(): string;
 
-	function getMessage(): string;
+	public function getMessage(): string;
 
-	function getRecipient(): string;
+	public function getRecipient(): string;
 
-	function getTrigger(): string;
+	public function getTrigger(): string;
 
 	/**
 	 * Return default placeholder set

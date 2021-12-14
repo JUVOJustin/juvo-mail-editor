@@ -9,7 +9,6 @@ namespace JUVO_MailEditor;
  * Maintain a list of all hooks that are registered throughout
  * the plugin, and register them with the WordPress API. Call the
  * run function to execute the list of actions and filters.
- *
  */
 class Loader {
 
@@ -47,8 +46,8 @@ class Loader {
 	 */
 	public function __construct() {
 
-		$this->actions = array();
-		$this->filters = array();
+		$this->actions    = array();
+		$this->filters    = array();
 		$this->shortcodes = array();
 
 	}
@@ -103,7 +102,7 @@ class Loader {
 			'component'     => $component,
 			'callback'      => $callback,
 			'priority'      => $priority,
-			'accepted_args' => $accepted_args
+			'accepted_args' => $accepted_args,
 		);
 
 		return $hooks;
@@ -133,24 +132,37 @@ class Loader {
 	public function run() {
 
 		foreach ( $this->filters as $hook ) {
-			add_filter( $hook['hook'], array(
-				$hook['component'],
-				$hook['callback']
-			), $hook['priority'], $hook['accepted_args'] );
+			add_filter(
+				$hook['hook'],
+				array(
+					$hook['component'],
+					$hook['callback'],
+				),
+				$hook['priority'],
+				$hook['accepted_args']
+			);
 		}
 
 		foreach ( $this->actions as $hook ) {
-			add_action( $hook['hook'], array(
-				$hook['component'],
-				$hook['callback']
-			), $hook['priority'], $hook['accepted_args'] );
+			add_action(
+				$hook['hook'],
+				array(
+					$hook['component'],
+					$hook['callback'],
+				),
+				$hook['priority'],
+				$hook['accepted_args']
+			);
 		}
 
 		foreach ( $this->shortcodes as $hook ) {
-			add_shortcode( $hook['hook'], array(
-				$hook['component'],
-				$hook['callback']
-			) );
+			add_shortcode(
+				$hook['hook'],
+				array(
+					$hook['component'],
+					$hook['callback'],
+				)
+			);
 		}
 
 	}

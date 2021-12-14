@@ -8,9 +8,8 @@ namespace JUVO_MailEditor;
  *
  * Loads and defines the internationalization files for this plugin
  * so that it is ready for translation.
- *
  */
-class i18n {
+class I18N {
 
 	/**
 	 * Load the plugin text domain for translation.

@@ -3,11 +3,11 @@
 
 namespace JUVO_MailEditor;
 
-
 /**
  * Transportobject for mail trigger terms
  *
  * Class Trigger
+ *
  * @package JUVO_MailEditor
  */
 class Trigger {

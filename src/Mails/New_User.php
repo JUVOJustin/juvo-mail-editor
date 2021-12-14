@@ -12,7 +12,7 @@ class New_User extends Mail_Generator {
 	protected WP_User $user;
 
 	public function getTrigger(): string {
-		return "new_user";
+		return 'new_user';
 	}
 
 	/**
@@ -33,7 +33,7 @@ class New_User extends Mail_Generator {
 
 		$placeholders = $this->getPlaceholderValues();
 
-		$relay = new Relay( $this->getTrigger(), $placeholders, [ "user" => $user ] );
+		$relay = new Relay( $this->getTrigger(), $placeholders, array( 'user' => $user ) );
 		$relay->sendMails();
 
 		return $this->emptyMailArray( $email );
@@ -47,7 +47,7 @@ class New_User extends Mail_Generator {
 
 		$adt_rp_key                          = get_password_reset_key( $this->user );
 		$user_login                          = $this->user->user_login;
-		$placeholders["password_reset_link"] = '<a href="' . network_site_url( "wp-login.php?action=rp&key=$adt_rp_key&login=" . rawurlencode( $user_login ), 'login' ) . '">' . network_site_url( "wp-login.php?action=rp&key=$adt_rp_key&login=" . rawurlencode( $user_login ), 'login' ) . '</a>';
+		$placeholders['password_reset_link'] = '<a href="' . network_site_url( "wp-login.php?action=rp&key=$adt_rp_key&login=" . rawurlencode( $user_login ), 'login' ) . '">' . network_site_url( "wp-login.php?action=rp&key=$adt_rp_key&login=" . rawurlencode( $user_login ), 'login' ) . '</a>';
 
 		return $placeholders;
 	}
@@ -56,29 +56,29 @@ class New_User extends Mail_Generator {
 	 * @inheritDoc
 	 */
 	public function getDefaultPlaceholder(): array {
-		return [
-			"password_reset_link" => ""
-		];
+		return array(
+			'password_reset_link' => '',
+		);
 	}
 
 	public function getSubject(): string {
-		return sprintf( __( '%s Login Details' ), "{{site.name}}" );
+		return sprintf( __( '%s Login Details', 'default' ), '{{site.name}}' );
 	}
 
 	public function getMessage(): string {
-		$message = sprintf( __( 'Username: %s' ), "{{user.name}}" ) . "\r\n\r\n";
-		$message .= __( 'To set your password, visit the following address:' ) . "\r\n\r\n";
-		$message .= "{{password_reset_link}}" . "\r\n";
+		$message = sprintf( __( 'Username: %s', 'default' ), '{{user.name}}' ) . "\r\n\r\n";
+		$message .= __( 'To set your password, visit the following address:', 'default' ) . "\r\n\r\n";
+		$message .= '{{password_reset_link}}' . "\r\n";
 
 		return $message;
 	}
 
 	public function getRecipient(): string {
-		return "{{user.user_email}}";
+		return '{{user.user_email}}';
 	}
 
 	protected function getName(): string {
-		return "New User (User)";
+		return 'New User (User)';
 	}
 
 	public function getAlwaysSent(): bool {
@@ -87,8 +87,8 @@ class New_User extends Mail_Generator {
 
 	public function getLanguage( string $language, array $context ): string {
 
-		if ( isset( $context["user"] ) && $context["user"] instanceof WP_User ) {
-			return get_user_locale( $context["user"]->ID );
+		if ( isset( $context['user'] ) && $context['user'] instanceof WP_User ) {
+			return get_user_locale( $context['user']->ID );
 		}
 
 		return $language;

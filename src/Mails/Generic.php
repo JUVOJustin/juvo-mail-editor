@@ -3,11 +3,10 @@
 
 namespace JUVO_MailEditor\Mails;
 
-
 class Generic {
 
-	private $subject = "";
-	private $content = "";
+	private $subject = '';
+	private $content = '';
 	private $recipients;
 
 	/**

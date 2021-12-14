@@ -15,7 +15,7 @@ class New_User_Admin extends Mail_Generator {
 	 * @return string
 	 */
 	public function getTrigger(): string {
-		return "new_user_admin";
+		return 'new_user_admin';
 	}
 
 	/**
@@ -34,44 +34,44 @@ class New_User_Admin extends Mail_Generator {
 
 		$placeholders = $this->getPlaceholderValues();
 
-		$relay = new Relay( $this->getTrigger(), $placeholders, [ "user" => $user ] );
+		$relay = new Relay( $this->getTrigger(), $placeholders, array( 'user' => $user ) );
 		$relay->sendMails();
 
 		return $this->emptyMailArray( $email );
 	}
 
 	public function getSubject(): string {
-		return sprintf( __( "[%s] New User Registration" ), "{{site.name}}" );
+		return sprintf( __( '[%s] New User Registration', 'default' ), '{{site.name}}' );
 	}
 
 	public function getMessage(): string {
-		$message = sprintf( __( 'New user registration on your site %s:' ), "{{site.name}}" ) . "\r\n\r\n";
-		$message .= sprintf( __( 'Username: %s' ), "{{user.name}}" ) . "\r\n\r\n";
-		$message .= sprintf( __( 'Email: %s' ), "{{user.user_email}}" ) . "\r\n";
+		$message = sprintf( __( 'New user registration on your site %s:', 'default' ), '{{site.name}}' ) . "\r\n\r\n";
+		$message .= sprintf( __( 'Username: %s', 'default' ), '{{user.name}}' ) . "\r\n\r\n";
+		$message .= sprintf( __( 'Email: %s', 'default' ), '{{user.user_email}}' ) . "\r\n";
 
 		return $message;
 	}
 
 	public function getRecipient(): string {
-		return "{{site.admin_email}}";
+		return '{{site.admin_email}}';
 	}
 
 	protected function getName(): string {
-		return "New User (Admin)";
+		return 'New User (Admin)';
 	}
 
 	/**
 	 * @inheritDoc
 	 */
 	public function getDefaultPlaceholder(): array {
-		return [];
+		return array();
 	}
 
 	/**
 	 * @inheritDoc
 	 */
 	protected function getPlaceholderValues(): array {
-		return [];
+		return array();
 	}
 
 	public function getAlwaysSent(): bool {

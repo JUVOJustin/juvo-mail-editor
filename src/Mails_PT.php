@@ -3,15 +3,14 @@
 
 namespace JUVO_MailEditor;
 
-
 use WP_Block_Editor_Context;
 
 class Mails_PT {
 
-	public const POST_TYPE_NAME = "juvo-mail";
+	public const POST_TYPE_NAME = 'juvo-mail';
 
 	public function registerPostType() {
-		$labels = [
+		$labels = array(
 			'name'                  => _x( 'Mail', 'Post type general name', 'juvo-mail-editor' ),
 			'singular_name'         => _x( 'Mail', 'Post type singular name', 'juvo-mail-editor' ),
 			'menu_name'             => _x( 'Mails', 'Admin Menu text', 'juvo-mail-editor' ),
@@ -30,7 +29,7 @@ class Mails_PT {
 			'filter_items_list'     => _x( 'Filter mail list', 'Screen reader text for the filter links heading on the post type listing screen. Default “Filter posts list”/”Filter pages list”. Added in 4.4', 'juvo-mail-editor' ),
 			'items_list_navigation' => _x( 'Mails list navigation', 'Screen reader text for the pagination heading on the post type listing screen. Default “Posts list navigation”/”Pages list navigation”. Added in 4.4', 'juvo-mail-editor' ),
 			'items_list'            => _x( 'Mails list', 'Screen reader text for the items list heading on the post type listing screen. Default “Posts list”/”Pages list”. Added in 4.4', 'juvo-mail-editor' ),
-		];
+		);
 
 		$args = array(
 			'labels'          => $labels,
@@ -42,7 +41,7 @@ class Mails_PT {
 			'menu_position'   => null,
 			'supports'        => array( 'title', 'editor', 'author', 'revisions' ),
 			'show_in_rest'    => true,
-			'menu_icon'       => 'dashicons-email'
+			'menu_icon'       => 'dashicons-email',
 		);
 
 		register_post_type( self::POST_TYPE_NAME, $args );
@@ -56,14 +55,14 @@ class Mails_PT {
 	 */
 	public function limitBlocks( $allowed_block_types, WP_Block_Editor_Context $block_editor_context ) {
 
-		if ( isset( $block_editor_context->post ) && $block_editor_context->post->post_type === self::POST_TYPE_NAME ) {
-			return [
+		if ( isset( $block_editor_context->post ) && self::POST_TYPE_NAME === $block_editor_context->post->post_type ) {
+			return array(
 				'core/image',
 				'core/paragraph',
 				'core/heading',
 				'core/list',
-				'core/table'
-			];
+				'core/table',
+			);
 		}
 
 		return $allowed_block_types;
@@ -71,32 +70,38 @@ class Mails_PT {
 
 	public function addMetaboxes() {
 
-		$cmb = new_cmb2_box( array(
-			'id'           => self::POST_TYPE_NAME . '_metabox',
-			'title'        => __( 'Mail Settings', 'juvo-mail-editor' ),
-			'object_types' => array( self::POST_TYPE_NAME, ), // Post type
-			'context'      => 'normal',
-			'priority'     => 'high',
-			'show_names'   => true, // Show field names on the left
-		) );
+		$cmb = new_cmb2_box(
+			array(
+				'id'           => self::POST_TYPE_NAME . '_metabox',
+				'title'        => __( 'Mail Settings', 'juvo-mail-editor' ),
+				'object_types' => array( self::POST_TYPE_NAME ), // Post type
+				'context'      => 'normal',
+				'priority'     => 'high',
+				'show_names'   => true, // Show field names on the left
+			)
+		);
 
-		$cmb->add_field( array(
-			'name'   => __( 'Recipients', 'juvo-mail-editor' ),
-			'desc'   => __( 'Comma seperated list of mail addresses<br><code>{{CONTEXT}}</code><code>{{ADMIN_EMAIL}}</code>', 'juvo-mail-editor' ),
-			'id'     => self::POST_TYPE_NAME . '_recipients',
-			'type'   => 'text',
-			'column' => true,
-		) );
+		$cmb->add_field(
+			array(
+				'name'   => __( 'Recipients', 'juvo-mail-editor' ),
+				'desc'   => __( 'Comma seperated list of mail addresses<br><code>{{CONTEXT}}</code><code>{{ADMIN_EMAIL}}</code>', 'juvo-mail-editor' ),
+				'id'     => self::POST_TYPE_NAME . '_recipients',
+				'type'   => 'text',
+				'column' => true,
+			)
+		);
 
-		$cmb->add_field( array(
-			'name'   => __( 'Subject', 'juvo-mail-editor' ),
-			'desc'   => __( 'E-Mail subject', 'juvo-mail-editor' ),
-			'id'     => self::POST_TYPE_NAME . '_subject',
-			'type'   => 'text',
-			'column' => true,
-		) );
+		$cmb->add_field(
+			array(
+				'name'   => __( 'Subject', 'juvo-mail-editor' ),
+				'desc'   => __( 'E-Mail subject', 'juvo-mail-editor' ),
+				'id'     => self::POST_TYPE_NAME . '_subject',
+				'type'   => 'text',
+				'column' => true,
+			)
+		);
 
-		apply_filters( "juvo_mail_editor_post_metabox", $cmb );
+		apply_filters( 'juvo_mail_editor_post_metabox', $cmb );
 	}
 
 }

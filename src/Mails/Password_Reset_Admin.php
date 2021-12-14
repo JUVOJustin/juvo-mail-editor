@@ -3,7 +3,6 @@
 
 namespace JUVO_MailEditor\Mails;
 
-
 use CMB2;
 use JUVO_MailEditor\Mail_Generator;
 use JUVO_MailEditor\Relay;
@@ -14,24 +13,20 @@ class Password_Reset_Admin extends Mail_Generator {
 		return $cmb;
 	}
 
-	public function getTrigger(): string {
-		return "password_reset_admin";
+	public function getSubject(): string {
+		return __( 'Password Reset (Admin)', 'juvo-mail-editor' );
 	}
 
-	function getSubject(): string {
-		return __( "Password Reset (Admin)", 'juvo-mail-editor' );
-	}
-
-	function getMessage(): string {
-		$message = __( 'Someone has requested a password reset for the following account:' ) . "\r\n\r\n";
-		$message .= sprintf( __( 'Site Name: %s' ), "{{ site.name}}" ) . "\r\n\r\n";
-		$message .= sprintf( __( 'Username: %s' ), "{{ user.name }}" ) . "\r\n\r\n";
+	public function getMessage(): string {
+		$message = __( 'Someone has requested a password reset for the following account:', 'default' ) . "\r\n\r\n";
+		$message .= sprintf( __( 'Site Name: %s', 'default' ), '{{ site.name}}' ) . "\r\n\r\n";
+		$message .= sprintf( __( 'Username: %s', 'default' ), '{{ user.name }}' ) . "\r\n\r\n";
 
 		return $message;
 	}
 
-	function getRecipient(): string {
-		return "{{ site.admin_email}}";
+	public function getRecipient(): string {
+		return '{{ site.admin_email}}';
 	}
 
 	public function send( ...$params ) {
@@ -39,28 +34,28 @@ class Password_Reset_Admin extends Mail_Generator {
 
 		$placeholders = $this->getPlaceholderValues();
 
-		$relay = new Relay( $this->getTrigger(), $placeholders, [ "user" => $user ] );
+		$relay = new Relay( $this->getTrigger(), $placeholders, array( 'user' => $user ) );
 		$relay->sendMails();
 
-		return "";
-	}
-
-	protected function getName(): string {
-		return "Password Reset (Admin)";
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public function getDefaultPlaceholder(): array {
-		return [];
+		return '';
 	}
 
 	/**
 	 * @inheritDoc
 	 */
 	protected function getPlaceholderValues(): array {
-		return [];
+		return array();
+	}
+
+	public function getTrigger(): string {
+		return 'password_reset_admin';
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function getDefaultPlaceholder(): array {
+		return array();
 	}
 
 	public function getAlwaysSent(): bool {
@@ -68,6 +63,10 @@ class Password_Reset_Admin extends Mail_Generator {
 	}
 
 	public function getLanguage( string $language, array $context ): string {
-		return get_bloginfo( "language" );
+		return get_bloginfo( 'language' );
+	}
+
+	protected function getName(): string {
+		return 'Password Reset (Admin)';
 	}
 }

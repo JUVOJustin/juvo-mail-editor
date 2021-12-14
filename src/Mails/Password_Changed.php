@@ -3,7 +3,6 @@
 
 namespace JUVO_MailEditor\Mails;
 
-
 use CMB2;
 use JUVO_MailEditor\Mail_Generator;
 use JUVO_MailEditor\Mail_Trigger_TAX;
@@ -22,14 +21,14 @@ class Password_Changed extends Mail_Generator {
 	}
 
 	public function getTrigger(): string {
-		return "password_changed";
+		return 'password_changed';
 	}
 
-	function getSubject(): string {
-		return sprintf( __( "%s Password Changed" ), "{{site.name}}" );
+	public function getSubject(): string {
+		return sprintf( __( '%s Password Changed', 'default' ), '{{site.name}}' );
 	}
 
-	function getMessage(): string {
+	public function getMessage(): string {
 		$message = __(
 			'Hi ###USERNAME###,
 
@@ -42,25 +41,27 @@ This email has been sent to ###EMAIL###
 
 Regards,
 All at ###SITENAME###
-###SITEURL###'
+###SITEURL###',
+			'default'
 		);
 
-		$message = str_replace( [
-			'###USERNAME###',
-			'###SITENAME###',
-			'###ADMIN_EMAIL###',
-			'###SITEURL###',
-			'###EMAIL###'
-		],
-			[ '{{user.name}}', '{{site.name}}', '{{site.admin_email}}', '{{site.url}}', '{{user.user_email}}' ],
+		$message = str_replace(
+			array(
+				'###USERNAME###',
+				'###SITENAME###',
+				'###ADMIN_EMAIL###',
+				'###SITEURL###',
+				'###EMAIL###',
+			),
+			array( '{{user.name}}', '{{site.name}}', '{{site.admin_email}}', '{{site.url}}', '{{user.user_email}}' ),
 			$message
 		);
 
 		return $message;
 	}
 
-	function getRecipient(): string {
-		return "{{user.user_email}}";
+	public function getRecipient(): string {
+		return '{{user.user_email}}';
 	}
 
 	public function send( ...$params ) {
@@ -68,7 +69,7 @@ All at ###SITENAME###
 
 		$placeholders = $this->getPlaceholderValues();
 
-		$relay = new Relay( $this->getTrigger(), $placeholders, [ "user" => $user ] );
+		$relay = new Relay( $this->getTrigger(), $placeholders, array( 'user' => $user ) );
 		$relay->sendMails();
 
 		return $this->emptyMailArray( $email );
@@ -78,14 +79,14 @@ All at ###SITENAME###
 	 * @inheritDoc
 	 */
 	protected function getPlaceholderValues(): array {
-		return [];
+		return array();
 	}
 
 	/**
 	 * @inheritDoc
 	 */
 	public function getDefaultPlaceholder(): array {
-		return [];
+		return array();
 	}
 
 	public function getAlwaysSent(): bool {
@@ -94,14 +95,14 @@ All at ###SITENAME###
 
 	public function getLanguage( string $language, array $context ): string {
 
-		if ( isset( $context["user"] ) && $context["user"] instanceof WP_User ) {
-			return get_user_locale( $context["user"]->ID );
+		if ( isset( $context['user'] ) && $context['user'] instanceof WP_User ) {
+			return get_user_locale( $context['user']->ID );
 		}
 
 		return $language;
 	}
 
 	protected function getName(): string {
-		return "Password Changed (User)";
+		return 'Password Changed (User)';
 	}
 }

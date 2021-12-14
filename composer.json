@@ -37,9 +37,10 @@
     "cmb2/cmb2": "^2.9",
     "php": ">=7.2.0",
     "timber/timber": "^1.19",
-    "symfony/polyfill-mbstring": "1.20.0"
+    "symfony/polyfill-mbstring": "1.20"
   },
   "scripts": {
+    "sniff": "./vendor/bin/phpcs -s ./",
     "static-analyse": "@php ./vendor/bin/phpstan analyse src",
     "test": "@php ./vendor/phpunit/phpunit/phpunit"
   },

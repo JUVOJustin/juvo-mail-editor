@@ -99,7 +99,7 @@ class Mail_Editor {
 		 * Options
 		 */
 		$options = new Options_Page();
-		$this->loader->add_action( 'cmb2_admin_init', $options, 'yourprefix_register_options_submenu_for_page_post_type' );
+		$this->loader->add_action( 'cmb2_admin_init', $options, 'registerOptionsPage' );
 		$this->loader->add_action( 'wp_ajax_juvo-mail-editor-sync-triggers', $options, 'ajax_sync_triggers' );
 
 		/**
@@ -126,62 +126,34 @@ class Mail_Editor {
 		/**
 		 * New User Notification for enduser
 		 */
-		$newUser = new New_User();
-		$this->loader->add_filter( 'juvo_mail_editor_trigger', $newUser, 'registerTrigger' );
-		$this->loader->add_filter( 'juvo_mail_editor_post_metabox', $newUser, 'addCustomFields' );
-		$this->loader->add_action( 'wp_new_user_notification_email', $newUser, 'send', 10, 2 );
-
-		// Rest
-		$newUserRest = new New_User_Rest();
-		$this->loader->add_filter( 'juvo_mail_editor_trigger', $newUserRest, 'registerTrigger' );
-		$this->loader->add_filter( 'juvo_mail_editor_post_metabox', $newUserRest, 'addCustomFields' );
-		$this->loader->add_action( 'rest_insert_user', $newUserRest, 'send', 12, 1 );
+		$this->loader->add_action( 'wp_new_user_notification_email', new New_User(), 'send', 10, 2 );
+		$this->loader->add_action( 'rest_insert_user', new New_User_Rest(), 'send', 12, 1 ); // Rest
 
 		/**
 		 * New User Notification Admin
 		 */
-		$newUserAdmin = new New_User_Admin();
-		$this->loader->add_filter( 'juvo_mail_editor_trigger', $newUserAdmin, 'registerTrigger' );
-		$this->loader->add_filter( 'juvo_mail_editor_post_metabox', $newUserAdmin, 'addCustomFields' );
-		$this->loader->add_action( 'wp_new_user_notification_email_admin', $newUserAdmin, 'send', 10, 2 );
-
-		// Rest
-		$newUserAdminRest = new New_User_Admin_Rest();
-		$this->loader->add_filter( 'juvo_mail_editor_trigger', $newUserAdminRest, 'registerTrigger' );
-		$this->loader->add_filter( 'juvo_mail_editor_post_metabox', $newUserAdminRest, 'addCustomFields' );
-		$this->loader->add_action( 'rest_insert_user', $newUserAdminRest, 'send', 12, 1 );
+		$this->loader->add_action( 'wp_new_user_notification_email_admin', new New_User_Admin(), 'send', 10, 2 );
+		$this->loader->add_action( 'rest_insert_user', new New_User_Admin_Rest(), 'send', 12, 1 ); // Rest
 
 		/**
 		 * Password Reset
 		 */
-		$passwordReset = new Password_Reset();
-		$this->loader->add_filter( 'juvo_mail_editor_trigger', $passwordReset, 'registerTrigger' );
-		$this->loader->add_filter( 'juvo_mail_editor_post_metabox', $passwordReset, 'addCustomFields' );
-		$this->loader->add_filter( 'retrieve_password_message', $passwordReset, 'send', 10, 4 );
+		$this->loader->add_filter( 'retrieve_password_message', new Password_Reset(), 'send', 10, 4 );
 
 		/**
 		 * Password Reset Admin
 		 */
-		$passwordResetAdmin = new Password_Reset_Admin();
-		$this->loader->add_filter( 'juvo_mail_editor_trigger', $passwordResetAdmin, 'registerTrigger' );
-		$this->loader->add_filter( 'juvo_mail_editor_post_metabox', $passwordResetAdmin, 'addCustomFields' );
-		$this->loader->add_filter( 'retrieve_password_message', $passwordResetAdmin, 'send', 99, 4 );
+		$this->loader->add_filter( 'retrieve_password_message', new Password_Reset_Admin(), 'send', 99, 4 );
 
 		/**
 		 * Password Changed
 		 */
-		$passwordChanged = new Password_Changed();
-		$this->loader->add_filter( 'juvo_mail_editor_trigger', $passwordChanged, 'registerTrigger' );
-		$this->loader->add_filter( 'juvo_mail_editor_post_metabox', $passwordChanged, 'addCustomFields' );
-		$this->loader->add_filter( 'password_change_email', $passwordChanged, 'send', 10, 2 );
+		$this->loader->add_filter( 'password_change_email', new Password_Changed(), 'send', 10, 2 );
 
 		/**
 		 * Password Changed Admin
 		 */
-		$passwordChangedAdmin = new Password_Changed_Admin();
-		$this->loader->add_filter( 'juvo_mail_editor_trigger', $passwordChangedAdmin, 'registerTrigger' );
-		$this->loader->add_filter( 'juvo_mail_editor_post_metabox', $passwordChangedAdmin, 'addCustomFields' );
-		$this->loader->add_filter( 'wp_password_change_notification_email', $passwordChangedAdmin, 'send', 10, 2 );
+		$this->loader->add_filter( 'wp_password_change_notification_email', new Password_Changed_Admin(), 'send', 10, 2 );
 
 		/**
 		 * Integrations

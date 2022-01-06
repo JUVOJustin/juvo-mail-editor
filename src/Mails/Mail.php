@@ -10,8 +10,6 @@ interface Mail {
 
 	public function getRecipient(): string;
 
-	public function getTrigger(): string;
-
 	/**
 	 * Return default placeholder set
 	 *

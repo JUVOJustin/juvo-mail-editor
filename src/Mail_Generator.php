@@ -11,6 +11,7 @@ abstract class Mail_Generator implements Mail {
 
 	public function __construct() {
 		add_filter( 'juvo_mail_editor_post_metabox', array( $this, 'addCustomFields' ) );
+		add_filter( 'juvo_mail_editor_trigger', array( $this, 'registerTrigger' ) );
 
 		add_filter( "juvo_mail_editor_{$this->getTrigger()}_always_sent", array( $this, 'getAlwaysSent' ), 1, 0 );
 		add_filter( "juvo_mail_editor_{$this->getTrigger()}_subject", array( $this, 'getSubject' ), 1, 0 );
@@ -27,6 +28,8 @@ abstract class Mail_Generator implements Mail {
 		);
 		add_filter( "juvo_mail_editor_{$this->getTrigger()}_language", array( $this, 'getLanguage' ), 1, 2 );
 	}
+
+	abstract protected function getTrigger(): string;
 
 	abstract public function send( ...$params );
 
@@ -50,7 +53,9 @@ abstract class Mail_Generator implements Mail {
 	 *
 	 * @return CMB2
 	 */
-	abstract public function addCustomFields( CMB2 $cmb ): CMB2;
+	public function addCustomFields( CMB2 $cmb ): CMB2 {
+		return $cmb;
+	} // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundInExtendedClassAfterLastUsed
 
 	public function postHasTrigger( CMB2_Field $field ): bool {
 		return has_term( $this->getTrigger(), Mail_Trigger_TAX::TAXONOMY_NAME, $field->object_id() );
@@ -64,7 +69,9 @@ abstract class Mail_Generator implements Mail {
 	 *
 	 * @phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter
 	 */
-	abstract public function getLanguage( string $language, array $context ): string; // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundInExtendedClassAfterLastUsed
+	public function getLanguage( string $language, array $context ): string {
+		return $language;
+	}
 
 	/**
 	 * Fill the default placeholders with their real values.

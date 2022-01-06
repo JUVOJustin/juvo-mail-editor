@@ -4,7 +4,7 @@ namespace JUVO_MailEditor;
 
 class Options_Page {
 
-	public function yourprefix_register_options_submenu_for_page_post_type() {
+	public function registerOptionsPage() {
 
 		/**
 		 * Registers options page menu item and form.
@@ -16,8 +16,8 @@ class Options_Page {
 				'object_types' => array( 'options-page' ),
 				'option_key'   => 'settings',
 				'parent_slug'  => 'edit.php?post_type=' . Mails_PT::POST_TYPE_NAME,
-				'capability'   => 'post', // Cap required to view options-page.
-				'display_cb'   => array( $this, 'yourprefix_theme_options_page_output' ),
+				'capability'   => 'edit_pages', // Cap required to view options-page.
+				'display_cb'   => array( $this, 'mailEditorOptionsPageRender' ),
 			)
 		);
 
@@ -37,7 +37,7 @@ class Options_Page {
 
 	}
 
-	public function yourprefix_theme_options_page_output( $hookup ) {
+	public function mailEditorOptionsPageRender( $hookup ) {
 		// Output custom markup for the options-page.
 		?>
 		<div class="wrap juvo-mail-editor cmb2-options-page option-<?php echo esc_attr( $hookup->option_key ); ?>">

@@ -47,7 +47,7 @@ class Password_Reset_Admin extends Mail_Generator {
 		return array();
 	}
 
-	public function getTrigger(): string {
+	protected function getTrigger(): string {
 		return 'password_reset_admin';
 	}
 
@@ -60,10 +60,6 @@ class Password_Reset_Admin extends Mail_Generator {
 
 	public function getAlwaysSent(): bool {
 		return true;
-	}
-
-	public function getLanguage( string $language, array $context ): string {
-		return get_bloginfo( 'language' );
 	}
 
 	protected function getName(): string {

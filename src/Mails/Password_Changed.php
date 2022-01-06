@@ -20,7 +20,7 @@ class Password_Changed extends Mail_Generator {
 		return $cmb;
 	}
 
-	public function getTrigger(): string {
+	protected function getTrigger(): string {
 		return 'password_changed';
 	}
 

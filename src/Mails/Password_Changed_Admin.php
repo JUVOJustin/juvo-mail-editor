@@ -20,7 +20,7 @@ class Password_Changed_Admin extends Mail_Generator {
 		return $cmb;
 	}
 
-	public function getTrigger(): string {
+	protected function getTrigger(): string {
 		return 'password_changed_admin';
 	}
 
@@ -63,13 +63,6 @@ class Password_Changed_Admin extends Mail_Generator {
 
 	public function getAlwaysSent(): bool {
 		return true;
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public function getLanguage( string $language, array $context ): string {
-		return $language;
 	}
 
 	protected function setPlaceholderValues( WP_User $user, array $options = array() ): void {

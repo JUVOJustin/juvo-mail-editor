@@ -2,7 +2,6 @@
 
 namespace JUVO_MailEditor\Mails;
 
-use CMB2;
 use JUVO_MailEditor\Mail_Generator;
 use JUVO_MailEditor\Relay;
 use WP_User;
@@ -11,19 +10,8 @@ class New_User extends Mail_Generator {
 
 	protected WP_User $user;
 
-	public function getTrigger(): string {
+	protected function getTrigger(): string {
 		return 'new_user';
-	}
-
-	/**
-	 * Add Custom Fields to metabox
-	 *
-	 * @param CMB2 $cmb
-	 *
-	 * @return CMB2
-	 */
-	public function addCustomFields( CMB2 $cmb ): CMB2 {
-		return $cmb;
 	}
 
 	public function send( ...$params ) {
@@ -93,4 +81,5 @@ class New_User extends Mail_Generator {
 
 		return $language;
 	}
+
 }

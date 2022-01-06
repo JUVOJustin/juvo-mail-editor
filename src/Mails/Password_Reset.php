@@ -15,7 +15,7 @@ class Password_Reset extends Mail_Generator {
 	protected WP_User $user;
 	protected string $key;
 
-	public function getTrigger(): string {
+	protected function getTrigger(): string {
 		return 'password_reset';
 	}
 

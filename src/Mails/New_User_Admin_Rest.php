@@ -2,20 +2,10 @@
 
 namespace JUVO_MailEditor\Mails;
 
-use CMB2;
 use JUVO_MailEditor\Mail_Generator;
 use JUVO_MailEditor\Relay;
 
 class New_User_Admin_Rest extends Mail_Generator {
-
-	/**
-	 * @param CMB2 $cmb
-	 *
-	 * @return CMB2
-	 */
-	public function addCustomFields( CMB2 $cmb ): CMB2 {
-		return $cmb;
-	}
 
 	public function send( ...$params ) {
 		list( $user ) = $params;
@@ -36,7 +26,7 @@ class New_User_Admin_Rest extends Mail_Generator {
 	/**
 	 * @return string
 	 */
-	public function getTrigger(): string {
+	protected function getTrigger(): string {
 		return 'new_user_admin_rest';
 	}
 
@@ -69,9 +59,5 @@ class New_User_Admin_Rest extends Mail_Generator {
 
 	public function getAlwaysSent(): bool {
 		return false;
-	}
-
-	public function getLanguage( string $language, array $context ): string {
-		return $language;
 	}
 }

@@ -7,7 +7,6 @@ use CMB2;
 use JUVO_MailEditor\Mail_Generator;
 use JUVO_MailEditor\Mail_Trigger_TAX;
 use JUVO_MailEditor\Mails_PT;
-use JUVO_MailEditor\Relay;
 use WP_User;
 
 class Password_Changed_Admin extends Mail_Generator {
@@ -36,36 +35,14 @@ class Password_Changed_Admin extends Mail_Generator {
 		return '{{site.admin_email}}';
 	}
 
-	public function send( ...$params ) {
-		list( $email, $user ) = $params;
-
-		$placeholders = $this->getPlaceholderValues();
-
-		$relay = new Relay( $this->getTrigger(), $placeholders, array( 'user' => $user ) );
-		$relay->sendMails();
+	public function prepareSend( array $email, WP_User $user ): array {
+		$this->send( [ "user" => $user ] );
 
 		return $this->emptyMailArray( $email );
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	protected function getPlaceholderValues(): array {
-		return array();
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public function getDefaultPlaceholder(): array {
-		return array();
-	}
-
 	public function getAlwaysSent(): bool {
 		return true;
-	}
-
-	protected function setPlaceholderValues( WP_User $user, array $options = array() ): void {
 	}
 
 	protected function getName(): string {

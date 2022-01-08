@@ -3,24 +3,13 @@
 namespace JUVO_MailEditor\Mails;
 
 use JUVO_MailEditor\Mail_Generator;
-use JUVO_MailEditor\Relay;
+use WP_User;
 
 class New_User_Admin_Rest extends Mail_Generator {
 
-	public function send( ...$params ) {
-		list( $user ) = $params;
+	public function prepareSend( WP_User $user ): void {
+		$this->send( [ "user" => $user ] );
 
-		$placeholders = $this->getPlaceholderValues();
-
-		$relay = new Relay( $this->getTrigger(), $placeholders, array( 'user' => $user ) );
-		$relay->sendMails();
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	protected function getPlaceholderValues(): array {
-		return array();
 	}
 
 	/**
@@ -48,13 +37,6 @@ class New_User_Admin_Rest extends Mail_Generator {
 
 	protected function getName(): string {
 		return 'New User Rest (Admin)';
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public function getDefaultPlaceholder(): array {
-		return array();
 	}
 
 	public function getAlwaysSent(): bool {

@@ -3,36 +3,33 @@
 namespace JUVO_MailEditor\Mails;
 
 use JUVO_MailEditor\Mail_Generator;
-use JUVO_MailEditor\Relay;
 use WP_User;
 
 class New_User_Rest extends Mail_Generator {
 
-	protected WP_User $user;
-
-	public function send( ...$params ) {
-		list( $user ) = $params;
-
-		$this->user = $user;
-
-		$placeholders = $this->getPlaceholderValues();
-
-		$relay = new Relay( $this->getTrigger(), $placeholders, array( 'user' => $user ) );
-		$relay->sendMails();
+	public function prepareSend( WP_User $user ) {
+		$this->send( [ "user" => $user ] );
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	protected function getPlaceholderValues(): array {
+	protected function getPlaceholders( ?array $context ): array {
 
-		$placeholders = $this->getDefaultPlaceholder();
+		$placeholders = array(
+			'password_reset_link' => '',
+		);
 
-		$adt_rp_key                          = get_password_reset_key( $this->user );
-		$user_login                          = $this->user->user_login;
+		if ( empty( $context ) ) {
+			return $placeholders;
+		}
+
+		$adt_rp_key                          = get_password_reset_key( $context['user'] );
+		$user_login                          = $context['user']->user_login;
 		$placeholders['password_reset_link'] = '<a href="' . network_site_url( "wp-login.php?action=rp&key=$adt_rp_key&login=" . rawurlencode( $user_login ), 'login' ) . '">' . network_site_url( "wp-login.php?action=rp&key=$adt_rp_key&login=" . rawurlencode( $user_login ), 'login' ) . '</a>';
 
 		return $placeholders;
+
 	}
 
 	/**

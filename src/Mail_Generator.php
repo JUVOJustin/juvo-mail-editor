@@ -27,11 +27,39 @@ abstract class Mail_Generator implements Mail {
 			0
 		);
 		add_filter( "juvo_mail_editor_{$this->getTrigger()}_language", array( $this, 'getLanguage' ), 1, 2 );
+
+		add_action( "juvo_mail_editor_{$this->getTrigger()}_send", array( $this, 'send' ), 10, 1 );
 	}
 
+	/**
+	 * Returns the trigger slug which should be unique and is used for all consecutive filters and actions
+	 *
+	 * @return string trigger slug
+	 */
 	abstract protected function getTrigger(): string;
 
-	abstract public function send( ...$params );
+	/**
+	 * @param array $context
+	 */
+	public function send( array $context ) {
+		$relay = new Relay( $this->getTrigger(), $this->getPlaceholders( $context ), $context );
+		$relay->sendMails();
+	}
+
+	/**
+	 * Returns the custom placeholders available for this trigger.
+	 * They may not necessarily have a value.
+	 *
+	 * The function should always return all custom placeholder no matter if they have a value or not.
+	 * This allows filters or other functions to fill or show the placeholder in the most dynamic way.
+	 *
+	 * @param array|null $context
+	 *
+	 * @return array Array key equals the accessor in twig
+	 */
+	protected function getPlaceholders( ?array $context ): array {
+		return [];
+	}
 
 	/**
 	 * @param Trigger[] $triggers
@@ -44,7 +72,12 @@ abstract class Mail_Generator implements Mail {
 		return $triggers;
 	}
 
-	abstract protected function getName(): string;
+	/**
+	 * Returns the triggers nicename in a human-readable format
+	 *
+	 * @return string trigger nicename
+	 */
+	abstract protected function getName(): string; // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundInExtendedClassAfterLastUsed
 
 	/**
 	 * Add Custom Fields to metabox
@@ -55,7 +88,7 @@ abstract class Mail_Generator implements Mail {
 	 */
 	public function addCustomFields( CMB2 $cmb ): CMB2 {
 		return $cmb;
-	} // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundInExtendedClassAfterLastUsed
+	}
 
 	public function postHasTrigger( CMB2_Field $field ): bool {
 		return has_term( $this->getTrigger(), Mail_Trigger_TAX::TAXONOMY_NAME, $field->object_id() );
@@ -72,15 +105,6 @@ abstract class Mail_Generator implements Mail {
 	public function getLanguage( string $language, array $context ): string {
 		return $language;
 	}
-
-	/**
-	 * Fill the default placeholders with their real values.
-	 * Params are most likely equal to the context.
-	 * This function should be called inside the send() method.
-	 *
-	 * @return array
-	 */
-	abstract protected function getPlaceholderValues(): array;
 
 	/**
 	 * Utility function to auto add show_on_cb callback for trigger
@@ -101,6 +125,15 @@ abstract class Mail_Generator implements Mail {
 		return $cmb;
 	}
 
+	/**
+	 * Utility function that completely empties the often used mail array.
+	 * This is most useful if hooking into native core function
+	 *
+	 * @param array $email
+	 * @param null $val
+	 *
+	 * @return array
+	 */
 	protected function emptyMailArray( array $email, $val = null ): array {
 		foreach ( $email as $key => $item ) {
 			$email[ $key ] = $val;

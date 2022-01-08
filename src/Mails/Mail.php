@@ -10,13 +10,6 @@ interface Mail {
 
 	public function getRecipient(): string;
 
-	/**
-	 * Return default placeholder set
-	 *
-	 * @return array
-	 */
-	public function getDefaultPlaceholder(): array;
-
 	public function getAlwaysSent(): bool;
 
 }

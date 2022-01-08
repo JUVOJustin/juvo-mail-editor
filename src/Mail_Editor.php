@@ -126,34 +126,34 @@ class Mail_Editor {
 		/**
 		 * New User Notification for enduser
 		 */
-		$this->loader->add_action( 'wp_new_user_notification_email', new New_User(), 'send', 10, 2 );
-		$this->loader->add_action( 'rest_insert_user', new New_User_Rest(), 'send', 12, 1 ); // Rest
+		$this->loader->add_action( 'wp_new_user_notification_email', new New_User(), 'prepareSend', 10, 2 );
+		$this->loader->add_action( 'rest_insert_user', new New_User_Rest(), 'prepareSend', 12, 1 ); // Rest
 
 		/**
 		 * New User Notification Admin
 		 */
-		$this->loader->add_action( 'wp_new_user_notification_email_admin', new New_User_Admin(), 'send', 10, 2 );
-		$this->loader->add_action( 'rest_insert_user', new New_User_Admin_Rest(), 'send', 12, 1 ); // Rest
+		$this->loader->add_action( 'wp_new_user_notification_email_admin', new New_User_Admin(), 'prepareSend', 10, 2 );
+		$this->loader->add_action( 'rest_insert_user', new New_User_Admin_Rest(), 'prepareSend', 12, 1 ); // Rest
 
 		/**
 		 * Password Reset
 		 */
-		$this->loader->add_filter( 'retrieve_password_message', new Password_Reset(), 'send', 10, 4 );
+		$this->loader->add_filter( 'retrieve_password_message', new Password_Reset(), 'prepareSend', 10, 4 );
 
 		/**
 		 * Password Reset Admin
 		 */
-		$this->loader->add_filter( 'retrieve_password_message', new Password_Reset_Admin(), 'send', 99, 4 );
+		$this->loader->add_filter( 'retrieve_password_message', new Password_Reset_Admin(), 'prepareSend', 99, 4 );
 
 		/**
 		 * Password Changed
 		 */
-		$this->loader->add_filter( 'password_change_email', new Password_Changed(), 'send', 10, 2 );
+		$this->loader->add_filter( 'password_change_email', new Password_Changed(), 'prepareSend', 10, 2 );
 
 		/**
 		 * Password Changed Admin
 		 */
-		$this->loader->add_filter( 'wp_password_change_notification_email', new Password_Changed_Admin(), 'send', 10, 2 );
+		$this->loader->add_filter( 'wp_password_change_notification_email', new Password_Changed_Admin(), 'prepareSend', 10, 2 );
 
 		/**
 		 * Integrations

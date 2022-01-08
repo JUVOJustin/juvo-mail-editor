@@ -7,13 +7,9 @@ use CMB2;
 use JUVO_MailEditor\Mail_Generator;
 use JUVO_MailEditor\Mail_Trigger_TAX;
 use JUVO_MailEditor\Mails_PT;
-use JUVO_MailEditor\Relay;
 use WP_User;
 
 class Password_Reset extends Mail_Generator {
-
-	protected WP_User $user;
-	protected string $key;
 
 	protected function getTrigger(): string {
 		return 'password_reset';
@@ -27,16 +23,8 @@ class Password_Reset extends Mail_Generator {
 		return $cmb;
 	}
 
-	public function send( ...$params ) {
-		list( $message, $key, $user_login, $user ) = $params;
-
-		$this->user = $user;
-		$this->key  = $key;
-
-		$placeholders = $this->getPlaceholderValues();
-
-		$relay = new Relay( $this->getTrigger(), $placeholders, array( 'user' => $user ) );
-		$relay->sendMails();
+	public function prepareSend( $message, string $key, $user_login, WP_User $user ): string {
+		$this->send( [ "user" => $user, 'key' => $key ] );
 
 		return '';
 	}
@@ -67,21 +55,18 @@ class Password_Reset extends Mail_Generator {
 	/**
 	 * @inheritDoc
 	 */
-	public function getDefaultPlaceholder(): array {
-		return array(
+	protected function getPlaceholders( ?array $context ): array {
+
+		$placeholders = array(
 			'password_reset_link' => '',
 		);
-	}
 
-	/**
-	 * @inheritDoc
-	 */
-	protected function getPlaceholderValues(): array {
+		if ( empty( $context ) ) {
+			return $placeholders;
+		}
 
-		$placeholders = $this->getDefaultPlaceholder();
-
-		if ( ! empty( $this->key ) ) {
-			$placeholders['password_reset_link'] = '<a href="' . network_site_url( "wp-login.php?action=rp&key={$this->key}&login=" . rawurlencode( $this->user->user_login ), 'login' ) . '">' . network_site_url( "wp-login.php?action=rp&key={$this->key}&login=" . rawurlencode( $this->user->user_login ), 'login' ) . '</a>';
+		if ( ! empty( $context['key'] ) ) {
+			$placeholders['password_reset_link'] = '<a href="' . network_site_url( "wp-login.php?action=rp&key={$context['key']}&login=" . rawurlencode( $context['user']->user_login ), 'login' ) . '">' . network_site_url( "wp-login.php?action=rp&key={$context['key']}&login=" . rawurlencode( $context['user']->user_login ), 'login' ) . '</a>';
 		}
 
 		return $placeholders;

@@ -5,7 +5,7 @@ namespace JUVO_MailEditor\Mails;
 
 use CMB2;
 use JUVO_MailEditor\Mail_Generator;
-use JUVO_MailEditor\Relay;
+use WP_User;
 
 class Password_Reset_Admin extends Mail_Generator {
 
@@ -29,33 +29,14 @@ class Password_Reset_Admin extends Mail_Generator {
 		return '{{ site.admin_email}}';
 	}
 
-	public function send( ...$params ) {
-		list( $message, $key, $user_login, $user ) = $params;
-
-		$placeholders = $this->getPlaceholderValues();
-
-		$relay = new Relay( $this->getTrigger(), $placeholders, array( 'user' => $user ) );
-		$relay->sendMails();
+	public function prepareSend( $message, $key, $user_login, WP_User $user ): string {
+		$this->send( [ "user" => $user ] );
 
 		return '';
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	protected function getPlaceholderValues(): array {
-		return array();
-	}
-
 	protected function getTrigger(): string {
 		return 'password_reset_admin';
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public function getDefaultPlaceholder(): array {
-		return array();
 	}
 
 	public function getAlwaysSent(): bool {

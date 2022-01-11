@@ -84,7 +84,7 @@ class Mails_PT {
 		$cmb->add_field(
 			array(
 				'name'   => __( 'Recipients', 'juvo-mail-editor' ),
-				'desc'   => __( 'Comma seperated list of mail addresses<br><code>{{CONTEXT}}</code><code>{{ADMIN_EMAIL}}</code>', 'juvo-mail-editor' ),
+				'desc'   => __( 'Comma seperated list of mail addresses', 'juvo-mail-editor' ),
 				'id'     => self::POST_TYPE_NAME . '_recipients',
 				'type'   => 'text',
 				'column' => true,

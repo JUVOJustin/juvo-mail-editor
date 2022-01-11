@@ -121,18 +121,12 @@ class Mail_Trigger_TAX {
 					)
 				);
 			}
+
 			if ( is_wp_error( $term ) ) {
 				$errors->add( 'juvo_mail_editor_term_error', $term->get_error_message() );
 				continue;
 			}
 
-			// wp_insert_term returns an error while wp_update_term return an instance of WP_Term... thanks for nothing
-			// normalize $term to be the term_id
-			if ( is_array( $term ) ) {
-				$term = $term['term_id'];
-			} else { // @phpstan-ignore-line
-				$term = $term->term_id;
-			}
 		}
 
 		foreach ( $errors->get_error_messages() as $error ) {

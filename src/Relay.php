@@ -36,8 +36,8 @@ class Relay {
 	 * Relay constructor.
 	 *
 	 * @param string $trigger
-	 * @param array $placeholders
 	 * @param array $context
+	 * @param WP_Term $term
 	 */
 	public function __construct( string $trigger, array $context, WP_Term $term ) {
 		$this->trigger      = $trigger;

@@ -18,17 +18,15 @@ abstract class Mail_Generator implements Mail {
 		add_filter( "juvo_mail_editor_{$this->getTrigger()}_message", array( $this, 'getMessage' ), 1, 0 );
 		add_filter( "juvo_mail_editor_{$this->getTrigger()}_default_recipients", array( $this, 'getRecipient' ), 1, 0 );
 		add_filter(
-			"juvo_mail_editor_{$this->getTrigger()}_default_placeholder",
+			"juvo_mail_editor_{$this->getTrigger()}_placeholders",
 			array(
 				$this,
-				'getDefaultPlaceholder',
+				'getPlaceholders',
 			),
 			1,
-			0
+			2
 		);
 		add_filter( "juvo_mail_editor_{$this->getTrigger()}_language", array( $this, 'getLanguage' ), 1, 2 );
-
-		add_action( "juvo_mail_editor_{$this->getTrigger()}_send", array( $this, 'send' ), 10, 1 );
 	}
 
 	/**
@@ -37,14 +35,6 @@ abstract class Mail_Generator implements Mail {
 	 * @return string trigger slug
 	 */
 	abstract protected function getTrigger(): string;
-
-	/**
-	 * @param array $context
-	 */
-	public function send( array $context ) {
-		$relay = new Relay( $this->getTrigger(), $this->getPlaceholders( $context ), $context );
-		$relay->sendMails();
-	}
 
 	/**
 	 * Returns the custom placeholders available for this trigger.
@@ -57,8 +47,8 @@ abstract class Mail_Generator implements Mail {
 	 *
 	 * @return array Array key equals the accessor in twig
 	 */
-	protected function getPlaceholders( ?array $context ): array {
-		return [];
+	public function getPlaceholders( array $placeholders, ?array $context ): array {
+		return $placeholders;
 	}
 
 	/**

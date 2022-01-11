@@ -119,6 +119,11 @@ class Mail_Editor {
 		$this->loader->add_action( 'cmb2_admin_init', $tax, 'addMetaboxes' );
 
 		/**
+		 * Handle Sending
+		 */
+		add_action( "juvo_mail_editor_send", array( Relay::class, 'sendMails' ), 10, 2 );
+
+		/**
 		 * Placeholders
 		 */
 		$this->loader->add_filter( 'juvo_mail_editor_timber_context', new Placeholder(), 'filterTimberContext' );

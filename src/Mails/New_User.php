@@ -12,8 +12,7 @@ class New_User extends Mail_Generator {
 	}
 
 	public function prepareSend( array $email, WP_User $user ): array {
-		$this->send( [ "user" => $user ] );
-
+		do_action( "juvo_mail_editor_send", $this->getTrigger(), [ "user" => $user ] );
 		return $this->emptyMailArray( $email );
 	}
 
@@ -22,11 +21,11 @@ class New_User extends Mail_Generator {
 	 *
 	 * @return string[]
 	 */
-	protected function getPlaceholders( ?array $context ): array {
+	public function getPlaceholders( array $placeholders, ?array $context ): array {
 
-		$placeholders = array(
+		$placeholders = array_merge( $placeholders, array(
 			'password_reset_link' => '',
-		);
+		) );
 
 		if ( empty( $context ) ) {
 			return $placeholders;

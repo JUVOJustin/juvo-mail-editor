@@ -36,8 +36,7 @@ class Password_Changed_Admin extends Mail_Generator {
 	}
 
 	public function prepareSend( array $email, WP_User $user ): array {
-		$this->send( [ "user" => $user ] );
-
+		do_action( "juvo_mail_editor_send", $this->getTrigger(), [ "user" => $user ] );
 		return $this->emptyMailArray( $email );
 	}
 

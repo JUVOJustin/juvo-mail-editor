@@ -24,8 +24,7 @@ class Password_Reset extends Mail_Generator {
 	}
 
 	public function prepareSend( $message, string $key, $user_login, WP_User $user ): string {
-		$this->send( [ "user" => $user, 'key' => $key ] );
-
+		do_action( "juvo_mail_editor_send", $this->getTrigger(), [ "user" => $user, 'key' => $key ] );
 		return '';
 	}
 
@@ -55,11 +54,11 @@ class Password_Reset extends Mail_Generator {
 	/**
 	 * @inheritDoc
 	 */
-	protected function getPlaceholders( ?array $context ): array {
+	public function getPlaceholders( array $placeholders, ?array $context ): array {
 
-		$placeholders = array(
+		$placeholders = array_merge( $placeholders, array(
 			'password_reset_link' => '',
-		);
+		) );
 
 		if ( empty( $context ) ) {
 			return $placeholders;

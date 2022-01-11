@@ -30,8 +30,7 @@ class Password_Reset_Admin extends Mail_Generator {
 	}
 
 	public function prepareSend( $message, $key, $user_login, WP_User $user ): string {
-		$this->send( [ "user" => $user ] );
-
+		do_action( "juvo_mail_editor_send", $this->getTrigger(), [ "user" => $user, 'key' => $key ] );
 		return '';
 	}
 

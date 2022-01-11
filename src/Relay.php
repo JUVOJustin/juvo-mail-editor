@@ -39,19 +39,12 @@ class Relay {
 	 * @param array $placeholders
 	 * @param array $context
 	 */
-	public function __construct( string $trigger, array $placeholders, array $context = array() ) {
+	public function __construct( string $trigger, array $context, WP_Term $term ) {
 		$this->trigger      = $trigger;
 		$this->context      = $context;
-		$this->term         = $this->setTerm();
+		$this->term         = $term;
 		$this->posts        = $this->setPostsForTrigger();
-		$this->placeholders = $this->preparePlaceholders( $placeholders );
-	}
-
-	/**
-	 * @return false|WP_Term
-	 */
-	private function setTerm() {
-		return get_term_by( 'slug', $this->trigger, Mail_Trigger_TAX::TAXONOMY_NAME );
+		$this->placeholders = $this->preparePlaceholders();
 	}
 
 	/**
@@ -78,18 +71,10 @@ class Relay {
 	}
 
 	/**
-	 * @param array $placeholders
-	 *
 	 * @return array
 	 */
-	public function preparePlaceholders( array $placeholders ): array {
-		$defaultPlaceholders = apply_filters( "juvo_mail_editor_{$this->trigger}_default_placeholder", array() );
-
-		if ( ! $defaultPlaceholders ) {
-			return $defaultPlaceholders;
-		}
-
-		return $placeholders + $defaultPlaceholders;
+	public function preparePlaceholders(): array {
+		return apply_filters( "juvo_mail_editor_{$this->trigger}_placeholders", array(), $this->context );
 	}
 
 	/**
@@ -98,24 +83,32 @@ class Relay {
 	 *
 	 * If the flag is set the term defaults are used for the mailing
 	 */
-	public function sendMails() {
+	public static function sendMails( string $trigger, array $context = array() ) {
 
-		// Add Muted Capability
-		if ( self::triggerIsMuted( $this->trigger ) ) {
+		$term = get_term_by( 'slug', $trigger, Mail_Trigger_TAX::TAXONOMY_NAME );
+
+		if ( ! $term instanceof WP_Term ) {
 			return false;
 		}
+
+		// Add Muted Capability
+		if ( self::triggerIsMuted( $trigger ) ) {
+			return false;
+		}
+
+		$relay = new self( $trigger, $context, $term );
 
 		// Store blog language defaults
 		restore_previous_locale();
 		$blogLocale = get_locale();
 		$blogLang   = locale_get_primary_language( $blogLocale );
 
-		if ( ! empty( $this->posts ) ) {
+		if ( ! empty( $relay->posts ) ) {
 			// If templates were created for trigger
 
-			foreach ( $this->posts as $post ) {
+			foreach ( $relay->posts as $post ) {
 
-				$locale = apply_filters( "juvo_mail_editor_{$this->trigger}_language", $blogLocale, $this->context );
+				$locale = apply_filters( "juvo_mail_editor_{$trigger}_language", $blogLocale, $relay->context );
 				$lang   = locale_get_primary_language( $locale );
 
 				// Switch language context
@@ -128,13 +121,13 @@ class Relay {
 				}
 
 				// Recipients
-				$recipients = $this->prepareRecipients( $post );
+				$recipients = $relay->prepareRecipients( $post );
 
 				// Content
-				$content = $this->prepareContent( $post );
+				$content = $relay->prepareContent( $post );
 
 				// Subject
-				$subject = $this->prepareSubject( $post );
+				$subject = $relay->prepareSubject( $post );
 
 				// Restore language context
 				if ( $switched_locale ) {
@@ -149,19 +142,19 @@ class Relay {
 			// No templates created use trigger defaults
 
 			// Some triggers might only send mails if a post is associated
-			$alwaysSent = apply_filters( "juvo_mail_editor_{$this->trigger}_always_sent", false );
+			$alwaysSent = apply_filters( "juvo_mail_editor_{$trigger}_always_sent", false );
 			if ( ! $alwaysSent ) {
 				return false;
 			}
 
-			$lang = apply_filters( "juvo_mail_editor_{$this->trigger}_language", $blogLocale, $this->context );
+			$lang = apply_filters( "juvo_mail_editor_{$trigger}_language", $blogLocale, $relay->context );
 
 			$switched_locale = switch_to_locale( $lang );
 
 			// Fallback if not posts are found for configured trigger
-			$content    = $this->prepareContent();
-			$subject    = $this->prepareSubject();
-			$recipients = $this->prepareRecipients();
+			$content    = $relay->prepareContent();
+			$subject    = $relay->prepareSubject();
+			$recipients = $relay->prepareRecipients();
 
 			if ( $switched_locale ) {
 				restore_previous_locale();
@@ -191,6 +184,24 @@ class Relay {
 		}
 
 		return false;
+	}
+
+	/**
+	 * @param WP_Post|null $post
+	 *
+	 * @return string
+	 */
+	public function prepareRecipients( WP_Post $post = null ): string {
+
+		// phpcs:ignore Squiz.PHP.DisallowMultipleAssignments.FoundInControlStructure
+		if ( ! $post || ! $recipients = get_post_meta( $post->ID, Mails_PT::POST_TYPE_NAME . '_recipients', true ) ) {
+			$recipients = apply_filters( "juvo_mail_editor_{$this->trigger}_default_recipients", '' );
+		}
+
+		$recipients = apply_filters( 'juvo_mail_editor_before_recipient_placeholder', $recipients, $this->trigger, $this->context );
+		$recipients = Placeholder::replacePlaceholder( $this->placeholders, $recipients, $this->context );
+
+		return apply_filters( 'juvo_mail_editor_after_recipient_placeholder', $recipients, $this->trigger, $this->context );
 	}
 
 	/**
@@ -253,24 +264,6 @@ class Relay {
 		$subject = Placeholder::replacePlaceholder( $this->placeholders, $subject, $this->context );
 
 		return apply_filters( 'juvo_mail_editor_after_subject_placeholder', $subject, $this->trigger, $this->context );
-	}
-
-	/**
-	 * @param WP_Post|null $post
-	 *
-	 * @return string
-	 */
-	public function prepareRecipients( WP_Post $post = null ): string {
-
-		// phpcs:ignore Squiz.PHP.DisallowMultipleAssignments.FoundInControlStructure
-		if ( ! $post || ! $recipients = get_post_meta( $post->ID, Mails_PT::POST_TYPE_NAME . '_recipients', true ) ) {
-			$recipients = apply_filters( "juvo_mail_editor_{$this->trigger}_default_recipients", '' );
-		}
-
-		$recipients = apply_filters( 'juvo_mail_editor_before_recipient_placeholder', $recipients, $this->trigger, $this->context );
-		$recipients = Placeholder::replacePlaceholder( $this->placeholders, $recipients, $this->context );
-
-		return apply_filters( 'juvo_mail_editor_after_recipient_placeholder', $recipients, $this->trigger, $this->context );
 	}
 
 	/**

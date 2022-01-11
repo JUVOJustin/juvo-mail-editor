@@ -8,8 +8,7 @@ use WP_User;
 class New_User_Admin_Rest extends Mail_Generator {
 
 	public function prepareSend( WP_User $user ): void {
-		$this->send( [ "user" => $user ] );
-
+		do_action( "juvo_mail_editor_send", $this->getTrigger(), [ "user" => $user ] );
 	}
 
 	/**

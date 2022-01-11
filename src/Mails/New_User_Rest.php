@@ -8,17 +8,17 @@ use WP_User;
 class New_User_Rest extends Mail_Generator {
 
 	public function prepareSend( WP_User $user ) {
-		$this->send( [ "user" => $user ] );
+		do_action( "juvo_mail_editor_send", $this->getTrigger(), [ "user" => $user ] );
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	protected function getPlaceholders( ?array $context ): array {
+	public function getPlaceholders( array $placeholders, ?array $context ): array {
 
-		$placeholders = array(
+		$placeholders = array_merge( $placeholders, array(
 			'password_reset_link' => '',
-		);
+		) );
 
 		if ( empty( $context ) ) {
 			return $placeholders;

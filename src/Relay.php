@@ -142,7 +142,7 @@ class Relay {
 			// No templates created use trigger defaults
 
 			// Some triggers might only send mails if a post is associated
-			$alwaysSent = apply_filters( "juvo_mail_editor_{$trigger}_always_sent", false );
+			$alwaysSent = apply_filters( "juvo_mail_editor_{$trigger}_always_sent", false, $relay->context );
 			if ( ! $alwaysSent ) {
 				return false;
 			}
@@ -195,7 +195,7 @@ class Relay {
 
 		// phpcs:ignore Squiz.PHP.DisallowMultipleAssignments.FoundInControlStructure
 		if ( ! $post || ! $recipients = get_post_meta( $post->ID, Mails_PT::POST_TYPE_NAME . '_recipients', true ) ) {
-			$recipients = apply_filters( "juvo_mail_editor_{$this->trigger}_default_recipients", '' );
+			$recipients = apply_filters( "juvo_mail_editor_{$this->trigger}_default_recipients", '', $this->context );
 		}
 
 		$recipients = apply_filters( 'juvo_mail_editor_before_recipient_placeholder', $recipients, $this->trigger, $this->context );
@@ -213,7 +213,7 @@ class Relay {
 
 		// phpcs:ignore Squiz.PHP.DisallowMultipleAssignments.FoundInControlStructure
 		if ( ! $post || ! $content = get_the_content( null, false, $post ) ) {
-			$content = apply_filters( "juvo_mail_editor_{$this->trigger}_message", '' );
+			$content = apply_filters( "juvo_mail_editor_{$this->trigger}_message", '', $this->context );
 		} else {
 			$blocks  = parse_blocks( $content );
 			$content = '';
@@ -257,7 +257,7 @@ class Relay {
 
 		// phpcs:ignore Squiz.PHP.DisallowMultipleAssignments.FoundInControlStructure
 		if ( ! $post || ! $subject = get_post_meta( $post->ID, Mails_PT::POST_TYPE_NAME . '_subject', true ) ) {
-			$subject = apply_filters( "juvo_mail_editor_{$this->trigger}_subject", '' );
+			$subject = apply_filters( "juvo_mail_editor_{$this->trigger}_subject", '', $this->context );
 		}
 
 		$subject = apply_filters( 'juvo_mail_editor_before_subject_placeholder', $subject, $this->trigger, $this->context );

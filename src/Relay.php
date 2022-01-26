@@ -129,12 +129,15 @@ class Relay {
 				// Subject
 				$subject = $relay->prepareSubject( $post );
 
+				// Headers
+				$headers = $relay->prepareHeaders( $post );
+
 				// Restore language context
 				if ( $switched_locale ) {
 					restore_previous_locale();
 				}
 
-				$mail = new Generic( $subject, $content, $recipients );
+				$mail = new Generic( $subject, $content, $recipients, $headers );
 				$mail->send();
 
 			}
@@ -155,12 +158,13 @@ class Relay {
 			$content    = $relay->prepareContent();
 			$subject    = $relay->prepareSubject();
 			$recipients = $relay->prepareRecipients();
+			$headers    = $relay->prepareHeaders();
 
 			if ( $switched_locale ) {
 				restore_previous_locale();
 			}
 
-			$mail = new Generic( $subject, $content, $recipients );
+			$mail = new Generic( $subject, $content, $recipients, $headers );
 			$mail->send();
 
 		}
@@ -285,6 +289,25 @@ class Relay {
 	 */
 	public function getPosts(): array {
 		return $this->posts;
+	}
+
+	/**
+	 * Sets custom headers.
+	 * By defaults adds headers to identify mail-editor mails through wordpress
+	 *
+	 * @param WP_Post|null $post
+	 *
+	 * @return mixed|void
+	 */
+	private function prepareHeaders( WP_Post $post = null ) {
+
+		$headers[] = "X-JUVO-ME-Trigger: {$this->trigger}";
+
+		if ( $post ) {
+			$headers[] = "X-JUVO-ME-PostID: {$post->ID}";
+		}
+
+		return apply_filters( "juvo_mail_editor_{$this->trigger}_headers", $headers, $this->trigger, $this->context );
 	}
 
 }

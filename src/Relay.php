@@ -307,7 +307,7 @@ class Relay {
 			$headers[] = "X-JUVO-ME-PostID: {$post->ID}";
 		}
 
-		return apply_filters( "juvo_mail_editor_{$this->trigger}_headers", $headers, $this->trigger, $this->context );
+		return apply_filters( "juvo_mail_editor_{$this->trigger}_headers", $headers, $this->context );
 	}
 
 }

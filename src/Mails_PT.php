@@ -83,16 +83,6 @@ class Mails_PT {
 
 		$cmb->add_field(
 			array(
-				'name'   => __( 'Recipients', 'juvo-mail-editor' ),
-				'desc'   => __( 'Comma seperated list of mail addresses', 'juvo-mail-editor' ),
-				'id'     => self::POST_TYPE_NAME . '_recipients',
-				'type'   => 'text',
-				'column' => true,
-			)
-		);
-
-		$cmb->add_field(
-			array(
 				'name'   => __( 'Subject', 'juvo-mail-editor' ),
 				'desc'   => __( 'E-Mail subject', 'juvo-mail-editor' ),
 				'id'     => self::POST_TYPE_NAME . '_subject',
@@ -101,7 +91,94 @@ class Mails_PT {
 			)
 		);
 
+		$cmb->add_field(
+			array(
+				'name'   => __( 'Recipients', 'juvo-mail-editor' ),
+				'id'     => self::POST_TYPE_NAME . '_recipients',
+				'type'   => 'text',
+				'column' => true,
+			)
+		);
+
+		$recipient_group = $cmb->add_field( array(
+			'id'          => self::POST_TYPE_NAME . '_recipients',
+			'type'        => 'group',
+			'description' => __( 'Comma seperated list of mail addresses', 'juvo-mail-editor' ),
+			'options'     => array(
+				'group_title'    => __( 'Recipient {#}', 'cmb2' ),
+				'add_button'     => __( 'Add Another Entry', 'cmb2' ),
+				'remove_button'  => __( 'Remove Entry', 'cmb2' ),
+				'sortable'       => true,
+				'closed'         => true,
+				'remove_confirm' => esc_html__( 'Are you sure you want to remove?', 'cmb2' ),
+			),
+			'classes'     => "cmb-flex"
+		) );
+
+		$this->addRecipientGroupFields( $recipient_group, $cmb );
+
+		$cc_group = $cmb->add_field( array(
+			'id'          => self::POST_TYPE_NAME . '_cc',
+			'type'        => 'group',
+			'description' => __( 'Add recipients that should receive a carbon copy (CC). CC Recipients are visible in emails', 'juvo-mail-editor' ),
+			'options'     => array(
+				'group_title'    => __( 'CC Recipient {#}', 'cmb2' ),
+				'add_button'     => __( 'Add Another Entry', 'cmb2' ),
+				'remove_button'  => __( 'Remove Entry', 'cmb2' ),
+				'sortable'       => true,
+				'closed'         => true,
+				'remove_confirm' => esc_html__( 'Are you sure you want to remove?', 'cmb2' ),
+			),
+			'classes'     => "cmb-flex"
+		) );
+
+		$this->addRecipientGroupFields( $cc_group, $cmb );
+
+		$bcc_group = $cmb->add_field( array(
+			'id'          => self::POST_TYPE_NAME . '_bcc',
+			'type'        => 'group',
+			'description' => __( 'Add recipients that should receive a “blind carbon copy.” Behaves like CC but without revealing the recipients in the email.', 'juvo-mail-editor' ),
+			'options'     => array(
+				'group_title'    => __( 'BCC Recipient {#}', 'cmb2' ),
+				'add_button'     => __( 'Add Another Entry', 'cmb2' ),
+				'remove_button'  => __( 'Remove Entry', 'cmb2' ),
+				'sortable'       => true,
+				'closed'         => true,
+				'remove_confirm' => esc_html__( 'Are you sure you want to remove?', 'cmb2' ),
+			),
+			'classes'     => "cmb-flex"
+		) );
+
+		$this->addRecipientGroupFields( $bcc_group, $cmb );
+
+
+		$cmb->add_field( array(
+			'name' => __( 'Attachments', 'juvo-mail-editor' ),
+			'desc' => '',
+			'id'   => self::POST_TYPE_NAME . '_attachments',
+			'type' => 'file_list',
+		) );
+
 		apply_filters( 'juvo_mail_editor_post_metabox', $cmb );
+	}
+
+	private function addRecipientGroupFields( string $group, $cmb ) {
+		$cmb->add_group_field( $group, array(
+			'name'    => __( 'Name', 'juvo-mail-editor' ),
+			'id'      => 'name',
+			'type'    => 'text',
+			'classes' => "flex-col-2"
+		) );
+
+		$cmb->add_group_field( $group, array(
+			'name'       => __( 'Mail', 'juvo-mail-editor' ),
+			'id'         => 'mail',
+			'type'       => 'text',
+			'classes'    => "flex-col-2",
+			'attributes' => array(
+				'data-validation' => 'required',
+			),
+		) );
 	}
 
 }

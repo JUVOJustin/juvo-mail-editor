@@ -132,12 +132,15 @@ class Relay {
 				// Headers
 				$headers = $relay->prepareHeaders( $post );
 
+				// Attachments
+				$attachments = $relay->prepareAttachments( $post );
+
 				// Restore language context
 				if ( $switched_locale ) {
 					restore_previous_locale();
 				}
 
-				$mail = new Generic( $subject, $content, $recipients, $headers );
+				$mail = new Generic( $subject, $content, $recipients, $headers, $attachments );
 				$mail->send();
 
 			}
@@ -155,16 +158,17 @@ class Relay {
 			$switched_locale = switch_to_locale( $lang );
 
 			// Fallback if not posts are found for configured trigger
-			$content    = $relay->prepareContent();
-			$subject    = $relay->prepareSubject();
-			$recipients = $relay->prepareRecipients();
-			$headers    = $relay->prepareHeaders();
+			$content     = $relay->prepareContent();
+			$subject     = $relay->prepareSubject();
+			$recipients  = $relay->prepareRecipients();
+			$headers     = $relay->prepareHeaders();
+			$attachments = $relay->prepareAttachments();
 
 			if ( $switched_locale ) {
 				restore_previous_locale();
 			}
 
-			$mail = new Generic( $subject, $content, $recipients, $headers );
+			$mail = new Generic( $subject, $content, $recipients, $headers, $attachments );
 			$mail->send();
 
 		}
@@ -193,17 +197,18 @@ class Relay {
 	/**
 	 * @param WP_Post|null $post
 	 *
-	 * @return string
+	 * @return array
 	 */
-	public function prepareRecipients( WP_Post $post = null ): string {
+	public function prepareRecipients( WP_Post $post = null ): array {
+
+		$recipients = [];
 
 		// phpcs:ignore Squiz.PHP.DisallowMultipleAssignments.FoundInControlStructure
-		if ( ! $post || ! $recipients = get_post_meta( $post->ID, Mails_PT::POST_TYPE_NAME . '_recipients', true ) ) {
-			$recipients = apply_filters( "juvo_mail_editor_{$this->trigger}_default_recipients", '', $this->context );
+		if ( $post ) {
+			$recipients = get_post_meta( $post->ID, Mails_PT::POST_TYPE_NAME . '_recipients', true );
 		}
 
-		$recipients = apply_filters( 'juvo_mail_editor_before_recipient_placeholder', $recipients, $this->trigger, $this->context );
-		$recipients = Placeholder::replacePlaceholder( $this->placeholders, $recipients, $this->context );
+		$recipients = apply_filters( "juvo_mail_editor_{$this->trigger}_recipients", $this->parseToCcBcc( $recipients ), $this->context );
 
 		return apply_filters( 'juvo_mail_editor_after_recipient_placeholder', $recipients, $this->trigger, $this->context );
 	}
@@ -215,10 +220,10 @@ class Relay {
 	 */
 	public function prepareContent( WP_Post $post = null ): string {
 
+		$content = '';
+
 		// phpcs:ignore Squiz.PHP.DisallowMultipleAssignments.FoundInControlStructure
-		if ( ! $post || ! $content = get_the_content( null, false, $post ) ) {
-			$content = apply_filters( "juvo_mail_editor_{$this->trigger}_message", '', $this->context );
-		} else {
+		if ( $post && $content = get_the_content( null, false, $post ) ) {
 			$blocks  = parse_blocks( $content );
 			$content = '';
 
@@ -227,7 +232,7 @@ class Relay {
 			}
 		}
 
-		$content = apply_filters( 'juvo_mail_editor_before_content_placeholder', $content, $this->trigger, $this->context );
+		$content = apply_filters( "juvo_mail_editor_{$this->trigger}_message", $content, $this->context );
 		$content = Placeholder::replacePlaceholder( $this->placeholders, $content, $this->context );
 		$content = apply_filters( 'juvo_mail_editor_after_content_placeholder', $content, $this->trigger, $this->context );
 
@@ -259,12 +264,14 @@ class Relay {
 	 */
 	public function prepareSubject( WP_Post $post = null ): string {
 
+		$subject = '';
+
 		// phpcs:ignore Squiz.PHP.DisallowMultipleAssignments.FoundInControlStructure
-		if ( ! $post || ! $subject = get_post_meta( $post->ID, Mails_PT::POST_TYPE_NAME . '_subject', true ) ) {
-			$subject = apply_filters( "juvo_mail_editor_{$this->trigger}_subject", '', $this->context );
+		if ( $post ) {
+			$subject = get_post_meta( $post->ID, Mails_PT::POST_TYPE_NAME . '_subject', true );
 		}
 
-		$subject = apply_filters( 'juvo_mail_editor_before_subject_placeholder', $subject, $this->trigger, $this->context );
+		$subject = apply_filters( "juvo_mail_editor_{$this->trigger}_subject", $subject, $this->context );
 		$subject = Placeholder::replacePlaceholder( $this->placeholders, $subject, $this->context );
 
 		return apply_filters( 'juvo_mail_editor_after_subject_placeholder', $subject, $this->trigger, $this->context );
@@ -307,7 +314,98 @@ class Relay {
 			$headers[] = "X-JUVO-ME-PostID: {$post->ID}";
 		}
 
+		// Add CC and BCC
+		$headers = $this->prepareCc( $headers, $post );
+		$headers = $this->prepareBcc( $headers, $post );
+
 		return apply_filters( "juvo_mail_editor_{$this->trigger}_headers", $headers, $this->context );
+	}
+
+	private function prepareAttachments( WP_Post $post = null ): array {
+
+		$attachments = [];
+
+		// phpcs:ignore Squiz.PHP.DisallowMultipleAssignments.FoundInControlStructure
+		if ( $post ) {
+			$attachments = get_post_meta( $post->ID, Mails_PT::POST_TYPE_NAME . '_attachments', true ) ?: [];
+
+			if ( empty( $attachments ) ) {
+				return $attachments;
+			}
+
+			foreach ( $attachments as $id => &$attachment ) {
+				$attachment = get_attached_file( $id );
+			}
+		}
+
+		return apply_filters( "juvo_mail_editor_{$this->trigger}_attachments", $attachments, $this->context );
+	}
+
+	private function prepareCc( array $headers, WP_Post $post = null ): array {
+
+		$cc = [];
+
+		// phpcs:ignore Squiz.PHP.DisallowMultipleAssignments.FoundInControlStructure
+		if ( $post ) {
+			$cc = get_post_meta( $post->ID, Mails_PT::POST_TYPE_NAME . '_cc', true );
+		}
+
+		$cc = apply_filters( "juvo_mail_editor_{$this->trigger}_cc", $this->parseToCcBcc( $cc, "Cc:" ), $this->context );
+		$cc = apply_filters( 'juvo_mail_editor_after_cc_placeholder', $cc, $this->trigger, $this->context );
+
+		return array_merge( $headers, $cc );
+	}
+
+	private function prepareBcc( array $headers, WP_Post $post = null ): array {
+
+		$bcc = [];
+
+		// phpcs:ignore Squiz.PHP.DisallowMultipleAssignments.FoundInControlStructure
+		if ( $post ) {
+			$bcc = get_post_meta( $post->ID, Mails_PT::POST_TYPE_NAME . '_bcc', true );
+		}
+
+		$bcc = apply_filters( "juvo_mail_editor_{$this->trigger}_bcc", $this->parseToCcBcc( $bcc, "Bcc:" ), $this->context );
+		$bcc = apply_filters( 'juvo_mail_editor_after_bcc_placeholder', $bcc, $this->trigger, $this->context );
+
+		return array_merge( $headers, $bcc );
+	}
+
+	/**
+	 * Parses cmb2 repeater groups or strings to wp_mail compatible array format for "to", "cc" and "bcc"
+	 *
+	 * @param array|string $recipients
+	 * @param string $prefix "Cc:" or "Bcc:"
+	 *
+	 * @return array
+	 */
+	private function parseToCcBcc( $recipients, string $prefix = "" ): array {
+
+		if ( empty( $recipients ) ) {
+			return [];
+		}
+
+		if ( is_string( $recipients ) ) {
+			$recipients = explode( ",", $recipients );
+		}
+
+		foreach ( $recipients as &$recipient ) {
+
+			if ( ! empty( $recipient['name'] ) && ! empty( $recipient['mail'] ) ) {
+				$recipient = "{$recipient['name']} <{$recipient['mail']}>";
+			} elseif ( empty( $recipient['name'] ) && ! empty( $recipient['mail'] ) ) {
+				$recipient = $recipient['mail'];
+			}
+
+			$recipient = Placeholder::replacePlaceholder( $this->placeholders, $recipient, $this->context );
+
+			if ( ! empty( $prefix ) ) {
+				$recipient = $prefix . " " . $recipient;
+			}
+		}
+
+		return $recipients;
+
 	}
 
 }

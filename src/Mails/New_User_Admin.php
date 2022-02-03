@@ -16,14 +16,25 @@ class New_User_Admin extends Mail_Generator {
 
 	public function prepareSend( array $email, WP_User $user ): array {
 		do_action( "juvo_mail_editor_send", $this->getTrigger(), [ "user" => $user ] );
+
 		return $this->emptyMailArray( $email );
 	}
 
-	public function getSubject(): string {
+	public function getSubject( string $subject ): string {
+
+		if ( ! empty( $subject ) ) {
+			return $subject;
+		}
+
 		return sprintf( __( '[%s] New User Registration', 'default' ), '{{site.name}}' );
 	}
 
-	public function getMessage(): string {
+	public function getMessage( string $message ): string {
+
+		if ( ! empty( $message ) ) {
+			return $message;
+		}
+
 		$message = sprintf( __( 'New user registration on your site %s:', 'default' ), '{{site.name}}' ) . "\r\n\r\n";
 		$message .= sprintf( __( 'Username: %s', 'default' ), '{{user.name}}' ) . "\r\n\r\n";
 		$message .= sprintf( __( 'Email: %s', 'default' ), '{{user.user_email}}' ) . "\r\n";
@@ -31,8 +42,13 @@ class New_User_Admin extends Mail_Generator {
 		return $message;
 	}
 
-	public function getRecipient(): string {
-		return '{{site.admin_email}}';
+	public function getRecipients( array $recipients ): array {
+
+		if ( ! empty( $recipients ) ) {
+			return $recipients;
+		}
+
+		return [ '{{site.admin_email}}' ];
 	}
 
 	protected function getName(): string {

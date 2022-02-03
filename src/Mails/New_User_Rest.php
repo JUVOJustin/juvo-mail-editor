@@ -45,11 +45,21 @@ class New_User_Rest extends Mail_Generator {
 		return 'new_user_rest';
 	}
 
-	public function getSubject(): string {
+	public function getSubject( string $subject ): string {
+
+		if ( ! empty( $subject ) ) {
+			return $subject;
+		}
+
 		return sprintf( __( '%s Login Details', 'default' ), '{{site.name}}' );
 	}
 
-	public function getMessage(): string {
+	public function getMessage( string $message ): string {
+
+		if ( ! empty( $message ) ) {
+			return $message;
+		}
+
 		$message = sprintf( __( 'Username: %s', 'default' ), '{{user.name}}' ) . "\r\n\r\n";
 		$message .= __( 'To set your password, visit the following address:', 'default' ) . "\r\n\r\n";
 		$message .= '{{password_reset_link}}' . "\r\n";
@@ -57,8 +67,13 @@ class New_User_Rest extends Mail_Generator {
 		return $message;
 	}
 
-	public function getRecipient(): string {
-		return '{{user.user_email}}';
+	public function getRecipients( array $recipients ): array {
+
+		if ( ! empty( $recipients ) ) {
+			return $recipients;
+		}
+
+		return [ '{{user.user_email}}' ];
 	}
 
 	public function getAlwaysSent(): bool {

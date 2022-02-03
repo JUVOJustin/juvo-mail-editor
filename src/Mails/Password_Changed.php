@@ -23,11 +23,21 @@ class Password_Changed extends Mail_Generator {
 		return 'password_changed';
 	}
 
-	public function getSubject(): string {
+	public function getSubject( string $subject ): string {
+
+		if ( ! empty( $subject ) ) {
+			return $subject;
+		}
+
 		return sprintf( __( '%s Password Changed', 'default' ), '{{site.name}}' );
 	}
 
-	public function getMessage(): string {
+	public function getMessage( string $message ): string {
+
+		if ( ! empty( $message ) ) {
+			return $message;
+		}
+
 		$message = __(
 			'Hi ###USERNAME###,
 
@@ -59,8 +69,13 @@ All at ###SITENAME###
 		return $message;
 	}
 
-	public function getRecipient(): string {
-		return '{{user.user_email}}';
+	public function getRecipients( array $recipients ): array {
+
+		if ( ! empty( $recipients ) ) {
+			return $recipients;
+		}
+
+		return [ '{{user.user_email}}' ];
 	}
 
 	public function prepareSend( array $email, WP_User $user ): array {

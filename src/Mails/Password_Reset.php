@@ -25,14 +25,25 @@ class Password_Reset extends Mail_Generator {
 
 	public function prepareSend( $message, string $key, $user_login, WP_User $user ): string {
 		do_action( "juvo_mail_editor_send", $this->getTrigger(), [ "user" => $user, 'key' => $key ] );
+
 		return '';
 	}
 
-	public function getSubject(): string {
+	public function getSubject( string $subject ): string {
+
+		if ( ! empty( $subject ) ) {
+			return $subject;
+		}
+
 		return __( 'Password Reset', 'juvo-mail-editor' );
 	}
 
-	public function getMessage(): string {
+	public function getMessage( string $message ): string {
+
+		if ( ! empty( $message ) ) {
+			return $message;
+		}
+
 		$message = __( 'Someone has requested a password reset for the following account:', 'default' ) . "\r\n\r\n";
 		$message .= sprintf( __( 'Site Name: %s', 'default' ), '{{ site.name }}' ) . "\r\n\r\n";
 		$message .= sprintf( __( 'Username: %s', 'default' ), '{{ user.name }}' ) . "\r\n\r\n";
@@ -43,8 +54,13 @@ class Password_Reset extends Mail_Generator {
 		return $message;
 	}
 
-	public function getRecipient(): string {
-		return '{{ user.user_email }}';
+	public function getRecipients( array $recipients ): array {
+
+		if ( ! empty( $recipients ) ) {
+			return $recipients;
+		}
+
+		return [ '{{user.user_email}}' ];
 	}
 
 	protected function getName(): string {

@@ -13,10 +13,10 @@ abstract class Mail_Generator implements Mail {
 		add_filter( 'juvo_mail_editor_post_metabox', array( $this, 'addCustomFields' ) );
 		add_filter( 'juvo_mail_editor_trigger', array( $this, 'registerTrigger' ) );
 
-		add_filter( "juvo_mail_editor_{$this->getTrigger()}_always_sent", array( $this, 'getAlwaysSent' ), 1, 0 );
-		add_filter( "juvo_mail_editor_{$this->getTrigger()}_subject", array( $this, 'getSubject' ), 1, 0 );
-		add_filter( "juvo_mail_editor_{$this->getTrigger()}_message", array( $this, 'getMessage' ), 1, 0 );
-		add_filter( "juvo_mail_editor_{$this->getTrigger()}_default_recipients", array( $this, 'getRecipient' ), 1, 0 );
+		add_filter( "juvo_mail_editor_{$this->getTrigger()}_always_sent", array( $this, 'getAlwaysSent' ), 10, 0 );
+		add_filter( "juvo_mail_editor_{$this->getTrigger()}_subject", array( $this, 'getSubject' ), 10, 1 );
+		add_filter( "juvo_mail_editor_{$this->getTrigger()}_message", array( $this, 'getMessage' ), 10, 1 );
+		add_filter( "juvo_mail_editor_{$this->getTrigger()}_recipients", array( $this, 'getRecipients' ), 10, 1 );
 		add_filter(
 			"juvo_mail_editor_{$this->getTrigger()}_placeholders",
 			array(

@@ -21,6 +21,7 @@ For more information about placeholders, triggers and extensibility of the plugi
 * Use global or trigger specific placeholders to make your mails dynamic
 * Seamless integration to any mail styling plugin - even buddyboss.
 * Multilanguage support
+* Set CC, BCC and Attachments for mails
 
 == Frequently Asked Questions ==
 = Can i modify the styling of mails with this plugin? =

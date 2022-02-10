@@ -53,7 +53,8 @@ class Admin {
 		 * class.
 		 */
 
-		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/options-page.css', array(), null, 'all' );
+		wp_enqueue_style( $this->plugin_name . "_options-page", plugin_dir_url( __FILE__ ) . 'css/options-page.css', array(), null, 'all' );
+		wp_enqueue_style( $this->plugin_name . "_cmb", plugin_dir_url( __FILE__ ) . 'css/cmb.css', array(), null, 'all' );
 
 	}
 

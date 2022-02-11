@@ -208,9 +208,9 @@ class Relay {
 			$recipients = get_post_meta( $post->ID, Mails_PT::POST_TYPE_NAME . '_recipients', true );
 		}
 
-		$recipients = apply_filters( "juvo_mail_editor_{$this->trigger}_recipients", $this->parseToCcBcc( $recipients ), $this->context );
+		$recipients = apply_filters( "juvo_mail_editor_{$this->trigger}_recipients", $recipients, $this->context );
 
-		return apply_filters( 'juvo_mail_editor_after_recipient_placeholder', $recipients, $this->trigger, $this->context );
+		return apply_filters( 'juvo_mail_editor_after_recipients_placeholder', $this->parseToCcBcc( $recipients ), $this->trigger, $this->context );
 	}
 
 	/**
@@ -350,8 +350,8 @@ class Relay {
 			$cc = get_post_meta( $post->ID, Mails_PT::POST_TYPE_NAME . '_cc', true );
 		}
 
-		$cc = apply_filters( "juvo_mail_editor_{$this->trigger}_cc", $this->parseToCcBcc( $cc, "Cc:" ), $this->context );
-		$cc = apply_filters( 'juvo_mail_editor_after_cc_placeholder', $cc, $this->trigger, $this->context );
+		$cc = apply_filters( "juvo_mail_editor_{$this->trigger}_cc", $cc, $this->context );
+		$cc = apply_filters( 'juvo_mail_editor_after_cc_placeholder', $this->parseToCcBcc( $cc, "Cc:" ), $this->trigger, $this->context );
 
 		return array_merge( $headers, $cc );
 	}
@@ -365,8 +365,8 @@ class Relay {
 			$bcc = get_post_meta( $post->ID, Mails_PT::POST_TYPE_NAME . '_bcc', true );
 		}
 
-		$bcc = apply_filters( "juvo_mail_editor_{$this->trigger}_bcc", $this->parseToCcBcc( $bcc, "Bcc:" ), $this->context );
-		$bcc = apply_filters( 'juvo_mail_editor_after_bcc_placeholder', $bcc, $this->trigger, $this->context );
+		$bcc = apply_filters( "juvo_mail_editor_{$this->trigger}_bcc", $bcc, $this->context );
+		$bcc = apply_filters( 'juvo_mail_editor_after_bcc_placeholder', $this->parseToCcBcc( $bcc, "Bcc:" ), $this->trigger, $this->context );
 
 		return array_merge( $headers, $bcc );
 	}

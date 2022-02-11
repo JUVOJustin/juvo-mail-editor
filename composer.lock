@@ -795,29 +795,29 @@
     ],
     "packages-dev": [
         {
-            "name": "dealerdirect/phpcodesniffer-composer-installer",
-            "version": "v0.7.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Dealerdirect/phpcodesniffer-composer-installer.git",
-                "reference": "fe390591e0241955f22eb9ba327d137e501c771c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Dealerdirect/phpcodesniffer-composer-installer/zipball/fe390591e0241955f22eb9ba327d137e501c771c",
-                "reference": "fe390591e0241955f22eb9ba327d137e501c771c",
-                "shasum": ""
-            },
+			"name": "dealerdirect/phpcodesniffer-composer-installer",
+			"version": "v0.7.2",
+			"source": {
+				"type": "git",
+				"url": "https://github.com/Dealerdirect/phpcodesniffer-composer-installer.git",
+				"reference": "1c968e542d8843d7cd71de3c5c9c3ff3ad71a1db"
+			},
+			"dist": {
+				"type": "zip",
+				"url": "https://api.github.com/repos/Dealerdirect/phpcodesniffer-composer-installer/zipball/1c968e542d8843d7cd71de3c5c9c3ff3ad71a1db",
+				"reference": "1c968e542d8843d7cd71de3c5c9c3ff3ad71a1db",
+				"shasum": ""
+			},
             "require": {
                 "composer-plugin-api": "^1.0 || ^2.0",
                 "php": ">=5.3",
-                "squizlabs/php_codesniffer": "^2.0 || ^3.0 || ^4.0"
+				"squizlabs/php_codesniffer": "^2.0 || ^3.1.0 || ^4.0"
             },
             "require-dev": {
-                "composer/composer": "*",
-                "phpcompatibility/php-compatibility": "^9.0",
-                "sensiolabs/security-checker": "^4.1.0"
-            },
+				"composer/composer": "*",
+				"php-parallel-lint/php-parallel-lint": "^1.3.1",
+				"phpcompatibility/php-compatibility": "^9.0"
+			},
             "type": "composer-plugin",
             "extra": {
                 "class": "Dealerdirect\\Composer\\Plugin\\Installers\\PHPCodeSniffer\\Plugin"
@@ -832,65 +832,70 @@
                 "MIT"
             ],
             "authors": [
-                {
-                    "name": "Franck Nijhof",
-                    "email": "franck.nijhof@dealerdirect.com",
-                    "homepage": "http://www.frenck.nl",
-                    "role": "Developer / IT Manager"
-                }
-            ],
+				{
+					"name": "Franck Nijhof",
+					"email": "franck.nijhof@dealerdirect.com",
+					"homepage": "http://www.frenck.nl",
+					"role": "Developer / IT Manager"
+				},
+				{
+					"name": "Contributors",
+					"homepage": "https://github.com/Dealerdirect/phpcodesniffer-composer-installer/graphs/contributors"
+				}
+			],
             "description": "PHP_CodeSniffer Standards Composer Installer Plugin",
             "homepage": "http://www.dealerdirect.com",
             "keywords": [
-                "PHPCodeSniffer",
-                "PHP_CodeSniffer",
-                "code quality",
-                "codesniffer",
-                "composer",
-                "installer",
-                "phpcs",
-                "plugin",
-                "qa",
-                "quality",
-                "standard",
-                "standards",
-                "style guide",
-                "stylecheck",
-                "tests"
-            ],
+				"PHPCodeSniffer",
+				"PHP_CodeSniffer",
+				"code quality",
+				"codesniffer",
+				"composer",
+				"installer",
+				"phpcbf",
+				"phpcs",
+				"plugin",
+				"qa",
+				"quality",
+				"standard",
+				"standards",
+				"style guide",
+				"stylecheck",
+				"tests"
+			],
             "support": {
                 "issues": "https://github.com/dealerdirect/phpcodesniffer-composer-installer/issues",
                 "source": "https://github.com/dealerdirect/phpcodesniffer-composer-installer"
             },
-            "time": "2020-12-07T18:04:37+00:00"
+			"time": "2022-02-04T12:51:07+00:00"
         },
-        {
-            "name": "lipemat/phpstan-wordpress",
-            "version": "1.7.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/lipemat/phpstan-wordpress.git",
-                "reference": "e282b7d011a975600b8bb2967c953cdf430db275"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/lipemat/phpstan-wordpress/zipball/e282b7d011a975600b8bb2967c953cdf430db275",
-                "reference": "e282b7d011a975600b8bb2967c953cdf430db275",
-                "shasum": ""
-            },
+		{
+			"name": "lipemat/phpstan-wordpress",
+			"version": "1.9.0",
+			"source": {
+				"type": "git",
+				"url": "https://github.com/lipemat/phpstan-wordpress.git",
+				"reference": "bdcc68d648e4a920d7c6e09ef8e48d4ef1241e46"
+			},
+			"dist": {
+				"type": "zip",
+				"url": "https://api.github.com/repos/lipemat/phpstan-wordpress/zipball/bdcc68d648e4a920d7c6e09ef8e48d4ef1241e46",
+				"reference": "bdcc68d648e4a920d7c6e09ef8e48d4ef1241e46",
+				"shasum": ""
+			},
             "require": {
-                "php": ">=7.1",
-                "php-stubs/woocommerce-stubs": "^5.7.1",
-                "php-stubs/wp-cli-stubs": "^2.4.0",
-                "phpstan/extension-installer": "^1.1.0",
-                "szepeviktor/phpstan-wordpress": "^0.7.7"
-            },
+				"php": ">=7.1",
+				"php-stubs/woocommerce-stubs": "^6.0.0",
+				"php-stubs/wp-cli-stubs": "^2.6.0",
+				"phpstan/extension-installer": "^1.1.0",
+				"szepeviktor/phpstan-wordpress": "^0.7.7"
+			},
             "require-dev": {
-                "composer/composer": "^2.1.8",
-                "giacocorsiglia/stubs-generator": "^0.5.0",
-                "lipemat/cmb2": "~2.9.0.3",
-                "roave/security-advisories": "dev-latest"
-            },
+				"composer/composer": "^2.2.5",
+				"giacocorsiglia/stubs-generator": "^0.5.0",
+				"lipemat/cmb2": "~2.9.0.4",
+				"roave/security-advisories": "dev-latest"
+			},
             "type": "phpstan-extension",
             "extra": {
                 "phpstan": {
@@ -911,7 +916,7 @@
             "description": "Phpstan extension for working with WordPress",
             "support": {
                 "issues": "https://github.com/lipemat/phpstan-wordpress/issues",
-                "source": "https://github.com/lipemat/phpstan-wordpress/tree/1.7.1"
+				"source": "https://github.com/lipemat/phpstan-wordpress/tree/1.9.0"
             },
             "funding": [
                 {
@@ -919,22 +924,22 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-10-18T16:40:18+00:00"
+			"time": "2022-01-28T16:05:36+00:00"
         },
-        {
-            "name": "php-stubs/woocommerce-stubs",
-            "version": "v5.9.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/php-stubs/woocommerce-stubs.git",
-                "reference": "a7204cfbb5fa90720773122cb68530087de5bc78"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/php-stubs/woocommerce-stubs/zipball/a7204cfbb5fa90720773122cb68530087de5bc78",
-                "reference": "a7204cfbb5fa90720773122cb68530087de5bc78",
-                "shasum": ""
-            },
+		{
+			"name": "php-stubs/woocommerce-stubs",
+			"version": "v6.0.0",
+			"source": {
+				"type": "git",
+				"url": "https://github.com/php-stubs/woocommerce-stubs.git",
+				"reference": "65e6be8a1b74b7be5d0d5591262342ff116f93db"
+			},
+			"dist": {
+				"type": "zip",
+				"url": "https://api.github.com/repos/php-stubs/woocommerce-stubs/zipball/65e6be8a1b74b7be5d0d5591262342ff116f93db",
+				"reference": "65e6be8a1b74b7be5d0d5591262342ff116f93db",
+				"shasum": ""
+			},
             "require": {
                 "php-stubs/wordpress-stubs": "^5.3.0"
             },
@@ -961,31 +966,34 @@
             ],
             "support": {
                 "issues": "https://github.com/php-stubs/woocommerce-stubs/issues",
-                "source": "https://github.com/php-stubs/woocommerce-stubs/tree/v5.9.0"
+				"source": "https://github.com/php-stubs/woocommerce-stubs/tree/v6.0.0"
             },
-            "time": "2021-11-05T10:02:27+00:00"
+			"time": "2022-01-04T22:00:24+00:00"
         },
-        {
-            "name": "php-stubs/wordpress-stubs",
-            "version": "v5.8.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/php-stubs/wordpress-stubs.git",
-                "reference": "67fd773742b7be5b4463f40318b0b4890a07033b"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/php-stubs/wordpress-stubs/zipball/67fd773742b7be5b4463f40318b0b4890a07033b",
-                "reference": "67fd773742b7be5b4463f40318b0b4890a07033b",
-                "shasum": ""
-            },
+		{
+			"name": "php-stubs/wordpress-stubs",
+			"version": "v5.9.0",
+			"source": {
+				"type": "git",
+				"url": "https://github.com/php-stubs/wordpress-stubs.git",
+				"reference": "0fa8dd9a1bd2a1b60e85afc6c798fca1f599cc1b"
+			},
+			"dist": {
+				"type": "zip",
+				"url": "https://api.github.com/repos/php-stubs/wordpress-stubs/zipball/0fa8dd9a1bd2a1b60e85afc6c798fca1f599cc1b",
+				"reference": "0fa8dd9a1bd2a1b60e85afc6c798fca1f599cc1b",
+				"shasum": ""
+			},
             "replace": {
                 "giacocorsiglia/wordpress-stubs": "*"
             },
             "require-dev": {
-                "giacocorsiglia/stubs-generator": "^0.5.0",
-                "php": "~7.1"
-            },
+				"nikic/php-parser": "< 4.12.0",
+				"php": "~7.3 || ~8.0",
+				"php-stubs/generator": "^0.8.0",
+				"phpdocumentor/reflection-docblock": "^5.3",
+				"phpstan/phpstan": "^1.2"
+			},
             "suggest": {
                 "paragonie/sodium_compat": "Pure PHP implementation of libsodium",
                 "symfony/polyfill-php73": "Symfony polyfill backporting some PHP 7.3+ features to lower PHP versions",
@@ -1005,31 +1013,31 @@
             ],
             "support": {
                 "issues": "https://github.com/php-stubs/wordpress-stubs/issues",
-                "source": "https://github.com/php-stubs/wordpress-stubs/tree/v5.8.2"
+				"source": "https://github.com/php-stubs/wordpress-stubs/tree/v5.9.0"
             },
-            "time": "2021-11-11T13:57:00+00:00"
+			"time": "2022-01-26T00:27:45+00:00"
         },
-        {
-            "name": "php-stubs/wp-cli-stubs",
-            "version": "v2.5.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/php-stubs/wp-cli-stubs.git",
-                "reference": "9140bf3f59d9df1f67f69c0d49d9364ee1684348"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/php-stubs/wp-cli-stubs/zipball/9140bf3f59d9df1f67f69c0d49d9364ee1684348",
-                "reference": "9140bf3f59d9df1f67f69c0d49d9364ee1684348",
-                "shasum": ""
-            },
+		{
+			"name": "php-stubs/wp-cli-stubs",
+			"version": "v2.6.0",
+			"source": {
+				"type": "git",
+				"url": "https://github.com/php-stubs/wp-cli-stubs.git",
+				"reference": "f1ca69572491c44d783335ce49269851b14f438c"
+			},
+			"dist": {
+				"type": "zip",
+				"url": "https://api.github.com/repos/php-stubs/wp-cli-stubs/zipball/f1ca69572491c44d783335ce49269851b14f438c",
+				"reference": "f1ca69572491c44d783335ce49269851b14f438c",
+				"shasum": ""
+			},
             "require": {
                 "php-stubs/wordpress-stubs": "^4.7 || ^5.0"
             },
             "require-dev": {
-                "giacocorsiglia/stubs-generator": "^0.5.0",
-                "php": "~7.1"
-            },
+				"php": "~7.1",
+				"php-stubs/generator": "^0.8.0"
+			},
             "suggest": {
                 "symfony/polyfill-php73": "Symfony polyfill backporting some PHP 7.3+ features to lower PHP versions",
                 "szepeviktor/phpstan-wordpress": "WordPress extensions for PHPStan"
@@ -1049,9 +1057,9 @@
             ],
             "support": {
                 "issues": "https://github.com/php-stubs/wp-cli-stubs/issues",
-                "source": "https://github.com/php-stubs/wp-cli-stubs/tree/v2.5.0"
+				"source": "https://github.com/php-stubs/wp-cli-stubs/tree/v2.6.0"
             },
-            "time": "2021-05-19T16:06:45+00:00"
+			"time": "2022-01-26T10:46:55+00:00"
         },
         {
             "name": "phpstan/extension-installer",
@@ -1218,20 +1226,20 @@
             },
             "time": "2021-12-12T21:44:58+00:00"
         },
-        {
-            "name": "symfony/polyfill-php73",
-            "version": "v1.23.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/polyfill-php73.git",
-                "reference": "fba8933c384d6476ab14fb7b8526e5287ca7e010"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-php73/zipball/fba8933c384d6476ab14fb7b8526e5287ca7e010",
-                "reference": "fba8933c384d6476ab14fb7b8526e5287ca7e010",
-                "shasum": ""
-            },
+		{
+			"name": "symfony/polyfill-php73",
+			"version": "v1.24.0",
+			"source": {
+				"type": "git",
+				"url": "https://github.com/symfony/polyfill-php73.git",
+				"reference": "cc5db0e22b3cb4111010e48785a97f670b350ca5"
+			},
+			"dist": {
+				"type": "zip",
+				"url": "https://api.github.com/repos/symfony/polyfill-php73/zipball/cc5db0e22b3cb4111010e48785a97f670b350ca5",
+				"reference": "cc5db0e22b3cb4111010e48785a97f670b350ca5",
+				"shasum": ""
+			},
             "require": {
                 "php": ">=7.1"
             },
@@ -1246,16 +1254,16 @@
                 }
             },
             "autoload": {
-                "psr-4": {
-                    "Symfony\\Polyfill\\Php73\\": ""
-                },
-                "files": [
-                    "bootstrap.php"
-                ],
-                "classmap": [
-                    "Resources/stubs"
-                ]
-            },
+				"files": [
+					"bootstrap.php"
+				],
+				"psr-4": {
+					"Symfony\\Polyfill\\Php73\\": ""
+				},
+				"classmap": [
+					"Resources/stubs"
+				]
+			},
             "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
@@ -1279,7 +1287,7 @@
                 "shim"
             ],
             "support": {
-                "source": "https://github.com/symfony/polyfill-php73/tree/v1.23.0"
+				"source": "https://github.com/symfony/polyfill-php73/tree/v1.24.0"
             },
             "funding": [
                 {
@@ -1295,7 +1303,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-02-19T12:13:01+00:00"
+			"time": "2021-06-05T21:20:04+00:00"
         },
         {
             "name": "szepeviktor/phpstan-wordpress",

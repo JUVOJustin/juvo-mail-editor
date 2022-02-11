@@ -91,16 +91,8 @@ class Mails_PT {
 			)
 		);
 
-		$cmb->add_field(
-			array(
-				'name'   => __( 'Recipients', 'juvo-mail-editor' ),
-				'id'     => self::POST_TYPE_NAME . '_recipients',
-				'type'   => 'text',
-				'column' => true,
-			)
-		);
-
-		$recipient_group = $cmb->add_field( array(
+		// Named "recipients" for backwards compatibility reasons. Don´t rename!
+		$to_group = $cmb->add_field( array(
 			'id'          => self::POST_TYPE_NAME . '_recipients',
 			'type'        => 'group',
 			'description' => __( 'Comma seperated list of mail addresses', 'juvo-mail-editor' ),
@@ -115,7 +107,7 @@ class Mails_PT {
 			'classes'     => "cmb-flex"
 		) );
 
-		$this->addRecipientGroupFields( $recipient_group, $cmb );
+		$this->addRecipientGroupFields( $to_group, $cmb );
 
 		$cc_group = $cmb->add_field( array(
 			'id'          => self::POST_TYPE_NAME . '_cc',
@@ -150,7 +142,6 @@ class Mails_PT {
 		) );
 
 		$this->addRecipientGroupFields( $bcc_group, $cmb );
-
 
 		$cmb->add_field( array(
 			'name' => __( 'Attachments', 'juvo-mail-editor' ),

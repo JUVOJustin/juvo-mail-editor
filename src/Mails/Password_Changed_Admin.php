@@ -5,17 +5,11 @@ namespace JUVO_MailEditor\Mails;
 
 use CMB2;
 use JUVO_MailEditor\Mail_Generator;
-use JUVO_MailEditor\Mail_Trigger_TAX;
-use JUVO_MailEditor\Mails_PT;
 use WP_User;
 
 class Password_Changed_Admin extends Mail_Generator {
 
 	public function addCustomFields( CMB2 $cmb ): CMB2 {
-		if ( has_term( $this->getTrigger(), Mail_Trigger_TAX::TAXONOMY_NAME, $cmb->object_id() ) ) {
-			$cmb->remove_field( Mails_PT::POST_TYPE_NAME . '_recipients' );
-		}
-
 		return $cmb;
 	}
 

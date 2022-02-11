@@ -12,6 +12,13 @@ use WP_User;
 class Password_Changed extends Mail_Generator {
 
 	public function addCustomFields( CMB2 $cmb ): CMB2 {
+
+		$field = $cmb->get_field( Mails_PT::POST_TYPE_NAME . '_recipients' );
+
+		if ( $cmb->object_id && ! empty( $field->value ) ) {
+			update_post_meta( $cmb->object_id(), Mails_PT::POST_TYPE_NAME . '_recipients', [] );
+		}
+
 		if ( has_term( $this->getTrigger(), Mail_Trigger_TAX::TAXONOMY_NAME, $cmb->object_id() ) ) {
 			$cmb->remove_field( Mails_PT::POST_TYPE_NAME . '_recipients' );
 		}
@@ -78,8 +85,8 @@ All at ###SITENAME###
 		return [ '{{user.user_email}}' ];
 	}
 
-	public function prepareSend( array $email, WP_User $user ): array {
-		do_action( "juvo_mail_editor_send", $this->getTrigger(), [ "user" => $user ] );
+	public function prepareSend( array $email, array $user ): array {
+		do_action( "juvo_mail_editor_send", $this->getTrigger(), [ "user" => get_user_by( "ID", $user['ID'] ) ] );
 
 		return $this->emptyMailArray( $email );
 	}

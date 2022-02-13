@@ -15,7 +15,7 @@ class Password_Changed extends Mail_Generator {
 
 		$field = $cmb->get_field( Mails_PT::POST_TYPE_NAME . '_recipients' );
 
-		if ( $cmb->object_id && ! empty( $field->value ) ) {
+		if ( $cmb->object_id() && ! empty( $field->value ) ) {
 			update_post_meta( $cmb->object_id(), Mails_PT::POST_TYPE_NAME . '_recipients', [] );
 		}
 

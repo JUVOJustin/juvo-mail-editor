@@ -4,7 +4,7 @@
 		"Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
 		"This file is @generated automatically"
 	],
-	"content-hash": "45cb1d86e9d3eabcba04524a29a8c887",
+	"content-hash": "6bae9ce527d09199095743df83eb95b4",
 	"packages": [
 		{
 			"name": "altorouter/altorouter",
@@ -15,16 +15,16 @@
 				"reference": "f6fede4f94ced7c22ba63a9b8af0bf2dc38e3cb2"
 			},
 			"dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/dannyvankooten/AltoRouter/zipball/f6fede4f94ced7c22ba63a9b8af0bf2dc38e3cb2",
-                "reference": "f6fede4f94ced7c22ba63a9b8af0bf2dc38e3cb2",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.6.0"
-            },
-            "require-dev": {
-                "codeclimate/php-test-reporter": "dev-master",
+				"type": "zip",
+				"url": "https://api.github.com/repos/dannyvankooten/AltoRouter/zipball/f6fede4f94ced7c22ba63a9b8af0bf2dc38e3cb2",
+				"reference": "f6fede4f94ced7c22ba63a9b8af0bf2dc38e3cb2",
+				"shasum": ""
+			},
+			"require": {
+				"php": ">=5.6.0"
+			},
+			"require-dev": {
+				"codeclimate/php-test-reporter": "dev-master",
                 "phpunit/phpunit": "5.7.*",
                 "squizlabs/php_codesniffer": "3.4.2"
             },
@@ -347,35 +347,32 @@
                     "type": "custom"
                 },
                 {
-                    "url": "https://github.com/fabpot",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2021-10-20T20:35:02+00:00"
-        },
+					"url": "https://github.com/fabpot",
+					"type": "github"
+				},
+				{
+					"url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+					"type": "tidelift"
+				}
+			],
+			"time": "2021-10-20T20:35:02+00:00"
+		},
 		{
 			"name": "symfony/polyfill-mbstring",
-			"version": "v1.24.0",
+			"version": "v1.20.0",
 			"source": {
 				"type": "git",
 				"url": "https://github.com/symfony/polyfill-mbstring.git",
-				"reference": "0abb51d2f102e00a4eefcf46ba7fec406d245825"
+				"reference": "39d483bdf39be819deabf04ec872eb0b2410b531"
 			},
 			"dist": {
 				"type": "zip",
-				"url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/0abb51d2f102e00a4eefcf46ba7fec406d245825",
-				"reference": "0abb51d2f102e00a4eefcf46ba7fec406d245825",
+				"url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/39d483bdf39be819deabf04ec872eb0b2410b531",
+				"reference": "39d483bdf39be819deabf04ec872eb0b2410b531",
 				"shasum": ""
 			},
 			"require": {
 				"php": ">=7.1"
-			},
-			"provide": {
-				"ext-mbstring": "*"
 			},
 			"suggest": {
 				"ext-mbstring": "For best performance"
@@ -383,14 +380,14 @@
 			"type": "library",
 			"extra": {
 				"branch-alias": {
-					"dev-main": "1.23-dev"
+					"dev-main": "1.20-dev"
 				},
 				"thanks": {
 					"name": "symfony/polyfill",
-                    "url": "https://github.com/symfony/polyfill"
-                }
-            },
-            "autoload": {
+					"url": "https://github.com/symfony/polyfill"
+				}
+			},
+			"autoload": {
 				"files": [
 					"bootstrap.php"
 				],
@@ -398,16 +395,16 @@
 					"Symfony\\Polyfill\\Mbstring\\": ""
 				}
 			},
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Nicolas Grekas",
-                    "email": "p@tchwork.com"
-                },
-                {
+			"notification-url": "https://packagist.org/downloads/",
+			"license": [
+				"MIT"
+			],
+			"authors": [
+				{
+					"name": "Nicolas Grekas",
+					"email": "p@tchwork.com"
+				},
+				{
                     "name": "Symfony Community",
                     "homepage": "https://symfony.com/contributors"
                 }
@@ -422,7 +419,7 @@
                 "shim"
             ],
             "support": {
-				"source": "https://github.com/symfony/polyfill-mbstring/tree/v1.24.0"
+				"source": "https://github.com/symfony/polyfill-mbstring/tree/v1.20.0"
             },
             "funding": [
                 {
@@ -438,7 +435,7 @@
                     "type": "tidelift"
                 }
             ],
-			"time": "2021-11-30T18:21:41+00:00"
+			"time": "2020-10-23T14:02:19+00:00"
         },
         {
             "name": "symfony/polyfill-php72",
@@ -909,16 +906,16 @@
 			},
 			"autoload": {
 				"psr-4": {
-                    "Lipe\\Lib\\Phpstan\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "Phpstan extension for working with WordPress",
-            "support": {
-                "issues": "https://github.com/lipemat/phpstan-wordpress/issues",
+					"Lipe\\Lib\\Phpstan\\": "src/"
+				}
+			},
+			"notification-url": "https://packagist.org/downloads/",
+			"license": [
+				"MIT"
+			],
+			"description": "Phpstan extension for working with WordPress",
+			"support": {
+				"issues": "https://github.com/lipemat/phpstan-wordpress/issues",
 				"source": "https://github.com/lipemat/phpstan-wordpress/tree/1.9.0"
 			},
 			"funding": [
@@ -953,16 +950,16 @@
 			"suggest": {
 				"symfony/polyfill-php73": "Symfony polyfill backporting some PHP 7.3+ features to lower PHP versions",
 				"szepeviktor/phpstan-wordpress": "WordPress extensions for PHPStan"
-            },
-            "type": "library",
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "WooCommerce function and class declaration stubs for static analysis.",
-            "homepage": "https://github.com/php-stubs/woocommerce-stubs",
-            "keywords": [
-                "PHPStan",
+			},
+			"type": "library",
+			"notification-url": "https://packagist.org/downloads/",
+			"license": [
+				"MIT"
+			],
+			"description": "WooCommerce function and class declaration stubs for static analysis.",
+			"homepage": "https://github.com/php-stubs/woocommerce-stubs",
+			"keywords": [
+				"PHPStan",
 				"static analysis",
 				"woocommerce",
 				"wordpress"
@@ -1007,9 +1004,9 @@
 			"license": [
 				"MIT"
 			],
-            "description": "WordPress function and class declaration stubs for static analysis.",
-            "homepage": "https://github.com/php-stubs/wordpress-stubs",
-            "keywords": [
+			"description": "WordPress function and class declaration stubs for static analysis.",
+			"homepage": "https://github.com/php-stubs/wordpress-stubs",
+			"keywords": [
 				"PHPStan",
 				"static analysis",
 				"wordpress"
@@ -1051,15 +1048,15 @@
 				"MIT"
 			],
 			"description": "WP-CLI function and class declaration stubs for static analysis.",
-            "homepage": "https://github.com/php-stubs/wp-cli-stubs",
-            "keywords": [
-                "PHPStan",
-                "static analysis",
-                "wordpress",
-                "wp-cli"
-            ],
-            "support": {
-                "issues": "https://github.com/php-stubs/wp-cli-stubs/issues",
+			"homepage": "https://github.com/php-stubs/wp-cli-stubs",
+			"keywords": [
+				"PHPStan",
+				"static analysis",
+				"wordpress",
+				"wp-cli"
+			],
+			"support": {
+				"issues": "https://github.com/php-stubs/wp-cli-stubs/issues",
 				"source": "https://github.com/php-stubs/wp-cli-stubs/tree/v2.6.0"
             },
 			"time": "2022-01-26T10:46:55+00:00"
@@ -1209,16 +1206,16 @@
             "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "Greg Sherwood",
-                    "role": "lead"
-                }
-            ],
-            "description": "PHP_CodeSniffer tokenizes PHP, JavaScript and CSS files and detects violations of a defined set of coding standards.",
-            "homepage": "https://github.com/squizlabs/PHP_CodeSniffer",
-            "keywords": [
+			],
+			"authors": [
+				{
+					"name": "Greg Sherwood",
+					"role": "lead"
+				}
+			],
+			"description": "PHP_CodeSniffer tokenizes PHP, JavaScript and CSS files and detects violations of a defined set of coding standards.",
+			"homepage": "https://github.com/squizlabs/PHP_CodeSniffer",
+			"keywords": [
 				"phpcs",
 				"standards"
 			],
@@ -1277,16 +1274,16 @@
 					"email": "p@tchwork.com"
 				},
 				{
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "Symfony polyfill backporting some PHP 7.3+ features to lower PHP versions",
-            "homepage": "https://symfony.com",
-            "keywords": [
-                "compatibility",
-                "polyfill",
-                "portable",
+					"name": "Symfony Community",
+					"homepage": "https://symfony.com/contributors"
+				}
+			],
+			"description": "Symfony polyfill backporting some PHP 7.3+ features to lower PHP versions",
+			"homepage": "https://symfony.com",
+			"keywords": [
+				"compatibility",
+				"polyfill",
+				"portable",
                 "shim"
             ],
             "support": {

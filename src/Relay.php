@@ -205,7 +205,7 @@ class Relay {
 
 		// phpcs:ignore Squiz.PHP.DisallowMultipleAssignments.FoundInControlStructure
 		if ( $post ) {
-			$recipients = get_post_meta( $post->ID, Mails_PT::POST_TYPE_NAME . '_recipients', true );
+			$recipients = get_post_meta( $post->ID, Mails_PT::POST_TYPE_NAME . '_recipients', true ) ?: [];
 		}
 
 		$recipients = apply_filters( "juvo_mail_editor_{$this->trigger}_recipients", $recipients, $this->context );
@@ -347,7 +347,7 @@ class Relay {
 
 		// phpcs:ignore Squiz.PHP.DisallowMultipleAssignments.FoundInControlStructure
 		if ( $post ) {
-			$cc = get_post_meta( $post->ID, Mails_PT::POST_TYPE_NAME . '_cc', true );
+			$cc = get_post_meta( $post->ID, Mails_PT::POST_TYPE_NAME . '_cc', true ) ?: [] ;
 		}
 
 		$cc = apply_filters( "juvo_mail_editor_{$this->trigger}_cc", $cc, $this->context );
@@ -362,7 +362,7 @@ class Relay {
 
 		// phpcs:ignore Squiz.PHP.DisallowMultipleAssignments.FoundInControlStructure
 		if ( $post ) {
-			$bcc = get_post_meta( $post->ID, Mails_PT::POST_TYPE_NAME . '_bcc', true );
+			$bcc = get_post_meta( $post->ID, Mails_PT::POST_TYPE_NAME . '_bcc', true ) ?: [];
 		}
 
 		$bcc = apply_filters( "juvo_mail_editor_{$this->trigger}_bcc", $bcc, $this->context );

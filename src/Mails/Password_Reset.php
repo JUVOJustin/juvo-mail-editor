@@ -17,14 +17,26 @@ class Password_Reset extends Mail_Generator {
 
 	public function addCustomFields( CMB2 $cmb ): CMB2 {
 
-		$field = $cmb->get_field( Mails_PT::POST_TYPE_NAME . '_recipients' );
+		if ( $cmb->object_id() && has_term( $this->getTrigger(), Mail_Trigger_TAX::TAXONOMY_NAME, $cmb->object_id() ) ) {
 
-		if ( $cmb->object_id() && ! empty( $field->value ) ) {
-			update_post_meta( $cmb->object_id(), Mails_PT::POST_TYPE_NAME . '_recipients', [] );
-		}
-
-		if ( has_term( $this->getTrigger(), Mail_Trigger_TAX::TAXONOMY_NAME, $cmb->object_id() ) ) {
+            $recipients = $cmb->get_field( Mails_PT::POST_TYPE_NAME . '_recipients' );
+            if (!empty( $recipients->value )) {
+                update_post_meta( $cmb->object_id(), Mails_PT::POST_TYPE_NAME . '_recipients', [] );
+            }
 			$cmb->remove_field( Mails_PT::POST_TYPE_NAME . '_recipients' );
+
+            $cc = $cmb->get_field( Mails_PT::POST_TYPE_NAME . '_cc' );
+            if (!empty( $cc->value )) {
+                update_post_meta( $cmb->object_id(), Mails_PT::POST_TYPE_NAME . '_cc', [] );
+            }
+            $cmb->remove_field( Mails_PT::POST_TYPE_NAME . '_cc' );
+
+            $bcc = $cmb->get_field( Mails_PT::POST_TYPE_NAME . '_bcc' );
+            if (!empty( $bcc->value )) {
+                update_post_meta( $cmb->object_id(), Mails_PT::POST_TYPE_NAME . '_bcc', [] );
+            }
+            $cmb->remove_field( Mails_PT::POST_TYPE_NAME . '_bcc' );
+
 		}
 
 		return $cmb;

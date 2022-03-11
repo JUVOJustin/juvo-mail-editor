@@ -72,6 +72,14 @@
 	flex-basis: 100%;
 }
 
+#juvo-mail_metabox .cmb2-metabox .cmbhandle:before {
+	content: "\f140";
+}
+
+#juvo-mail_metabox .cmb2-metabox .postbox.closed .cmbhandle:before {
+	content: "\f141";
+}
+
 @media screen and (max-width: 781px) {
 	#juvo-mail_metabox .cmb-flex .flex-col-2 {
 		flex-basis: 100%;

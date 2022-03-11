@@ -62,6 +62,11 @@ class Mails_PT {
 				'core/heading',
 				'core/list',
 				'core/table',
+				'core/html',
+				'core/freeform',
+				'core/shortcode',
+				'core/separator',
+				'core/spacer'
 			);
 		}
 

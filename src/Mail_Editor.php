@@ -4,7 +4,6 @@
 namespace JUVO_MailEditor;
 
 use JUVO_MailEditor\Admin\Admin;
-use JUVO_MailEditor\Integrations\BuddyBoss;
 use JUVO_MailEditor\Mails\New_User;
 use JUVO_MailEditor\Mails\New_User_Admin;
 use JUVO_MailEditor\Mails\New_User_Admin_Rest;
@@ -163,7 +162,8 @@ class Mail_Editor {
 		/**
 		 * Integrations
 		 */
-		$this->loader->add_filter( 'wp_mail', new BuddyBoss(), 'useTemplate', 99, 1 );
+		$this->loader->add_filter( 'wp_mail', new Integrations\BuddyBoss(), 'useTemplate', 99, 1 );
+		$this->loader->add_filter( 'user_activation_notification_message', new Integrations\Formidable_Forms\Confirm_User(), 'prepareSend', 99, 3 );
 	}
 
 	/**

@@ -32,15 +32,6 @@ class New_User_Rest extends Mail_Generator {
 
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	public function getDefaultPlaceholder(): array {
-		return array(
-			'password_reset_link' => '',
-		);
-	}
-
 	protected function getTrigger(): string {
 		return 'new_user_rest';
 	}

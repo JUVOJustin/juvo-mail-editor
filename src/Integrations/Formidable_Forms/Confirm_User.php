@@ -10,14 +10,14 @@ class Confirm_User extends Mail_Generator
 {
 
 	/**
-	 * @param $message
-	 * @param $activation_url
-	 * @param $user_id
+	 * @param string $message
+	 * @param string $activation_url
+	 * @param int $user_id
 	 * @return string Return empty string to avoid wp_mail from sending the mail
 	 *
 	 * @link https://formidableforms.com/knowledgebase/user-registration/#kb-customize-confirmation-email
 	 */
-	public function prepareSend($message, $activation_url, $user_id) {
+	public function prepareSend(string $message, string $activation_url, int $user_id) {
 
 		$user = get_user_by('ID', $user_id);
 		do_action( "juvo_mail_editor_send", $this->getTrigger(), [ "user" => $user, "activation_url" => $activation_url ] );

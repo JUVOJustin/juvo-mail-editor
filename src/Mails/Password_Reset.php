@@ -100,7 +100,7 @@ class Password_Reset extends Mail_Generator {
 		}
 
 		if ( ! empty( $context['key'] ) ) {
-			$placeholders['password_reset_link'] = '<a href="' . network_site_url( "wp-login.php?action=rp&key={$context['key']}&login=" . rawurlencode( $context['user']->user_login ), 'login' ) . '">' . network_site_url( "wp-login.php?action=rp&key={$context['key']}&login=" . rawurlencode( $context['user']->user_login ), 'login' ) . '</a>';
+			$placeholders['password_reset_link'] = network_site_url( "wp-login.php?action=rp&key={$context['key']}&login=" . rawurlencode( $context['user']->user_login ), 'login' );
 		}
 
 		return $placeholders;

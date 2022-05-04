@@ -128,6 +128,12 @@ class Mail_Editor {
 		$this->loader->add_filter( 'juvo_mail_editor_timber_context', new Placeholder(), 'filterTimberContext' );
 
 		/**
+		 * User Locale
+		 */
+		$this->loader->add_filter('juvo_mail_editor_user_language', new Integrations\Language(), 'getUserLocale', 10, 2);
+		$this->loader->add_filter('juvo_mail_editor_user_language', new Integrations\WPML(), 'getUserLocale', 20, 2);
+
+		/**
 		 * New User Notification for enduser
 		 */
 		$this->loader->add_action( 'wp_new_user_notification_email', new New_User(), 'prepareSend', 10, 2 );

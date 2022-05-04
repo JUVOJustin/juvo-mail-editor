@@ -101,7 +101,6 @@ class Relay {
 		// Store blog language defaults
 		restore_previous_locale();
 		$blogLocale = get_locale();
-		$blogLang   = locale_get_primary_language( $blogLocale );
 
 		if ( ! empty( $relay->posts ) ) {
 			// If templates were created for trigger

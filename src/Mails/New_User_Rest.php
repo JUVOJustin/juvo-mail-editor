@@ -74,7 +74,7 @@ class New_User_Rest extends Mail_Generator {
 	public function getLanguage( string $language, array $context ): string {
 
 		if ( isset( $context['user'] ) && $context['user'] instanceof WP_User ) {
-			return get_user_locale( $context['user']->ID );
+			return apply_filters( "juvo_mail_editor_user_language", '', $context['user'] );
 		}
 
 		return $language;

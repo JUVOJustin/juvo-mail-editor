@@ -17,6 +17,7 @@ class Password_Reset extends Mail_Generator {
 
 	public function addCustomFields( CMB2 $cmb ): CMB2 {
 
+		/** There are usecases to allow sending this mail to other recipients
 		if ( $cmb->object_id() && has_term( $this->getTrigger(), Mail_Trigger_TAX::TAXONOMY_NAME, $cmb->object_id() ) ) {
 
             $recipients = $cmb->get_field( Mails_PT::POST_TYPE_NAME . '_recipients' );
@@ -38,6 +39,7 @@ class Password_Reset extends Mail_Generator {
             $cmb->remove_field( Mails_PT::POST_TYPE_NAME . '_bcc' );
 
 		}
+		**/
 
 		return $cmb;
 	}

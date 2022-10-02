@@ -243,7 +243,11 @@ class Relay {
 	public function setContentType( string $message ): string {
 
 		$type    = 'text/html';
-		$message = wpautop( $message, false );
+
+		// If plaintext make linebreaks html compliant
+		if($message == strip_tags($message)){
+			$message = wpautop( $message );
+		}
 
 		add_filter(
 			'wp_mail_content_type',

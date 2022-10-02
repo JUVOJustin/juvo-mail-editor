@@ -243,7 +243,7 @@ class Relay {
 	public function setContentType( string $message ): string {
 
 		$type    = 'text/html';
-		$message = wpautop( $message );
+		$message = wpautop( $message, false );
 
 		add_filter(
 			'wp_mail_content_type',

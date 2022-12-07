@@ -4,6 +4,9 @@
 namespace JUVO_MailEditor;
 
 use WP_Block_Editor_Context;
+use Timber\Timber;
+use Timber\User;
+
 
 class Mails_PT {
 
@@ -154,6 +157,34 @@ class Mails_PT {
 			'id'   => self::POST_TYPE_NAME . '_attachments',
 			'type' => 'file_list',
 		) );
+			
+		//Getting all the Variable stored in the Timber Context
+		$context = Timber::context();
+		$context = $this->filterTimberContext($context);
+
+		//Adding all the variables to an array
+		$variables_aray = [];
+		foreach ($context as $key => $elt) {
+			if (is_array($elt) || is_object($elt)) {
+				foreach ($elt as $mykey => $value) {
+					if (!is_array($value) && !is_object($value)) {
+						if (!empty($value)) {
+							$myHtmlElement = "<div class='juvo_tooltip'>  <span class='juvo_tooltiptext'>{$mykey}</span> <h2 class=' juvo_variable_badges'>{{{$value}}}</h2></div>";
+							array_push($variables_aray, $myHtmlElement);
+						}
+					}
+				}
+			}
+			
+			//Add the Variables field to the Edit Mail Page 
+			$cmb2->add_field(array(
+				'name' => $key,
+				'id'   => 'cmb2_juvo_hareth_' . $key,
+				'type' => 'title',
+				'desc' => implode("  ", $variables_aray),
+
+			));
+		}
 
 		apply_filters( 'juvo_mail_editor_post_metabox', $cmb );
 	}
@@ -175,6 +206,24 @@ class Mails_PT {
 				'data-validation' => 'required',
 			),
 		) );
+	}
+
+	/**
+	 * Remove some of the default context variables timber sets
+	 *
+	 * @param array $context
+	 *
+	 * @return array
+	 */
+	public function filterTimberContext(array $context): array
+	{
+		unset($context['body_class']);
+		unset($context['request']);
+		unset($context['wp_head']);
+		unset($context['wp_footer']);
+		unset($context['posts']);
+
+		return $context;
 	}
 
 }

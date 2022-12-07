@@ -85,3 +85,42 @@
 		flex-basis: 100%;
 	}
 }
+
+.juvo_variable_badges {
+	color:#fff !important;
+	background:#198754 !important;
+	display: inline-block;
+	padding: 0.35em 0.65em !important;
+	font-size: .75em !important;
+	font-weight: 700 !important;
+	line-height: 1 !important;
+	text-align: center !important;
+	white-space: nowrap !important;
+	vertical-align: baseline !important;
+	border-radius: 0.25rem !important;
+}
+
+.juvo_tooltip {
+	position: relative;
+}
+
+.juvo_tooltiptext {
+	top:-20px;
+    left:50%;
+    transform:translate(-30%,-100%);
+    padding:10px 20px;
+	visibility: hidden;
+	width: 120px;
+	background-color: #FFFFE0;
+	color: #555;
+	text-align: center;
+	border-radius: 6px;
+	padding: 5px 0;
+	/* Position the tooltip */
+	position: absolute;
+	z-index: 1;
+  }
+  
+  .juvo_tooltip:hover .juvo_tooltiptext {
+	visibility: visible;
+  }

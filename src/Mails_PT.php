@@ -169,7 +169,7 @@ class Mails_PT {
 				foreach ($elt as $mykey => $value) {
 					if (!is_array($value) && !is_object($value)) {
 						if (!empty($value)) {
-							$myHtmlElement = "<div class='juvo_tooltip'>  <span class='juvo_tooltiptext'>{$mykey}</span> <h2 class=' juvo_variable_badges'>{{{$value}}}</h2></div>";
+							$myHtmlElement = "<div class='juvo_tooltip'>  <span class='juvo_tooltiptext'>{$value}</span> <h2 class=' juvo_variable_badges'>{{{$mykey}}}</h2></div>";
 							array_push($variables_aray, $myHtmlElement);
 						}
 					}

@@ -102,23 +102,21 @@
 
 .juvo_tooltip {
 	position: relative;
+	width: fit-content;
+
 }
 
 .juvo_tooltiptext {
-	top:-20px;
-    left:50%;
-    transform:translate(-30%,-100%);
-    padding:10px 20px;
-	visibility: hidden;
-	width: 120px;
-	background-color: #FFFFE0;
-	color: #555;
-	text-align: center;
-	border-radius: 6px;
-	padding: 5px 0;
-	/* Position the tooltip */
-	position: absolute;
-	z-index: 1;
+		left: 8rem;
+		padding: 10px 20px;
+		visibility: hidden;
+		background-color: #FFFFE0;
+		color: #555;
+		text-align: center;
+		border-radius: 6px;
+		padding: 5px 0;
+		position: absolute;
+		z-index: 1;
   }
   
   .juvo_tooltip:hover .juvo_tooltiptext {

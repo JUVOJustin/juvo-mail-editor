@@ -37,7 +37,8 @@
     "cmb2/cmb2": "^2.9",
     "php": ">=7.2.0",
     "timber/timber": "^1.19",
-    "symfony/polyfill-mbstring": "v1.20.0"
+    "symfony/polyfill-mbstring": "v1.20.0",
+    "zenorocha/clipboardjs":"2.0.11"
   },
   "scripts": {
     "sniff": "@php ./vendor/bin/phpcs -s ./",

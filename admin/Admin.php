@@ -78,6 +78,8 @@ class Admin {
 		 */
 
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/ajax.js', array( 'jquery' ), null, true );
+		wp_enqueue_script( $this->plugin_name."placeholder", plugin_dir_url( __FILE__ ) . 'js/placeholder.js', array(), null, true );
+		wp_enqueue_script( $this->plugin_name."cilpboard", plugin_dir_url( __DIR__ ) . 'vendor/clipboard.js/dist/clipboard.min.js', array(), null, true );
 
 	}
 

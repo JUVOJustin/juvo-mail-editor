@@ -158,31 +158,7 @@ class Mails_PT {
 			'type' => 'file_list',
 		) );
 			
-		//Get Filtered Timber Context
-		$context = apply_filters('juvo_mail_editor_timber_context', Timber::context());
-
-		if (isset($_GET['post'])) {
-
-			//Get This Post's Triggers Slugs
-			$posts_triggers = array_column(get_the_terms($_GET['post'], Mail_Trigger_TAX::TAXONOMY_NAME), 'slug');
-
-			//Array for This Post's Specific Variables 
-			$specific_variables = [];
-
-			//Go Throught All Slugs and get the key which represents the Specific Variable
-			foreach ($posts_triggers as $key => $trigger) {
-				$trigger_specific_variable = key(apply_filters("juvo_mail_editor_{$trigger}_placeholders", array(), array()));
-				if (!empty($trigger_specific_variable) && !in_array($trigger_specific_variable, $specific_variables)) {
-					$specific_variables[$trigger_specific_variable] = $trigger_specific_variable;
-				}
-			}
-
-			//Add The Specific Variables to Timber::context
-			$context["Specific Variables"] = $specific_variables;
-		}
-
-		//Call the function creating the new Variables Field
-		$this->custom_variables_field($cmb, $context);
+		
 
 		apply_filters( 'juvo_mail_editor_post_metabox', $cmb );
 	}
@@ -207,43 +183,68 @@ class Mails_PT {
 	}
 
 	//Create a custom HTML cmb Field for All variables
-	public function custom_variables_field($cmb, $variables)
+	public function get_placeholders_for_current_post(): array
 	{
+
+		//Get Filtered Timber Context
+		$context = apply_filters('juvo_mail_editor_timber_context', Timber::context());
+
+		if (empty($context)) {
+			return [];
+		}
+
+		if (isset($_GET['post']) && !empty(get_the_terms($_GET['post'], Mail_Trigger_TAX::TAXONOMY_NAME))) {
+
+			//Get This Post's Triggers Slugs
+
+			$posts_triggers = array_column(get_the_terms($_GET['post'], Mail_Trigger_TAX::TAXONOMY_NAME), 'slug');
+
+			//Array for This Post's Specific Variables 
+			$specific_variables = [];
+
+			//Go Throught All Slugs and get the key which represents the Specific Variable
+			foreach ($posts_triggers as $key => $trigger) {
+				$trigger_specific_variable = key(apply_filters("juvo_mail_editor_{$trigger}_placeholders", array(), array()));
+
+
+
+				if (!empty($trigger_specific_variable) && !in_array($trigger_specific_variable, $specific_variables)) {
+					$specific_variables[$trigger_specific_variable] = $trigger_specific_variable;
+				}
+			}
+
+			//Add The Specific Variables to Timber::context
+			$context["specific_variables"] = $specific_variables;
+		}
+
+
+
+		$cmb = new_cmb2_box(
+			array(
+				'id'           => self::POST_TYPE_NAME . '_placeholders',
+				'title'        => __('PlaceHolder', 'juvo-mail-editor'),
+				'object_types' => array(self::POST_TYPE_NAME), // Post type
+				'context'      => 'normal',
+				'priority'     => 'high',
+				'show_names'   => true,
+			)
+		);
+
+
+
+		//Call the function creating the new Variables Field
 		$cmb->add_field(array(
 			'name' => 'Mail Variables',
 			'id'   => self::POST_TYPE_NAME . "mail_variables",
 			'type' => 'text',
-			'variables' => $variables,
-			'render_row_cb' => function ($field_args, $field) {
-				$id          = $field->args('id');
-				$label       = $field->args('name');
-				$variables = $field->args('variables');
-
-?>
-			<div class="custom-field-row">
-				<h3><label for="<?php echo $id; ?>"><?php echo $label; ?></label></h3>
-				<br>
-				<?php
-				foreach ($variables as $key => $value) {
-					echo '<h5 class="cmb2-metabox-title" ">' . $key . '</h5><br>';
-					if (is_array($value) || is_object($value)) {
-						foreach ($value as $objectkey => $objectvalue) {
-							if (!empty($objectvalue) && !is_array($objectvalue) && !is_object($objectvalue)) {
-								echo "<div class='juvo_tooltip'>  <span class='juvo_tooltiptext'>{$objectvalue}</span> <a  href='#'  class='juvo_variable_badges'>{{{$objectkey}}}</a></div>";
-							}
-						}
-					} else {
-						echo "<div class='juvo_tooltip'>  <span class='juvo_tooltiptext'>{$value}</span> <a  href='#' class='juvo_variable_badges'>{{{$key}}}</a></div>";
-					}
-				}
-
-				?>
-
-				<input id='badgesInput' value='' type='hidden'>;
-			</div>
-<?php
-			},
+			'variables' => $context,
+			'render_row_cb' => Timber::compile("placeholder-widget.twig", $context)
 		));
-	}
+
+
+		return $context;
+}
+
+
 
 }

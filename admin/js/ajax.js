@@ -24,27 +24,6 @@ jQuery(document).ready(function ($) {
 	});
 
 
-	//Copy the variable from the badges
-	$('.juvo_variable_badges').click(function (event) { 
-		
-		navigator.clipboard.writeText("");
-		
-		//Put the badge value in an input
-		$("#badgesInput").val(event.target.text) ;
-
-		 // Get the text field
-		 var copyText = $("#badgesInput");
-
-		 // Select the text field
-		 copyText.select();
-		 
-	   
-		 // Copy the text inside the text field
-		 navigator.clipboard.writeText(copyText.val());
-		 
-		 // Alert the copied text
-		 alert("You Copied the text : " + copyText.val());
-	});
 
 
 });

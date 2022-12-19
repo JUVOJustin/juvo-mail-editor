@@ -17,29 +17,23 @@ class Mail_Editor {
 
 	/**
 	 * The loader that's responsible for maintaining and registering all hooks that power
-	 * the plugin.
+	 * the plugin
 	 *
-	 * @since    1.0.0
-	 * @access   protected
-	 * @var      Loader $loader Maintains and registers all hooks for the plugin.
+	 * @var Loader
 	 */
 	protected $loader;
 
 	/**
 	 * The unique identifier of this plugin.
 	 *
-	 * @since    1.0.0
-	 * @access   protected
-	 * @var      string $plugin_name The string used to uniquely identify this plugin.
+	 * @var string
 	 */
 	protected $plugin_name;
 
 	/**
 	 * The current version of the plugin.
 	 *
-	 * @since    1.0.0
-	 * @access   protected
-	 * @var      string $version The current version of the plugin.
+	 * @var string
 	 */
 	protected $version;
 
@@ -52,9 +46,10 @@ class Mail_Editor {
 	 *
 	 * @since    1.0.0
 	 */
-	public function __construct() {
+	public function __construct(string $version) {
 
 		$this->plugin_name = 'juvo-mail-editor';
+		$this->version = $version;
 
 		$this->loader = new Loader();
 
@@ -90,7 +85,7 @@ class Mail_Editor {
 	 */
 	private function define_admin_hooks() {
 
-		$plugin_admin = new Admin( $this->get_plugin_name() );
+		$plugin_admin = new Admin( $this->get_plugin_name(), $this->get_version() );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
 
@@ -211,6 +206,15 @@ class Mail_Editor {
 	 */
 	public function get_loader() {
 		return $this->loader;
+	}
+
+	/**
+	 * Retrieve the version number of the plugin.
+	 *
+	 * @return    string    The version number of the plugin.
+	 */
+	public function get_version() {
+		return $this->version;
 	}
 
 }

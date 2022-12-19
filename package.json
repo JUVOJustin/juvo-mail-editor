@@ -1,0 +1,24 @@
+{
+  "dependencies": {
+    "clipboard": "^2.0.11"
+  },
+  "devDependencies": {
+    "@wordpress/env": "^5.6.0",
+    "cypress": "^10.11.0",
+    "laravel-mix": "^6.0.34",
+    "laravel-mix-merge-manifest": "^2.1.0",
+    "laravel-mix-purgecss": "^6.0.0",
+    "resolve-url-loader": "^4.0.0",
+    "sass": "^1.43.2",
+    "sass-loader": "^12.2.0"
+  },
+  "scripts": {
+    "development": "npx mix",
+    "watch": "npx mix watch",
+    "production": "npx mix --production",
+    "wp-env": "wp-env",
+    "composer:test": "cd ./tests/setup; composer install; cd ../..",
+    "test:php": "npm run composer:test && npm run wp-env --debug start && npm run wp-env run phpunit 'phpunit -c /var/www/html/wp-content/plugins/wsform-login/phpunit.xml.dist'",
+    "test:e2e":  "npm run composer:test && npm run wp-env --debug start && npm run wp-env clean tests && npx cypress run --config video=false"
+  }
+}

@@ -8,30 +8,31 @@ use Timber\Timber;
 use Timber\User;
 
 
-class Mails_PT {
+class Mails_PT
+{
 
 	public const POST_TYPE_NAME = 'juvo-mail';
 
 	public function registerPostType() {
 		$labels = array(
-			'name'                  => _x( 'Mail', 'Post type general name', 'juvo-mail-editor' ),
-			'singular_name'         => _x( 'Mail', 'Post type singular name', 'juvo-mail-editor' ),
-			'menu_name'             => _x( 'Mails', 'Admin Menu text', 'juvo-mail-editor' ),
-			'name_admin_bar'        => _x( 'Mail', 'Add New on Toolbar', 'juvo-mail-editor' ),
-			'add_new'               => __( 'Add Mail', 'juvo-mail-editor' ),
-			'add_new_item'          => __( 'Add New Mail', 'juvo-mail-editor' ),
-			'new_item'              => __( 'New Mail', 'juvo-mail-editor' ),
-			'edit_item'             => __( 'Edit Mail', 'juvo-mail-editor' ),
-			'view_item'             => __( 'View Mail', 'juvo-mail-editor' ),
-			'all_items'             => __( 'All Mails', 'juvo-mail-editor' ),
-			'search_items'          => __( 'Search Mails', 'juvo-mail-editor' ),
-			'not_found'             => __( 'No Mail found.', 'juvo-mail-editor' ),
-			'not_found_in_trash'    => __( 'No mails found in Trash.', 'juvo-mail-editor' ),
-			'insert_into_item'      => _x( 'Insert into book', 'Overrides the “Insert into post”/”Insert into page” phrase (used when inserting media into a post). Added in 4.4', 'juvo-mail-editor' ),
-			'uploaded_to_this_item' => _x( 'Uploaded to this book', 'Overrides the “Uploaded to this post”/”Uploaded to this page” phrase (used when viewing media attached to a post). Added in 4.4', 'juvo-mail-editor' ),
-			'filter_items_list'     => _x( 'Filter mail list', 'Screen reader text for the filter links heading on the post type listing screen. Default “Filter posts list”/”Filter pages list”. Added in 4.4', 'juvo-mail-editor' ),
-			'items_list_navigation' => _x( 'Mails list navigation', 'Screen reader text for the pagination heading on the post type listing screen. Default “Posts list navigation”/”Pages list navigation”. Added in 4.4', 'juvo-mail-editor' ),
-			'items_list'            => _x( 'Mails list', 'Screen reader text for the items list heading on the post type listing screen. Default “Posts list”/”Pages list”. Added in 4.4', 'juvo-mail-editor' ),
+			'name'                  => _x('Mail', 'Post type general name', 'juvo-mail-editor'),
+			'singular_name'         => _x('Mail', 'Post type singular name', 'juvo-mail-editor'),
+			'menu_name'             => _x('Mails', 'Admin Menu text', 'juvo-mail-editor'),
+			'name_admin_bar'        => _x('Mail', 'Add New on Toolbar', 'juvo-mail-editor'),
+			'add_new'               => __('Add Mail', 'juvo-mail-editor'),
+			'add_new_item'          => __('Add New Mail', 'juvo-mail-editor'),
+			'new_item'              => __('New Mail', 'juvo-mail-editor'),
+			'edit_item'             => __('Edit Mail', 'juvo-mail-editor'),
+			'view_item'             => __('View Mail', 'juvo-mail-editor'),
+			'all_items'             => __('All Mails', 'juvo-mail-editor'),
+			'search_items'          => __('Search Mails', 'juvo-mail-editor'),
+			'not_found'             => __('No Mail found.', 'juvo-mail-editor'),
+			'not_found_in_trash'    => __('No mails found in Trash.', 'juvo-mail-editor'),
+			'insert_into_item'      => _x('Insert into book', 'Overrides the “Insert into post”/”Insert into page” phrase (used when inserting media into a post). Added in 4.4', 'juvo-mail-editor'),
+			'uploaded_to_this_item' => _x('Uploaded to this book', 'Overrides the “Uploaded to this post”/”Uploaded to this page” phrase (used when viewing media attached to a post). Added in 4.4', 'juvo-mail-editor'),
+			'filter_items_list'     => _x('Filter mail list', 'Screen reader text for the filter links heading on the post type listing screen. Default “Filter posts list”/”Filter pages list”. Added in 4.4', 'juvo-mail-editor'),
+			'items_list_navigation' => _x('Mails list navigation', 'Screen reader text for the pagination heading on the post type listing screen. Default “Posts list navigation”/”Pages list navigation”. Added in 4.4', 'juvo-mail-editor'),
+			'items_list'            => _x('Mails list', 'Screen reader text for the items list heading on the post type listing screen. Default “Posts list”/”Pages list”. Added in 4.4', 'juvo-mail-editor'),
 		);
 
 		$args = array(
@@ -42,12 +43,12 @@ class Mails_PT {
 			'has_archive'     => false,
 			'hierarchical'    => false,
 			'menu_position'   => null,
-			'supports'        => array( 'title', 'editor', 'author', 'revisions' ),
+			'supports'        => array('title', 'editor', 'author', 'revisions'),
 			'show_in_rest'    => true,
 			'menu_icon'       => 'dashicons-email',
 		);
 
-		register_post_type( self::POST_TYPE_NAME, $args );
+		register_post_type(self::POST_TYPE_NAME, $args);
 	}
 
 	/**
@@ -56,9 +57,9 @@ class Mails_PT {
 	 *
 	 * @return string[]
 	 */
-	public function limitBlocks( $allowed_block_types, WP_Block_Editor_Context $block_editor_context ) {
+	public function limitBlocks($allowed_block_types, WP_Block_Editor_Context $block_editor_context) {
 
-		if ( isset( $block_editor_context->post ) && self::POST_TYPE_NAME === $block_editor_context->post->post_type ) {
+		if (isset($block_editor_context->post) && self::POST_TYPE_NAME === $block_editor_context->post->post_type) {
 			return array(
 				'core/image',
 				'core/paragraph',
@@ -81,8 +82,8 @@ class Mails_PT {
 		$cmb = new_cmb2_box(
 			array(
 				'id'           => self::POST_TYPE_NAME . '_metabox',
-				'title'        => __( 'Mail Settings', 'juvo-mail-editor' ),
-				'object_types' => array( self::POST_TYPE_NAME ), // Post type
+				'title'        => __('Mail Settings', 'juvo-mail-editor'),
+				'object_types' => array(self::POST_TYPE_NAME), // Post type
 				'context'      => 'normal',
 				'priority'     => 'high',
 				'show_names'   => true, // Show field names on the left
@@ -91,8 +92,8 @@ class Mails_PT {
 
 		$cmb->add_field(
 			array(
-				'name'   => __( 'Subject', 'juvo-mail-editor' ),
-				'desc'   => __( 'E-Mail subject', 'juvo-mail-editor' ),
+				'name'   => __('Subject', 'juvo-mail-editor'),
+				'desc'   => __('E-Mail subject', 'juvo-mail-editor'),
 				'id'     => self::POST_TYPE_NAME . '_subject',
 				'type'   => 'text',
 				'column' => true,
@@ -100,91 +101,120 @@ class Mails_PT {
 		);
 
 		// Named "recipients" for backwards compatibility reasons. Don´t rename!
-		$to_group = $cmb->add_field( array(
+		$to_group = $cmb->add_field(array(
 			'id'          => self::POST_TYPE_NAME . '_recipients',
 			'type'        => 'group',
-			'description' => __( 'Comma seperated list of mail addresses', 'juvo-mail-editor' ),
+			'description' => __('Comma seperated list of mail addresses', 'juvo-mail-editor'),
 			'options'     => array(
-				'group_title'    => __( 'Recipient {#}', 'cmb2' ),
-				'add_button'     => __( 'Add Another Entry', 'cmb2' ),
-				'remove_button'  => __( 'Remove Entry', 'cmb2' ),
+				'group_title'    => __('Recipient {#}', 'cmb2'),
+				'add_button'     => __('Add Another Entry', 'cmb2'),
+				'remove_button'  => __('Remove Entry', 'cmb2'),
 				'sortable'       => true,
 				'closed'         => true,
-				'remove_confirm' => esc_html__( 'Are you sure you want to remove?', 'cmb2' ),
+				'remove_confirm' => esc_html__('Are you sure you want to remove?', 'cmb2'),
 			),
 			'classes'     => "cmb-flex"
-		) );
+		));
 
-		$this->addRecipientGroupFields( $to_group, $cmb );
+		$this->addRecipientGroupFields($to_group, $cmb);
 
-		$cc_group = $cmb->add_field( array(
+		$cc_group = $cmb->add_field(array(
 			'id'          => self::POST_TYPE_NAME . '_cc',
 			'type'        => 'group',
-			'description' => __( 'Add recipients that should receive a carbon copy (CC). CC Recipients are visible in emails', 'juvo-mail-editor' ),
+			'description' => __('Add recipients that should receive a carbon copy (CC). CC Recipients are visible in emails', 'juvo-mail-editor'),
 			'options'     => array(
-				'group_title'    => __( 'CC Recipient {#}', 'cmb2' ),
-				'add_button'     => __( 'Add Another Entry', 'cmb2' ),
-				'remove_button'  => __( 'Remove Entry', 'cmb2' ),
+				'group_title'    => __('CC Recipient {#}', 'cmb2'),
+				'add_button'     => __('Add Another Entry', 'cmb2'),
+				'remove_button'  => __('Remove Entry', 'cmb2'),
 				'sortable'       => true,
 				'closed'         => true,
-				'remove_confirm' => esc_html__( 'Are you sure you want to remove?', 'cmb2' ),
+				'remove_confirm' => esc_html__('Are you sure you want to remove?', 'cmb2'),
 			),
 			'classes'     => "cmb-flex"
-		) );
+		));
 
-		$this->addRecipientGroupFields( $cc_group, $cmb );
+		$this->addRecipientGroupFields($cc_group, $cmb);
 
-		$bcc_group = $cmb->add_field( array(
+		$bcc_group = $cmb->add_field(array(
 			'id'          => self::POST_TYPE_NAME . '_bcc',
 			'type'        => 'group',
-			'description' => __( 'Add recipients that should receive a “blind carbon copy.” Behaves like CC but without revealing the recipients in the email.', 'juvo-mail-editor' ),
+			'description' => __('Add recipients that should receive a “blind carbon copy.” Behaves like CC but without revealing the recipients in the email.', 'juvo-mail-editor'),
 			'options'     => array(
-				'group_title'    => __( 'BCC Recipient {#}', 'cmb2' ),
-				'add_button'     => __( 'Add Another Entry', 'cmb2' ),
-				'remove_button'  => __( 'Remove Entry', 'cmb2' ),
+				'group_title'    => __('BCC Recipient {#}', 'cmb2'),
+				'add_button'     => __('Add Another Entry', 'cmb2'),
+				'remove_button'  => __('Remove Entry', 'cmb2'),
 				'sortable'       => true,
 				'closed'         => true,
-				'remove_confirm' => esc_html__( 'Are you sure you want to remove?', 'cmb2' ),
+				'remove_confirm' => esc_html__('Are you sure you want to remove?', 'cmb2'),
 			),
 			'classes'     => "cmb-flex"
-		) );
+		));
 
-		$this->addRecipientGroupFields( $bcc_group, $cmb );
+		$this->addRecipientGroupFields($bcc_group, $cmb);
 
-		$cmb->add_field( array(
-			'name' => __( 'Attachments', 'juvo-mail-editor' ),
+		$cmb->add_field(array(
+			'name' => __('Attachments', 'juvo-mail-editor'),
 			'desc' => '',
 			'id'   => self::POST_TYPE_NAME . '_attachments',
 			'type' => 'file_list',
-		) );
-			
-		
+		));
 
-		apply_filters( 'juvo_mail_editor_post_metabox', $cmb );
+		apply_filters('juvo_mail_editor_post_metabox', $cmb);
+
+		// Introduce new box for placeholders
+		$cmb_placeholders = new_cmb2_box(
+			array(
+				'id'           => self::POST_TYPE_NAME . '_placeholders',
+				'title'        => __('Placeholder', 'juvo-mail-editor'),
+				'object_types' => array(self::POST_TYPE_NAME), // Post type
+				'context'      => 'side',
+				'priority'     => 'high',
+				'show_names'   => false,
+				'save_fields'  => false,
+			)
+		);
+
+		//Call the function creating the new Variables Field
+		$cmb_placeholders->add_field(array(
+			'name'          => 'Mail Variables',
+			'id'            => self::POST_TYPE_NAME . "mail_variables",
+			'type'          => 'text',
+			'render_row_cb' => Timber::compile("placeholder-box.twig", $this->get_placeholders_for_current_post()),
+		));
 	}
 
-	private function addRecipientGroupFields( string $group, $cmb ) {
-		$cmb->add_group_field( $group, array(
-			'name'    => __( 'Name', 'juvo-mail-editor' ),
+	private function addRecipientGroupFields(string $group, $cmb) {
+		$cmb->add_group_field($group, array(
+			'name'    => __('Name', 'juvo-mail-editor'),
 			'id'      => 'name',
 			'type'    => 'text',
 			'classes' => "flex-col-2"
-		) );
+		));
 
-		$cmb->add_group_field( $group, array(
-			'name'       => __( 'Mail', 'juvo-mail-editor' ),
+		$cmb->add_group_field($group, array(
+			'name'       => __('Mail', 'juvo-mail-editor'),
 			'id'         => 'mail',
 			'type'       => 'text',
 			'classes'    => "flex-col-2",
 			'attributes' => array(
 				'data-validation' => 'required',
 			),
-		) );
+		));
 	}
 
 	//Create a custom HTML cmb Field for All variables
-	public function get_placeholders_for_current_post(): array
-	{
+	public function get_placeholders_for_current_post(): array {
+
+		// check if current post can be determined
+		$post = null;
+		if (isset($_GET['post'])) {
+			$post = get_post($_GET['post']);
+		}
+
+		// Only continue if post found
+		if (empty($post)) {
+			return [];
+		}
 
 		//Get Filtered Timber Context
 		$context = apply_filters('juvo_mail_editor_timber_context', Timber::context());
@@ -193,58 +223,32 @@ class Mails_PT {
 			return [];
 		}
 
-		if (isset($_GET['post']) && !empty(get_the_terms($_GET['post'], Mail_Trigger_TAX::TAXONOMY_NAME))) {
-
-			//Get This Post's Triggers Slugs
-
-			$posts_triggers = array_column(get_the_terms($_GET['post'], Mail_Trigger_TAX::TAXONOMY_NAME), 'slug');
-
-			//Array for This Post's Specific Variables 
-			$specific_variables = [];
-
-			//Go Throught All Slugs and get the key which represents the Specific Variable
-			foreach ($posts_triggers as $key => $trigger) {
-				$trigger_specific_variable = key(apply_filters("juvo_mail_editor_{$trigger}_placeholders", array(), array()));
-
-
-
-				if (!empty($trigger_specific_variable) && !in_array($trigger_specific_variable, $specific_variables)) {
-					$specific_variables[$trigger_specific_variable] = $trigger_specific_variable;
-				}
-			}
-
-			//Add The Specific Variables to Timber::context
-			$context["specific_variables"] = $specific_variables;
+		// Try to find triggers. If no triggers found return general context
+		$terms = get_the_terms($post->ID, Mail_Trigger_TAX::TAXONOMY_NAME);
+		if (empty($terms) || is_wp_error($terms)) {
+			return $context;
 		}
 
+		//Go Throught All Slugs and get the key which represents the Specific Variable
+		foreach ($terms as $term) {
+			$trigger_placeholders = apply_filters("juvo_mail_editor_{$term->slug}_placeholders", array(), array());
 
+			if (empty($trigger_placeholders)) {
+				continue;
+			}
 
-		$cmb = new_cmb2_box(
-			array(
-				'id'           => self::POST_TYPE_NAME . '_placeholders',
-				'title'        => __('PlaceHolder', 'juvo-mail-editor'),
-				'object_types' => array(self::POST_TYPE_NAME), // Post type
-				'context'      => 'normal',
-				'priority'     => 'high',
-				'show_names'   => true,
-			)
-		);
+			foreach($trigger_placeholders as $trigger_placeholder => $trigger_value) {
+				$context[$term->slug][$trigger_placeholder] = $trigger_value;
+			}
+		}
 
+		// Enforce context to only contain strings or array
+		$context = json_decode(json_encode($context), true);
 
-
-		//Call the function creating the new Variables Field
-		$cmb->add_field(array(
-			'name' => 'Mail Variables',
-			'id'   => self::POST_TYPE_NAME . "mail_variables",
-			'type' => 'text',
-			'variables' => $context,
-			'render_row_cb' => Timber::compile("placeholder-widget.twig", $context)
-		));
-
-
-		return $context;
-}
-
+		return [
+			'variables' => $context
+		];
+	}
 
 
 }

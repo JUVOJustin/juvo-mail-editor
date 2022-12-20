@@ -1,0 +1,39 @@
+{% if function("gettype",placeholder_value) != "array" or not placeholder_value %}
+
+{#	Make empty arrays an empty string to avoid conversion errors#}
+	{% if function("gettype", placeholder_value) == "array" and placeholder_value|length == 0 %}
+		{% set placeholder_value = "" %}
+	{% endif %}
+
+	{% if parent_placeholder %}
+		{% set placeholder = parent_placeholder ~ '.' ~ placeholder %}
+	{% endif %}
+
+	<div class='juvo_tooltip'>
+		<a href='#' class='juvo_variable_badges'
+		   data-clipboard-text='{{ '{{'~ placeholder ~ '}}' }}'
+			{% if placeholder_value %}
+				data-bs-toggle="tooltip" data-bs-placement="right"
+				data-bs-custom-class="custom-tooltip"
+				data-bs-title="{{ placeholder_value }}"
+			{% endif %}
+		>{{ placeholder }}</a>
+	</div>
+
+{% else %}
+	<div style="margin-left: 5px">
+		<b>{{ placeholder|upper }}</b>
+
+		{% if parent_placeholder %}
+			{% set parent_placeholder = parent_placeholder ~ '.' ~ placeholder %}
+		{% else %}
+			{% set parent_placeholder = placeholder %}
+		{% endif %}
+
+
+		{% for sub_placeholder, sub_value in placeholder_value %}
+			{% include 'placeholders.twig' with {'placeholder' : sub_placeholder, 'placeholder_value' : sub_value, 'parent_placeholder' : parent_placeholder} only %}
+		{% endfor %}
+	</div>
+
+{% endif %}

@@ -12,6 +12,7 @@ use JUVO_MailEditor\Mails\Password_Changed;
 use JUVO_MailEditor\Mails\Password_Changed_Admin;
 use JUVO_MailEditor\Mails\Password_Reset;
 use JUVO_MailEditor\Mails\Password_Reset_Admin;
+use Timber\Timber;
 
 class Mail_Editor {
 
@@ -51,11 +52,42 @@ class Mail_Editor {
 		$this->plugin_name = 'juvo-mail-editor';
 		$this->version = $version;
 
-		$this->loader = new Loader();
-
+		$this->load_dependencies();
 		$this->set_locale();
 		$this->define_admin_hooks();
 		$this->define_public_hooks();
+
+	}
+
+	/**
+	 * Load the required dependencies for this plugin.
+	 *
+	 * Create an instance of the loader which will be used to register the hooks
+	 * with WordPress.
+	 *
+	 * @since    1.0.0
+	 * @access   private
+	 */
+	private function load_dependencies() {
+
+		$this->loader = new Loader();
+
+		// Initialize Timber.
+		new Timber();
+
+		// Timber
+		add_filter('timber/locations', function($locations) {
+
+			if (file_exists(get_stylesheet_directory() . "/juvo-mail-editor/admin/")) {
+				$locations[] = get_stylesheet_directory() . "/juvo-mail-editor/admin/";
+			}
+
+			$locations = array_merge($locations, array(
+				JUVO_MAIL_EDITOR_PATH . "admin/views",
+			));
+
+			return $locations;
+		});
 
 	}
 

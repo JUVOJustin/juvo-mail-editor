@@ -1,0 +1,33 @@
+{% for key, value in variables %}
+
+{% endfor %}
+
+<ul class="nav nav-pills mb-3" id="juvo-mail-editor-placeholder-tabs" role="tablist">
+	{% for key, value in variables %}
+		<li class="nav-item" role="presentation">
+			{% if loop.first %}
+				<button class="nav-link active" id="pills-{{ key }}-tab" data-bs-toggle="pill"
+						data-bs-target="#tab-{{ key }}" type="button" role="tab" aria-controls="tab-{{ key }}"
+						aria-selected="true">{{ key|upper }}</button>
+			{% else %}
+				<button class="nav-link" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#tab-{{ key }}"
+						type="button" role="tab" aria-controls="tab-{{ key }}" aria-selected="false">{{ key|upper }}</button>
+			{% endif %}
+		</li>
+	{% endfor %}
+</ul>
+<div class="tab-content" id="pills-tabContent">
+	{% for key, value in variables %}
+		{% if loop.first %}
+			<div class="tab-pane fade active show" id="tab-{{ key }}" role="tabpanel" aria-labelledby="pills-{{ key }}-tab"
+				 tabindex="0">
+				{% include 'placeholders.twig' with {'placeholder' : key, 'placeholder_value' : value} only %}
+			</div>
+		{% else %}
+			<div class="tab-pane fade" id="tab-{{ key }}" role="tabpanel" aria-labelledby="pills-{{ key }}-tab"
+				 tabindex="0">
+				{% include 'placeholders.twig' with {'placeholder' : key, 'placeholder_value' : value} only %}
+			</div>
+		{% endif %}
+	{% endfor %}
+</div>

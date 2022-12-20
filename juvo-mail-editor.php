@@ -86,7 +86,8 @@ function juvo_mail_editor_run() {
 	// Make sure only loaded once
 	if ( class_exists( '\WP' ) && ! defined( 'JUVO_MAIL_EDITOR_LOADED' ) ) {
 
-		$plugin = new Mail_Editor();
+		$version = "3.0.14";
+		$plugin = new Mail_Editor($version);
 		$plugin->run();
 
 		define( 'JUVO_MAIL_EDITOR_LOADED', true );

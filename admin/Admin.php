@@ -21,16 +21,25 @@ class Admin {
 	private $plugin_name;
 
 	/**
-	 * Initialize the class and set its properties.
-	 *
-	 * @param string $plugin_name The name of this plugin.
-	 * @param string $version The version of this plugin.
+	 * The version of this plugin.
 	 *
 	 * @since    1.0.0
+	 * @access   private
+	 * @var      string    $version    The current version of this plugin.
 	 */
-	public function __construct( $plugin_name ) {
+	private $version;
+
+	/**
+	 * Initialize the class and set its properties.
+	 *
+	 * @since    1.0.0
+	 * @param      string    $plugin_name       The name of the plugin.
+	 * @param      string    $version    The version of this plugin.
+	 */
+	public function __construct( $plugin_name, $version ) {
 
 		$this->plugin_name = $plugin_name;
+		$this->version = $version;
 
 	}
 
@@ -53,8 +62,7 @@ class Admin {
 		 * class.
 		 */
 
-		wp_enqueue_style( $this->plugin_name . "_options-page", plugin_dir_url( __FILE__ ) . 'css/options-page.css', array(), null, 'all' );
-		wp_enqueue_style( $this->plugin_name . "_cmb", plugin_dir_url( __FILE__ ) . 'css/cmb.css', array(), null, 'all' );
+		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'dist/css/juvo-mail-editor.css', array(), $this->version, 'all' );
 
 	}
 
@@ -77,7 +85,8 @@ class Admin {
 		 * class.
 		 */
 
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/ajax.js', array( 'jquery' ), null, true );
+		wp_enqueue_script( $this->plugin_name.'_ajax', plugin_dir_url( __FILE__ ) . 'js/ajax.js', array( 'jquery' ), null, true );
+		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'dist/js/juvo-mail-editor.js', array(), $this->version, true );
 
 	}
 

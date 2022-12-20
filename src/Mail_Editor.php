@@ -12,34 +12,29 @@ use JUVO_MailEditor\Mails\Password_Changed;
 use JUVO_MailEditor\Mails\Password_Changed_Admin;
 use JUVO_MailEditor\Mails\Password_Reset;
 use JUVO_MailEditor\Mails\Password_Reset_Admin;
+use Timber\Timber;
 
 class Mail_Editor {
 
 	/**
 	 * The loader that's responsible for maintaining and registering all hooks that power
-	 * the plugin.
+	 * the plugin
 	 *
-	 * @since    1.0.0
-	 * @access   protected
-	 * @var      Loader $loader Maintains and registers all hooks for the plugin.
+	 * @var Loader
 	 */
 	protected $loader;
 
 	/**
 	 * The unique identifier of this plugin.
 	 *
-	 * @since    1.0.0
-	 * @access   protected
-	 * @var      string $plugin_name The string used to uniquely identify this plugin.
+	 * @var string
 	 */
 	protected $plugin_name;
 
 	/**
 	 * The current version of the plugin.
 	 *
-	 * @since    1.0.0
-	 * @access   protected
-	 * @var      string $version The current version of the plugin.
+	 * @var string
 	 */
 	protected $version;
 
@@ -52,15 +47,47 @@ class Mail_Editor {
 	 *
 	 * @since    1.0.0
 	 */
-	public function __construct() {
+	public function __construct(string $version) {
 
 		$this->plugin_name = 'juvo-mail-editor';
+		$this->version = $version;
 
-		$this->loader = new Loader();
-
+		$this->load_dependencies();
 		$this->set_locale();
 		$this->define_admin_hooks();
 		$this->define_public_hooks();
+
+	}
+
+	/**
+	 * Load the required dependencies for this plugin.
+	 *
+	 * Create an instance of the loader which will be used to register the hooks
+	 * with WordPress.
+	 *
+	 * @since    1.0.0
+	 * @access   private
+	 */
+	private function load_dependencies() {
+
+		$this->loader = new Loader();
+
+		// Initialize Timber.
+		new Timber();
+
+		// Timber
+		add_filter('timber/locations', function($locations) {
+
+			if (file_exists(get_stylesheet_directory() . "/juvo-mail-editor/admin/")) {
+				$locations[] = get_stylesheet_directory() . "/juvo-mail-editor/admin/";
+			}
+
+			$locations = array_merge($locations, array(
+				JUVO_MAIL_EDITOR_PATH . "admin/views",
+			));
+
+			return $locations;
+		});
 
 	}
 
@@ -90,7 +117,7 @@ class Mail_Editor {
 	 */
 	private function define_admin_hooks() {
 
-		$plugin_admin = new Admin( $this->get_plugin_name() );
+		$plugin_admin = new Admin( $this->get_plugin_name(), $this->get_version() );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
 
@@ -108,6 +135,7 @@ class Mail_Editor {
 		$this->loader->add_action( 'init', $pt, 'registerPostType' );
 		$this->loader->add_filter( 'allowed_block_types_all', $pt, 'limitBlocks', 10, 2 );
 		$this->loader->add_action( 'cmb2_admin_init', $pt, 'addMetaboxes' );
+		$this->loader->add_action( 'cmb2_admin_init', $pt, 'get_placeholders_for_current_post' );
 
 		/**
 		 * Taxonomy
@@ -210,6 +238,15 @@ class Mail_Editor {
 	 */
 	public function get_loader() {
 		return $this->loader;
+	}
+
+	/**
+	 * Retrieve the version number of the plugin.
+	 *
+	 * @return    string    The version number of the plugin.
+	 */
+	public function get_version() {
+		return $this->version;
 	}
 
 }

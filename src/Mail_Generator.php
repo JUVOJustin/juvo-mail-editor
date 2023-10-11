@@ -13,6 +13,11 @@ abstract class Mail_Generator implements Mail {
 		add_filter( 'juvo_mail_editor_post_metabox', array( $this, 'addCustomFields' ) );
 		add_filter( 'juvo_mail_editor_trigger', array( $this, 'registerTrigger' ) );
 
+		// If there is a hook to modify the mail array directly, process it here
+		if($this->getMailArrayHook()) {
+			add_filter($this->getMailArrayHook(), array($this, 'addTriggerToHeader'), 10, 1);
+		}
+
 		add_filter( "juvo_mail_editor_{$this->getTrigger()}_always_sent", array( $this, 'getAlwaysSent' ), 10, 0 );
 		add_filter( "juvo_mail_editor_{$this->getTrigger()}_subject", array( $this, 'getSubject' ), 10, 1 );
 		add_filter( "juvo_mail_editor_{$this->getTrigger()}_message", array( $this, 'getMessage' ), 10, 1 );
@@ -43,6 +48,7 @@ abstract class Mail_Generator implements Mail {
 	 * The function should always return all custom placeholder no matter if they have a value or not.
 	 * This allows filters or other functions to fill or show the placeholder in the most dynamic way.
 	 *
+	 * @param array $placeholders
 	 * @param array|null $context
 	 *
 	 * @return array Array key equals the accessor in twig
@@ -85,8 +91,10 @@ abstract class Mail_Generator implements Mail {
 	}
 
 	/**
+	 * Get the language an email should be sent in.
+	 *
 	 * @param string $language
-	 * @param array $context
+	 * @param array $context the context array allows to adjust the language e.g. to the users language
 	 *
 	 * @return string
 	 *
@@ -116,6 +124,16 @@ abstract class Mail_Generator implements Mail {
 	}
 
 	/**
+	 * WordPress has something of a default array structure that is used for wp_mail.
+	 * Often there is a hook to directly modify this array. If so set it here.
+	 *
+	 * @return string
+	 */
+	protected function getMailArrayHook(): string {
+		return "";
+	}
+
+	/**
 	 * Utility function that completely empties the often used mail array.
 	 * This is most useful if hooking into native core function
 	 *
@@ -130,5 +148,22 @@ abstract class Mail_Generator implements Mail {
 		}
 
 		return $email;
+	}
+
+	/**
+	 * Add trigger slug to mail header to identify throughout the process
+	 *
+	 * @param array $args
+	 *
+	 * @return array
+	 */
+	public function addTriggerToHeader(array $args): array {
+
+		if (isset($args['headers'])) {
+			$args['headers'] =  explode( ',', $args['headers'] );
+			$args['headers'][] = "X-JUVO-ME-Trigger: {$this->getTrigger()}";
+		}
+		return $args;
+
 	}
 }

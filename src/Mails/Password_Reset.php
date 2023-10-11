@@ -50,6 +50,10 @@ class Password_Reset extends Mail_Generator {
 		return '';
 	}
 
+	protected function getMailArrayHook(): string {
+		return "retrieve_password_notification_email";
+	}
+
 	public function getSubject( string $subject ): string {
 
 		if ( ! empty( $subject ) ) {

@@ -25,9 +25,9 @@ class Trigger {
 	private $slug;
 
 	/**
-	 * @var WP_Term
+	 * @var WP_Term|null
 	 */
-	private WP_Term $term;
+	private ?WP_Term $term;
 
 	/**
 	 * Trigger constructor.
@@ -38,7 +38,7 @@ class Trigger {
 	public function __construct( string $name, string $slug ) {
 		$this->name = $name;
 		$this->slug = $slug;
-		$this->term = get_term_by( 'slug', $slug, Mail_Trigger_TAX::TAXONOMY_NAME );
+		$this->term = get_term_by( 'slug', $slug, Mail_Trigger_TAX::TAXONOMY_NAME ) ?: null;
 	}
 
 	public function getTerm(): ?WP_Term {

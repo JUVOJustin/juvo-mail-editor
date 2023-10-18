@@ -13,11 +13,6 @@ abstract class Mail_Generator implements Mail {
 		add_filter( 'juvo_mail_editor_post_metabox', array( $this, 'addCustomFields' ) );
 		add_filter( 'juvo_mail_editor_trigger', array( $this, 'registerTrigger' ) );
 
-		// If there is a hook to modify the mail array directly, process it here
-		if($this->getMailArrayHook()) {
-			add_filter($this->getMailArrayHook(), array($this, 'addTriggerToHeader'), 10, 1);
-		}
-
 		add_filter( "juvo_mail_editor_{$this->getTrigger()}_always_sent", array( $this, 'getAlwaysSent' ), 10, 0 );
 		add_filter( "juvo_mail_editor_{$this->getTrigger()}_subject", array( $this, 'getSubject' ), 10, 1 );
 		add_filter( "juvo_mail_editor_{$this->getTrigger()}_message", array( $this, 'getMessage' ), 10, 1 );
@@ -148,22 +143,5 @@ abstract class Mail_Generator implements Mail {
 		}
 
 		return $email;
-	}
-
-	/**
-	 * Add trigger slug to mail header to identify throughout the process
-	 *
-	 * @param array $args
-	 *
-	 * @return array
-	 */
-	public function addTriggerToHeader(array $args): array {
-
-		if (isset($args['headers'])) {
-			$args['headers'] =  explode( ',', $args['headers'] );
-			$args['headers'][] = "X-JUVO-ME-Trigger: {$this->getTrigger()}";
-		}
-		return $args;
-
 	}
 }

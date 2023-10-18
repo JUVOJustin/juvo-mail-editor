@@ -14,6 +14,9 @@ use WP_Term;
  */
 class Trigger {
 
+	// Hold the class instance.
+	private static $instance = null;
+
 	/**
 	 * @var string
 	 */
@@ -29,16 +32,24 @@ class Trigger {
 	 */
 	private ?WP_Term $term;
 
+	private array $context = [];
+
+	private string $mailHook;
+
 	/**
 	 * Trigger constructor.
 	 *
 	 * @param string $name
 	 * @param string $slug
+	 * @param string $mailHook
 	 */
-	public function __construct( string $name, string $slug ) {
-		$this->name = $name;
-		$this->slug = $slug;
-		$this->term = get_term_by( 'slug', $slug, Mail_Trigger_TAX::TAXONOMY_NAME ) ?: null;
+	public function __construct( string $name, string $slug, string $mailHook = '' ) {
+		$this->name     = $name;
+		$this->slug     = $slug;
+		$this->mailHook = $mailHook;
+		$this->term     = get_term_by( 'slug', $slug, Mail_Trigger_TAX::TAXONOMY_NAME ) ?: null;
+
+		add_filter( $this->mailHook, array( $this, 'addTriggerToHeader' ), 9, 1 );
 	}
 
 	public function getTerm(): ?WP_Term {
@@ -74,9 +85,9 @@ class Trigger {
 		return false;
 	}
 
-	public function getRelatedPosts() :array {
+	public function getRelatedPosts(): array {
 
-		if (!$this->getTerm() instanceof WP_Term) {
+		if ( ! $this->getTerm() instanceof WP_Term ) {
 			return [];
 		}
 
@@ -95,6 +106,38 @@ class Trigger {
 				),
 			)
 		);
+	}
+
+	public function getMailHook(): string {
+		return $this->mailHook;
+	}
+
+	public function getContext(): array {
+		return $this->context;
+	}
+
+	public function setContext( array $context ): void {
+		$this->context = $context;
+	}
+
+	/**
+	 * Add trigger slug to mail header to identify throughout the process
+	 *
+	 * @param array $args
+	 *
+	 * @return array
+	 */
+	public function addTriggerToHeader( array $args ): array {
+
+		// Enforce headers to be array
+		if ( ! empty( $args['headers'] ) && is_string( $args['headers'] ) ) {
+			$args['headers'] = explode( ',', $args['headers'] );
+		}
+
+		$args['headers'][] = "X-JUVO-ME-Trigger: {$this->getSlug()}";
+
+		return $args;
+
 	}
 
 }

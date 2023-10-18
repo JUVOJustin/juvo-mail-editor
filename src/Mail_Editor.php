@@ -94,6 +94,9 @@ class Mail_Editor {
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
 
+		// Init Trigger Registry
+		Trigger_Registry::getInstance();
+
 		/**
 		 * Options
 		 */

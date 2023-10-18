@@ -91,10 +91,9 @@ class Mail_Trigger_TAX {
 	 */
 	public function registerTrigger() {
 
-		$triggers = array();
-		$errors   = new WP_Error();
+		$errors = new WP_Error();
 
-		$triggers = apply_filters( 'juvo_mail_editor_trigger', $triggers );
+		$triggers = Trigger_Registry::getInstance()->getAll();
 
 		foreach ( $triggers as $trigger ) {
 

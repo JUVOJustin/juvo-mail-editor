@@ -28,7 +28,10 @@ abstract class Mail_Generator implements Mail {
 		add_filter( "juvo_mail_editor_{$this->getTrigger()}_language", array( $this, 'getLanguage' ), 1, 2 );
 
 		// Add current trigger to registry
-		Trigger_Registry::getInstance()->set( $this->getName(), $this->getTrigger(), $this->getMailArrayHook() );
+		add_action('init', function() {
+			Trigger_Registry::getInstance()->set( $this->getName(), $this->getTrigger(), $this->getMailArrayHook() );
+		});
+
 	}
 
 	public function getSubject(string $subject) {

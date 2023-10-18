@@ -123,12 +123,9 @@ class Mail_Editor {
 		/**
 		 * Handle Sending
 		 */
-		add_action( "juvo_mail_editor_send", array( Relay::class, 'sendMails' ), 10, 2 );
-
-		/**
-		 * Handle mail array hooks
-		 */
-		add_filter('wp_mail', array(new Process_Mail_Array(), 'process'), 10, 1);
+		$relay = new Relay();
+		$this->loader->add_action("juvo_mail_editor_send", $relay, 'send_mails_action_callback', 10, 2);
+		$this->loader->add_filter("wp_mail", $relay, 'wpmail_filter_callback', 10, 1);
 
 		/**
 		 * Placeholders
@@ -156,13 +153,8 @@ class Mail_Editor {
 		/**
 		 * Password Reset
 		 */
-		new Password_Reset();
-		//$this->loader->add_filter( '', new Password_Reset(), 'retrieve_password_notification_email', 10, 4 );
-
-		/**
-		 * Password Reset Admin
-		 */
-		$this->loader->add_filter( 'retrieve_password_notification_email', new Password_Reset_Admin(), 'prepareSend', 99, 4 );
+		$this->loader->add_filter( 'retrieve_password_notification_email', new Password_Reset(), 'prepareSend', 10, 4 );
+		$this->loader->add_filter( 'retrieve_password_notification_email', new Password_Reset_Admin(), 'prepareSend', 10, 4 );
 
 		/**
 		 * Password Changed

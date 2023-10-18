@@ -14,9 +14,6 @@ use WP_Term;
  */
 class Trigger {
 
-	// Hold the class instance.
-	private static $instance = null;
-
 	/**
 	 * @var string
 	 */

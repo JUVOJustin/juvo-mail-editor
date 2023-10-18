@@ -41,7 +41,7 @@ class Process_Mail_Array {
 					} else {
 
 						// Avoid endless loop, so unhook
-						remove_filter('wp_mail', array($this, 'process'), 10, 1);
+						remove_filter('wp_mail', array($this, 'process'), 10);
 
 						// Send all but first one
 						$first = array_shift($mailArrays);

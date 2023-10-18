@@ -26,6 +26,11 @@ class Relay {
 			return $args;
 		}
 
+		// Headers can be passed as array and as string
+		if (!is_array($args['headers'])) {
+			$args['headers'] = explode("\r\n", $args['headers']);
+		}
+
 		$this->args = $args;
 
 		$mailArrays = [];
@@ -189,7 +194,7 @@ class Relay {
 			'to'          => $this->prepareRecipients( $trigger, $post ),
 			'subject'     => $this->prepareSubject( $trigger, $post ),
 			'message'     => $this->prepareContent( $trigger, $post ),
-			'headers'     => $this->prepareHeaders( $trigger, $post ),
+			'headers'     => implode("\r\n", $this->prepareHeaders( $trigger, $post )),
 			'attachments' => $this->prepareAttachments( $trigger, $post ),
 		];
 
@@ -247,7 +252,7 @@ class Relay {
 		$content = Placeholder::replacePlaceholder( $this->preparePlaceholders( $trigger ), $content, $trigger->getContext() );
 		$content = apply_filters( 'juvo_mail_editor_after_content_placeholder', $content, $trigger->getSlug(), $trigger->getContext() );
 
-		$content = $this->setContentType( $content );
+		//$content = $this->setContentType( $content );
 
 		return $content;
 	}

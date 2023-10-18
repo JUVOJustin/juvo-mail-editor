@@ -128,12 +128,15 @@ class Trigger {
 
 		// Enforce headers to be array
 		if ( ! empty( $args['headers'] ) && is_string( $args['headers'] ) ) {
-			$args['headers'] = explode( ',', $args['headers'] );
+			$args['headers'] = explode( "\n", str_replace( "\r\n", "\n", $args['headers'] ) );
 		} elseif(empty($args['headers'])) {
 			$args['headers'] = [];
 		}
 
 		$args['headers'][] = "X-JUVO-ME-Trigger: {$this->getSlug()}";
+
+		// Format back to string since some smtp plugins do not support arrays
+		$args['headers'] = implode("\r\n", $args['headers']);
 
 		return $args;
 

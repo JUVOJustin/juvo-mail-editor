@@ -129,6 +129,8 @@ class Trigger {
 		// Enforce headers to be array
 		if ( ! empty( $args['headers'] ) && is_string( $args['headers'] ) ) {
 			$args['headers'] = explode( ',', $args['headers'] );
+		} elseif(empty($args['headers'])) {
+			$args['headers'] = [];
 		}
 
 		$args['headers'][] = "X-JUVO-ME-Trigger: {$this->getSlug()}";

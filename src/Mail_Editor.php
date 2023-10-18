@@ -143,10 +143,6 @@ class Mail_Editor {
 		 */
 		$this->loader->add_action( 'wp_new_user_notification_email', new New_User(), 'prepareSend', 10, 2 );
 		$this->loader->add_action( 'rest_insert_user', new New_User_Rest(), 'prepareSend', 12, 1 ); // Rest
-
-		/**
-		 * New User Notification Admin
-		 */
 		$this->loader->add_action( 'wp_new_user_notification_email_admin', new New_User_Admin(), 'prepareSend', 10, 2 );
 		$this->loader->add_action( 'rest_insert_user', new New_User_Admin_Rest(), 'prepareSend', 12, 1 ); // Rest
 
@@ -160,10 +156,6 @@ class Mail_Editor {
 		 * Password Changed
 		 */
 		$this->loader->add_filter( 'password_change_email', new Password_Changed(), 'prepareSend', 10, 2 );
-
-		/**
-		 * Password Changed Admin
-		 */
 		$this->loader->add_filter( 'wp_password_change_notification_email', new Password_Changed_Admin(), 'prepareSend', 10, 2 );
 
 		/**

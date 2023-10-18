@@ -11,7 +11,6 @@ abstract class Mail_Generator implements Mail {
 
 	public function __construct() {
 		add_filter( 'juvo_mail_editor_post_metabox', array( $this, 'addCustomFields' ) );
-		add_filter( 'juvo_mail_editor_trigger', array( $this, 'registerTrigger' ) );
 
 		add_filter( "juvo_mail_editor_{$this->getTrigger()}_always_sent", array( $this, 'getAlwaysSent' ), 10, 0 );
 		add_filter( "juvo_mail_editor_{$this->getTrigger()}_subject", array( $this, 'getSubject' ), 10, 1 );
@@ -27,6 +26,21 @@ abstract class Mail_Generator implements Mail {
 			2
 		);
 		add_filter( "juvo_mail_editor_{$this->getTrigger()}_language", array( $this, 'getLanguage' ), 1, 2 );
+
+		// Add current trigger to registry
+		Trigger_Registry::getInstance()->set( $this->getName(), $this->getTrigger(), $this->getMailArrayHook() );
+	}
+
+	public function getSubject(string $subject) {
+		return $subject;
+	}
+
+	public function getMessage(string $message) {
+		return $message;
+	}
+
+	public function getRecipients(array $recipients) {
+		return $recipients;
 	}
 
 	/**
@@ -50,17 +64,6 @@ abstract class Mail_Generator implements Mail {
 	 */
 	public function getPlaceholders( array $placeholders, ?array $context ): array {
 		return $placeholders;
-	}
-
-	/**
-	 * @param Trigger[] $triggers
-	 *
-	 * @return Trigger[]
-	 */
-	public function registerTrigger( array $triggers ): array {
-		$triggers[] = new Trigger( $this->getName(), $this->getTrigger() );
-
-		return $triggers;
 	}
 
 	/**

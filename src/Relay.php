@@ -3,6 +3,7 @@
 
 namespace JUVO_MailEditor;
 
+use WP_HTML_Tag_Processor;
 use WP_Post;
 
 class Relay {
@@ -194,9 +195,10 @@ class Relay {
 			'to'          => $this->prepareRecipients( $trigger, $post ),
 			'subject'     => $this->prepareSubject( $trigger, $post ),
 			'message'     => $this->prepareContent( $trigger, $post ),
-			'headers'     => implode("\r\n", $this->prepareHeaders( $trigger, $post )),
 			'attachments' => $this->prepareAttachments( $trigger, $post ),
 		];
+
+		$new_args['headers'] = implode("\r\n", $this->prepareHeaders( $trigger, $post, $new_args['message'] ));
 
 		// Replace empty args with original args
 		foreach ( $new_args as $key => $value ) {
@@ -250,31 +252,16 @@ class Relay {
 
 		$content = apply_filters( "juvo_mail_editor_{$trigger->getSlug()}_message", $content, $trigger->getContext() );
 		$content = Placeholder::replacePlaceholder( $this->preparePlaceholders( $trigger ), $content, $trigger->getContext() );
-		$content = apply_filters( 'juvo_mail_editor_after_content_placeholder', $content, $trigger->getSlug(), $trigger->getContext() );
 
-		//$content = $this->setContentType( $content );
-
-		return $content;
-	}
-
-	public function setContentType( string $message ): string {
-
-		$type = 'text/html';
-
-		// If plaintext make linebreaks html compliant
-		if ( $message == strip_tags( $message ) ) {
-			$message = wpautop( $message );
+		// If html tags present use wpautop to automagically fix linebreaks
+		$p = new WP_HTML_Tag_Processor( $content );
+		if ($p->next_tag()) {
+			$content = wpautop( $content );
 		}
 
-		add_filter(
-			'wp_mail_content_type',
-			function( $content_type ) use ( $type ) {
-				return $type;
-			},
-			10
-		);
+		$content = apply_filters( 'juvo_mail_editor_after_content_placeholder', $content, $trigger->getSlug(), $trigger->getContext() );
 
-		return $message;
+		return $content;
 	}
 
 	/**
@@ -315,7 +302,7 @@ class Relay {
 	 *
 	 * @return mixed|void
 	 */
-	private function prepareHeaders( Trigger $trigger, WP_Post $post = null ) {
+	private function prepareHeaders( Trigger $trigger, WP_Post $post = null, string $content = "" ) {
 
 		$headers[] = "X-JUVO-ME-Trigger: {$trigger->getSlug()}";
 
@@ -323,9 +310,17 @@ class Relay {
 			$headers[] = "X-JUVO-ME-PostID: {$post->ID}";
 		}
 
+		// Use new Tag Processor API to dynamically set content type
+		if (!empty($content)) {
+			$p = new WP_HTML_Tag_Processor( $content );
+			if ($p->next_tag()) {
+				$headers[] = "Content-Type: text/html; charset=UTF-8";
+			}
+		}
+
 		// Add CC and BCC
-		$headers = $this->prepareCc( $headers, $trigger, $post );
-		$headers = $this->prepareBcc( $headers, $trigger, $post );
+		$headers = array_merge($headers, $this->prepareCc( $headers, $trigger, $post ));
+		$headers = array_merge($headers, $this->prepareBcc( $headers, $trigger, $post ));
 
 		return apply_filters( "juvo_mail_editor_{$trigger->getSlug()}_headers", $headers, $trigger->getContext() );
 	}
@@ -362,7 +357,7 @@ class Relay {
 		$cc = apply_filters( "juvo_mail_editor_{$trigger->getSlug()}_cc", $cc, $trigger->getContext() );
 		$cc = apply_filters( 'juvo_mail_editor_after_cc_placeholder', $this->parseToCcBcc( $trigger, $cc, "Cc:" ), $trigger->getSlug(), $trigger->getContext() );
 
-		return array_merge( $headers, $cc );
+		return $cc;
 	}
 
 	private function prepareBcc( array $headers, Trigger $trigger, WP_Post $post = null ): array {
@@ -377,7 +372,7 @@ class Relay {
 		$bcc = apply_filters( "juvo_mail_editor_{$trigger->getSlug()}_bcc", $bcc, $trigger->getContext() );
 		$bcc = apply_filters( 'juvo_mail_editor_after_bcc_placeholder', $this->parseToCcBcc( $trigger, $bcc, "Bcc:" ), $trigger->getSlug(), $trigger->getContext() );
 
-		return array_merge( $headers, $bcc );
+		return $bcc;
 	}
 
 	/**

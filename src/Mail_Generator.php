@@ -11,7 +11,6 @@ abstract class Mail_Generator implements Mail {
 
 	public function __construct() {
 		add_filter( 'juvo_mail_editor_post_metabox', array( $this, 'addCustomFields' ) );
-		add_filter( 'juvo_mail_editor_trigger', array( $this, 'registerTrigger' ) );
 
 		add_filter( "juvo_mail_editor_{$this->getTrigger()}_always_sent", array( $this, 'getAlwaysSent' ), 10, 0 );
 		add_filter( "juvo_mail_editor_{$this->getTrigger()}_subject", array( $this, 'getSubject' ), 10, 1 );
@@ -27,6 +26,24 @@ abstract class Mail_Generator implements Mail {
 			2
 		);
 		add_filter( "juvo_mail_editor_{$this->getTrigger()}_language", array( $this, 'getLanguage' ), 1, 2 );
+
+		// Add current trigger to registry
+		add_action('init', function() {
+			Trigger_Registry::getInstance()->set( $this->getName(), $this->getTrigger(), $this->getMailArrayHook() );
+		}, 20);
+
+	}
+
+	public function getSubject(string $subject) {
+		return $subject;
+	}
+
+	public function getMessage(string $message) {
+		return $message;
+	}
+
+	public function getRecipients(array $recipients) {
+		return $recipients;
 	}
 
 	/**
@@ -43,23 +60,13 @@ abstract class Mail_Generator implements Mail {
 	 * The function should always return all custom placeholder no matter if they have a value or not.
 	 * This allows filters or other functions to fill or show the placeholder in the most dynamic way.
 	 *
+	 * @param array $placeholders
 	 * @param array|null $context
 	 *
 	 * @return array Array key equals the accessor in twig
 	 */
 	public function getPlaceholders( array $placeholders, ?array $context ): array {
 		return $placeholders;
-	}
-
-	/**
-	 * @param Trigger[] $triggers
-	 *
-	 * @return Trigger[]
-	 */
-	public function registerTrigger( array $triggers ): array {
-		$triggers[] = new Trigger( $this->getName(), $this->getTrigger() );
-
-		return $triggers;
 	}
 
 	/**
@@ -85,8 +92,10 @@ abstract class Mail_Generator implements Mail {
 	}
 
 	/**
+	 * Get the language an email should be sent in.
+	 *
 	 * @param string $language
-	 * @param array $context
+	 * @param array $context the context array allows to adjust the language e.g. to the users language
 	 *
 	 * @return string
 	 *
@@ -113,6 +122,16 @@ abstract class Mail_Generator implements Mail {
 		$cmb->add_field( $field );
 
 		return $cmb;
+	}
+
+	/**
+	 * WordPress has something of a default array structure that is used for wp_mail.
+	 * Often there is a hook to directly modify this array. If so set it here.
+	 *
+	 * @return string
+	 */
+	protected function getMailArrayHook(): string {
+		return "";
 	}
 
 	/**

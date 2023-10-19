@@ -3,202 +3,220 @@
 
 namespace JUVO_MailEditor;
 
-use JUVO_MailEditor\Mails\Generic;
+use WP_HTML_Tag_Processor;
 use WP_Post;
-use WP_Term;
 
 class Relay {
 
+	private $args = [];
+
 	/**
-	 * @var string
+	 * This callback hooks into wp_mail and checks if the header indicates that this mail should be processed by juvo_mail_editor.
+	 * If so it will process the mail and return the mail array.
+	 * If multiple templates are set up for one trigger, the first one will be returned callback and all other mails will be send directly with wp_mail in "process_trigger".
+	 *
+	 * @param array $args {
+	 *      Array of the `wp_mail()` arguments.
+	 *
+	 * @return array
 	 */
-	private $trigger;
+	public function wpmail_filter_callback( array $args ): array {
+
+		// Trigger info lives in header. If no headers set exit early
+		if ( empty( $args['headers'] ) ) {
+			return $args;
+		}
+
+		// Headers can be passed as array and as string
+		if (!is_array($args['headers'])) {
+			$args['headers'] = explode("\r\n", $args['headers']);
+		}
+
+		$this->args = $args;
+
+		$mailArrays = [];
+
+		foreach ( $args['headers'] as $header ) {
+			if ( strpos( $header, 'X-JUVO-ME-Trigger:' ) !== false ) {
+				$value = trim( explode( ':', $header, 2 )[1] );
+				$mailArrays = array_merge($mailArrays, $this->buildMailArrays( $value ));
+			}
+		}
+
+		// Return first mail array item;
+		if (!empty($mailArrays)) {
+			$this->process_trigger( $mailArrays, true );
+			return reset($mailArrays);
+		}
+
+		return $args;
+
+	}
 
 	/**
-	 * @var array
-	 */
-	private $placeholders;
-
-	/**
-	 * @var WP_Term
-	 */
-	private $term;
-
-	/**
-	 * @var int[]|WP_Post[]
-	 */
-	private $posts;
-
-
-	private $context;
-
-	/**
-	 * Relay constructor.
+	 * Some triggers might not use wp_mail natively. It is totally fine to directly send the mails with juvo_mail_editor.
+	 * In this case we do not hook into wp_mail but directly send the mails.
+	 *
+	 * Callback for the "juvo_mail_editor_send" action.
 	 *
 	 * @param string $trigger
 	 * @param array $context
-	 * @param WP_Term $term
+	 *
+	 * @return void
 	 */
-	public function __construct( string $trigger, array $context, WP_Term $term ) {
-		$this->trigger      = $trigger;
-		$this->context      = $context;
-		$this->term         = $term;
-		$this->posts        = $this->setPostsForTrigger();
-		$this->placeholders = $this->preparePlaceholders();
+	public function send_mails_action_callback( string $trigger, array $context = array() ) {
+
+		// Add Context
+		Trigger_Registry::getInstance()->get( $trigger )
+		                ->setContext( $context );
+
+		$mailArrays = $this->buildMailArrays( $trigger );
+		$this->process_trigger( $mailArrays, false );
 	}
 
 	/**
-	 * @return WP_Post[]
-	 */
-	private function setPostsForTrigger(): array {
-
-		return get_posts(
-			array(
-				'post_type'        => Mails_PT::POST_TYPE_NAME,
-				'post_status'      => 'publish',
-				'numberposts'      => - 1,
-				'suppress_filters' => false,
-				'tax_query'        => array(
-					array(
-						'taxonomy' => Mail_Trigger_TAX::TAXONOMY_NAME,
-						'field'    => 'id',
-						'terms'    => $this->term,
-					),
-				),
-			)
-		);
-
-	}
-
-	/**
+	 * Send the given mail array and optionally return the first mail array.
+	 *
+	 * @param array $mailArrays
+	 * @param bool $return_first
+	 *
 	 * @return array
 	 */
-	public function preparePlaceholders(): array {
-		return apply_filters( "juvo_mail_editor_{$this->trigger}_placeholders", array(), $this->context );
+	public function process_trigger(  array $mailArrays, bool $return_first = false ): array {
+
+		// Exit early if no mails are set up
+		if ( empty( $mailArrays ) ) {
+			return [];
+		}
+
+		// Avoid endless loop, so unhook
+		remove_filter( 'wp_mail', array( $this, 'wpmail_filter_callback' ), 10 );
+
+		// Send all others
+		$i = 0;
+		foreach ( $mailArrays as $key => $mailArray ) {
+
+			// Send all but first one
+			if ( $return_first && $i === 0 ) {
+				$i ++;
+				continue;
+			}
+
+			// Avoid endless loop, so unhook
+			remove_filter( 'wp_mail', array( $this, 'wpmail_filter_callback' ), 10 );
+
+			wp_mail( $mailArray['to'], $mailArray['subject'], $mailArray['message'], $mailArray['headers'], $mailArray['attachments'] );
+
+			// Add unhooked code again
+			add_filter( 'wp_mail', array( $this, 'wpmail_filter_callback' ), 10, 1 );
+
+			// Remove mail from array so that either none or only one mail is returned
+			unset( $mailArrays[ $key ] );
+			$i ++;
+		}
+
+		return $mailArrays;
 	}
 
 	/**
-	 * Sends mails for all posts that are associated with the trigger.
-	 * To send mails even if not post is associated set the "alwaysSend" flag.
+	 * Build mail array for each template and returns one combined array that contains all mails to be sent.
+	 * This function also takes care that translations are applied correctly for each template.
 	 *
-	 * If the flag is set the term defaults are used for the mailing
+	 * @param string $slug
+	 *
+	 * @return array
 	 */
-	public static function sendMails( string $trigger, array $context = array() ) {
+	public function buildMailArrays( string $slug ): array {
 
-		$term = get_term_by( 'slug', $trigger, Mail_Trigger_TAX::TAXONOMY_NAME );
-
-		if ( ! $term instanceof WP_Term ) {
-			return false;
+		// Get Trigger from Registry
+		$trigger = Trigger_Registry::getInstance()->get( $slug );
+		if ( empty( $trigger ) ) {
+			return [];
 		}
 
 		// Add Muted Capability
-		if ( self::triggerIsMuted( $trigger ) ) {
-			return false;
+		if ( $trigger->isMuted() ) {
+			return [];
 		}
-
-		$relay = new self( $trigger, $context, $term );
 
 		// Store blog language defaults
 		restore_previous_locale();
 		$blogLocale = get_locale();
 
-		if ( ! empty( $relay->posts ) ) {
-			// If templates were created for trigger
+		$mails     = [];
+		$templates = $trigger->getRelatedPosts();
 
-			foreach ( $relay->posts as $post ) {
+		$locale = apply_filters( "juvo_mail_editor_{$trigger->getSlug()}_language", $blogLocale, $trigger->getContext() );
+		$lang   = locale_get_primary_language( $locale );
 
-				$locale = apply_filters( "juvo_mail_editor_{$trigger}_language", $blogLocale, $relay->context );
-				$lang   = locale_get_primary_language( $locale );
+		// Switch language context
+		$switched_locale = switch_to_locale( $locale );
 
-				// Switch language context
-				$switched_locale = switch_to_locale( $locale );
+
+		if ( ! $templates ) {
+			// If not template is set up try to get mail array from hooks
+			$mails[] = $this->buildMailArray( $trigger );
+		} else {
+
+			// Build mail array for each template
+			foreach ( $templates as $template ) {
 
 				// Get translated post with WPML
-				$translationId = apply_filters( 'wpml_object_id', $post->ID, Mails_PT::POST_TYPE_NAME, true, $lang );
-				if ( $translationId && $translationId !== $post->ID && get_post_status( $translationId ) === 'publish' ) {
-					$post = get_post( $translationId );
+				$translationId = apply_filters( 'wpml_object_id', $template->ID, Mails_PT::POST_TYPE_NAME, true, $lang );
+				if ( $translationId && $translationId !== $template->ID && get_post_status( $translationId ) === 'publish' ) {
+					$template = get_post( $translationId );
 				}
 
-				// Recipients
-				$recipients = $relay->prepareRecipients( $post );
-
-				// Content
-				$content = $relay->prepareContent( $post );
-
-				// Subject
-				$subject = $relay->prepareSubject( $post );
-
-				// Headers
-				$headers = $relay->prepareHeaders( $post );
-
-				// Attachments
-				$attachments = $relay->prepareAttachments( $post );
-
-				// Restore language context
-				if ( $switched_locale ) {
-					restore_previous_locale();
-				}
-
-				$mail = new Generic( $subject, $content, $recipients, $headers, $attachments );
-				$mail->send();
-
+				$mails[] = $this->buildMailArray( $trigger, $template );
 			}
-		} else {
-			// No templates created use trigger defaults
-
-			// Some triggers might only send mails if a post is associated
-			$alwaysSent = apply_filters( "juvo_mail_editor_{$trigger}_always_sent", false, $relay->context );
-			if ( ! $alwaysSent ) {
-				return false;
-			}
-
-			$lang = apply_filters( "juvo_mail_editor_{$trigger}_language", $blogLocale, $relay->context );
-
-			$switched_locale = switch_to_locale( $lang );
-
-			// Fallback if not posts are found for configured trigger
-			$content     = $relay->prepareContent();
-			$subject     = $relay->prepareSubject();
-			$recipients  = $relay->prepareRecipients();
-			$headers     = $relay->prepareHeaders();
-			$attachments = $relay->prepareAttachments();
-
-			if ( $switched_locale ) {
-				restore_previous_locale();
-			}
-
-			$mail = new Generic( $subject, $content, $recipients, $headers, $attachments );
-			$mail->send();
 
 		}
 
-		return true;
-	}
-
-	/**
-	 * Checks if the given trigger is globally muted.
-	 * Might be called manually if the mail is not send using the 'Relay' class but eg. with a filter.
-	 *
-	 * @param string $trigger
-	 *
-	 * @return bool
-	 */
-	public static function triggerIsMuted( string $trigger ): bool {
-		$pluginSettings = get_option( 'settings' );
-
-		if ( isset( $pluginSettings['trigger_mute'] ) ) {
-			return in_array( $trigger, $pluginSettings['trigger_mute'], true );
+		// Restore language context
+		if ( $switched_locale ) {
+			restore_previous_locale();
 		}
 
-		return false;
+		return $mails;
+
 	}
 
 	/**
+	 * Builds an array with mail args in a way that WordPress uses internally
+	 *
+	 * @param Trigger $trigger
 	 * @param WP_Post|null $post
 	 *
 	 * @return array
 	 */
-	public function prepareRecipients( WP_Post $post = null ): array {
+	public function buildMailArray( Trigger $trigger, WP_Post $post = null ): array {
+
+		$new_args = [
+			'to'          => $this->prepareRecipients( $trigger, $post ),
+			'subject'     => $this->prepareSubject( $trigger, $post ),
+			'message'     => $this->prepareContent( $trigger, $post ),
+			'attachments' => $this->prepareAttachments( $trigger, $post ),
+		];
+
+		$new_args['headers'] = implode("\r\n", $this->prepareHeaders( $trigger, $post, $new_args['message'] ));
+
+		// Replace empty args with original args
+		foreach ( $new_args as $key => $value ) {
+			if ( empty( $value ) ) {
+				$new_args[ $key ] = $this->args[ $key ] ?? "";
+			}
+		}
+
+		return $new_args;
+	}
+
+	/**
+	 * @param WP_Post|null $post
+	 * @param Trigger $trigger
+	 *
+	 * @return array
+	 */
+	public function prepareRecipients( Trigger $trigger, WP_Post $post = null ): array {
 
 		$recipients = [];
 
@@ -207,17 +225,18 @@ class Relay {
 			$recipients = get_post_meta( $post->ID, Mails_PT::POST_TYPE_NAME . '_recipients', true ) ?: [];
 		}
 
-		$recipients = apply_filters( "juvo_mail_editor_{$this->trigger}_recipients", $recipients, $this->context );
+		$recipients = apply_filters( "juvo_mail_editor_{$trigger->getSlug()}_recipients", $recipients, $trigger->getContext() );
 
-		return apply_filters( 'juvo_mail_editor_after_recipients_placeholder', $this->parseToCcBcc( $recipients ), $this->trigger, $this->context );
+		return apply_filters( 'juvo_mail_editor_after_recipients_placeholder', $this->parseToCcBcc( $trigger, $recipients ), $trigger->getSlug(), $trigger->getContext() );
 	}
 
 	/**
 	 * @param WP_Post|null $post
+	 * @param Trigger $trigger
 	 *
 	 * @return string
 	 */
-	public function prepareContent( WP_Post $post = null ): string {
+	public function prepareContent( Trigger $trigger, WP_Post $post = null ): string {
 
 		$content = '';
 
@@ -231,41 +250,27 @@ class Relay {
 			}
 		}
 
-		$content = apply_filters( "juvo_mail_editor_{$this->trigger}_message", $content, $this->context );
-		$content = Placeholder::replacePlaceholder( $this->placeholders, $content, $this->context );
-		$content = apply_filters( 'juvo_mail_editor_after_content_placeholder', $content, $this->trigger, $this->context );
+		$content = apply_filters( "juvo_mail_editor_{$trigger->getSlug()}_message", $content, $trigger->getContext() );
+		$content = Placeholder::replacePlaceholder( $this->preparePlaceholders( $trigger ), $content, $trigger->getContext() );
 
-		$content = $this->setContentType( $content );
+		// If html tags present use wpautop to automagically fix linebreaks
+		$p = new WP_HTML_Tag_Processor( $content );
+		if ($p->next_tag()) {
+			$content = wpautop( $content );
+		}
+
+		$content = apply_filters( 'juvo_mail_editor_after_content_placeholder', $content, $trigger->getSlug(), $trigger->getContext() );
 
 		return $content;
 	}
 
-	public function setContentType( string $message ): string {
-
-		$type    = 'text/html';
-
-		// If plaintext make linebreaks html compliant
-		if($message == strip_tags($message)){
-			$message = wpautop( $message );
-		}
-
-		add_filter(
-			'wp_mail_content_type',
-			function( $content_type ) use ( $type ) {
-				return $type;
-			},
-			10
-		);
-
-		return $message;
-	}
-
 	/**
 	 * @param WP_Post|null $post
+	 * @param Trigger $trigger
 	 *
 	 * @return string
 	 */
-	public function prepareSubject( WP_Post $post = null ): string {
+	public function prepareSubject( Trigger $trigger, WP_Post $post = null ): string {
 
 		$subject = '';
 
@@ -274,57 +279,53 @@ class Relay {
 			$subject = get_post_meta( $post->ID, Mails_PT::POST_TYPE_NAME . '_subject', true );
 		}
 
-		$subject = apply_filters( "juvo_mail_editor_{$this->trigger}_subject", $subject, $this->context );
-		$subject = Placeholder::replacePlaceholder( $this->placeholders, $subject, $this->context );
+		$subject = apply_filters( "juvo_mail_editor_{$trigger->getSlug()}_subject", $subject, $trigger->getContext() );
+		$subject = Placeholder::replacePlaceholder( $this->preparePlaceholders( $trigger ), $subject, $trigger->getContext() );
 
-		return apply_filters( 'juvo_mail_editor_after_subject_placeholder', $subject, $this->trigger, $this->context );
+		return apply_filters( 'juvo_mail_editor_after_subject_placeholder', $subject, $trigger->getSlug(), $trigger->getContext() );
 	}
 
 	/**
+	 * @param Trigger $trigger
+	 *
 	 * @return array
 	 */
-	public function getPlaceholders(): array {
-		return $this->placeholders;
-	}
-
-	/**
-	 * @return WP_Term
-	 */
-	public function getTerm() {
-		return $this->term;
-	}
-
-	/**
-	 * @return WP_Post[]
-	 */
-	public function getPosts(): array {
-		return $this->posts;
+	public function preparePlaceholders( Trigger $trigger ): array {
+		return apply_filters( "juvo_mail_editor_{$trigger->getSlug()}_placeholders", array(), $trigger->getContext() );
 	}
 
 	/**
 	 * Sets custom headers.
-	 * By defaults adds headers to identify mail-editor mails through wordpress
+	 * By defaults adds headers to identify mail-editor mails through WordPress
 	 *
 	 * @param WP_Post|null $post
 	 *
 	 * @return mixed|void
 	 */
-	private function prepareHeaders( WP_Post $post = null ) {
+	private function prepareHeaders( Trigger $trigger, WP_Post $post = null, string $content = "" ) {
 
-		$headers[] = "X-JUVO-ME-Trigger: {$this->trigger}";
+		$headers[] = "X-JUVO-ME-Trigger: {$trigger->getSlug()}";
 
 		if ( $post ) {
 			$headers[] = "X-JUVO-ME-PostID: {$post->ID}";
 		}
 
-		// Add CC and BCC
-		$headers = $this->prepareCc( $headers, $post );
-		$headers = $this->prepareBcc( $headers, $post );
+		// Use new Tag Processor API to dynamically set content type
+		if (!empty($content)) {
+			$p = new WP_HTML_Tag_Processor( $content );
+			if ($p->next_tag()) {
+				$headers[] = "Content-Type: text/html; charset=UTF-8";
+			}
+		}
 
-		return apply_filters( "juvo_mail_editor_{$this->trigger}_headers", $headers, $this->context );
+		// Add CC and BCC
+		$headers = array_merge($headers, $this->prepareCc( $headers, $trigger, $post ));
+		$headers = array_merge($headers, $this->prepareBcc( $headers, $trigger, $post ));
+
+		return apply_filters( "juvo_mail_editor_{$trigger->getSlug()}_headers", $headers, $trigger->getContext() );
 	}
 
-	private function prepareAttachments( WP_Post $post = null ): array {
+	private function prepareAttachments( Trigger $trigger, WP_Post $post = null ): array {
 
 		$attachments = [];
 
@@ -341,25 +342,25 @@ class Relay {
 			}
 		}
 
-		return apply_filters( "juvo_mail_editor_{$this->trigger}_attachments", $attachments, $this->context );
+		return apply_filters( "juvo_mail_editor_{$trigger->getSlug()}_attachments", $attachments, $trigger->getContext() );
 	}
 
-	private function prepareCc( array $headers, WP_Post $post = null ): array {
+	private function prepareCc( array $headers, Trigger $trigger, WP_Post $post = null ): array {
 
 		$cc = [];
 
 		// phpcs:ignore Squiz.PHP.DisallowMultipleAssignments.FoundInControlStructure
 		if ( $post ) {
-			$cc = get_post_meta( $post->ID, Mails_PT::POST_TYPE_NAME . '_cc', true ) ?: [] ;
+			$cc = get_post_meta( $post->ID, Mails_PT::POST_TYPE_NAME . '_cc', true ) ?: [];
 		}
 
-		$cc = apply_filters( "juvo_mail_editor_{$this->trigger}_cc", $cc, $this->context );
-		$cc = apply_filters( 'juvo_mail_editor_after_cc_placeholder', $this->parseToCcBcc( $cc, "Cc:" ), $this->trigger, $this->context );
+		$cc = apply_filters( "juvo_mail_editor_{$trigger->getSlug()}_cc", $cc, $trigger->getContext() );
+		$cc = apply_filters( 'juvo_mail_editor_after_cc_placeholder', $this->parseToCcBcc( $trigger, $cc, "Cc:" ), $trigger->getSlug(), $trigger->getContext() );
 
-		return array_merge( $headers, $cc );
+		return $cc;
 	}
 
-	private function prepareBcc( array $headers, WP_Post $post = null ): array {
+	private function prepareBcc( array $headers, Trigger $trigger, WP_Post $post = null ): array {
 
 		$bcc = [];
 
@@ -368,21 +369,22 @@ class Relay {
 			$bcc = get_post_meta( $post->ID, Mails_PT::POST_TYPE_NAME . '_bcc', true ) ?: [];
 		}
 
-		$bcc = apply_filters( "juvo_mail_editor_{$this->trigger}_bcc", $bcc, $this->context );
-		$bcc = apply_filters( 'juvo_mail_editor_after_bcc_placeholder', $this->parseToCcBcc( $bcc, "Bcc:" ), $this->trigger, $this->context );
+		$bcc = apply_filters( "juvo_mail_editor_{$trigger->getSlug()}_bcc", $bcc, $trigger->getContext() );
+		$bcc = apply_filters( 'juvo_mail_editor_after_bcc_placeholder', $this->parseToCcBcc( $trigger, $bcc, "Bcc:" ), $trigger->getSlug(), $trigger->getContext() );
 
-		return array_merge( $headers, $bcc );
+		return $bcc;
 	}
 
 	/**
 	 * Parses cmb2 repeater groups or strings to wp_mail compatible array format for "to", "cc" and "bcc"
 	 *
+	 * @param Trigger $trigger
 	 * @param array|string $recipients
 	 * @param string $prefix "Cc:" or "Bcc:"
 	 *
 	 * @return array
 	 */
-	private function parseToCcBcc( $recipients, string $prefix = "" ): array {
+	private function parseToCcBcc( Trigger $trigger, $recipients, string $prefix = "" ): array {
 
 		if ( empty( $recipients ) ) {
 			return [];
@@ -400,7 +402,7 @@ class Relay {
 				$recipient = $recipient['mail'];
 			}
 
-			$recipient = Placeholder::replacePlaceholder( $this->placeholders, $recipient, $this->context );
+			$recipient = Placeholder::replacePlaceholder( $this->preparePlaceholders( $trigger ), $recipient, $trigger->getContext() );
 
 			if ( ! empty( $prefix ) ) {
 				$recipient = $prefix . " " . $recipient;

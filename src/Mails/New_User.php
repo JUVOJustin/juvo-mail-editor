@@ -3,6 +3,7 @@
 namespace JUVO_MailEditor\Mails;
 
 use JUVO_MailEditor\Mail_Generator;
+use JUVO_MailEditor\Trigger_Registry;
 use WP_User;
 
 class New_User extends Mail_Generator {
@@ -12,8 +13,15 @@ class New_User extends Mail_Generator {
 	}
 
 	public function prepareSend( array $email, WP_User $user ): array {
-		do_action( "juvo_mail_editor_send", $this->getTrigger(), [ "user" => $user ] );
-		return $this->emptyMailArray( $email );
+
+		Trigger_Registry::getInstance()->get( $this->getTrigger() )
+		                ->setContext( [ "user" => $user ] );
+
+		return $email;
+	}
+
+	protected function getMailArrayHook(): string {
+		return "wp_new_user_notification_email";
 	}
 
 	/**
@@ -36,37 +44,6 @@ class New_User extends Mail_Generator {
 		$placeholders['password_reset_link'] = '<a href="' . network_site_url( "wp-login.php?action=rp&key=$adt_rp_key&login=" . rawurlencode( $user_login ), 'login' ) . '">' . network_site_url( "wp-login.php?action=rp&key=$adt_rp_key&login=" . rawurlencode( $user_login ), 'login' ) . '</a>';
 
 		return $placeholders;
-	}
-
-	public function getSubject( string $subject ): string {
-
-		if ( ! empty( $subject ) ) {
-			return $subject;
-		}
-
-		return sprintf( __( '%s Login Details', 'default' ), '{{site.name}}' );
-	}
-
-	public function getMessage( string $message ): string {
-
-		if ( ! empty( $message ) ) {
-			return $message;
-		}
-
-		$message = sprintf( __( 'Username: %s', 'default' ), '{{user.name}}' ) . "\r\n\r\n";
-		$message .= __( 'To set your password, visit the following address:', 'default' ) . "\r\n\r\n";
-		$message .= '{{password_reset_link}}' . "\r\n";
-
-		return $message;
-	}
-
-	public function getRecipients( array $recipients ): array {
-
-		if ( ! empty( $recipients ) ) {
-			return $recipients;
-		}
-
-		return [ '{{user.user_email}}' ];
 	}
 
 	protected function getName(): string {

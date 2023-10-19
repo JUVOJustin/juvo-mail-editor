@@ -30,7 +30,7 @@ abstract class Mail_Generator implements Mail {
 		// Add current trigger to registry
 		add_action('init', function() {
 			Trigger_Registry::getInstance()->set( $this->getName(), $this->getTrigger(), $this->getMailArrayHook() );
-		});
+		}, 20);
 
 	}
 

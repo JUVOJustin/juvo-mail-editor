@@ -66,11 +66,15 @@ class Relay {
 	 */
 	public function send_mails_action_callback( string $trigger, array $context = array() ) {
 
-		// Add Context
-		Trigger_Registry::getInstance()->get( $trigger )
-		                ->setContext( $context );
+		$trigger = Trigger_Registry::getInstance()->get( $trigger );
+		if ( empty( $trigger ) ) {
+			return;
+		}
 
-		$mailArrays = $this->buildMailArrays( $trigger );
+		// Add Context
+		$trigger->setContext( $context );
+
+		$mailArrays = $this->buildMailArrays( $trigger->getSlug() );
 		$this->process_trigger( $mailArrays, false );
 	}
 

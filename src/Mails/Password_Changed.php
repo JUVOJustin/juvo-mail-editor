@@ -3,10 +3,7 @@
 
 namespace JUVO_MailEditor\Mails;
 
-use CMB2;
 use JUVO_MailEditor\Mail_Generator;
-use JUVO_MailEditor\Mail_Trigger_TAX;
-use JUVO_MailEditor\Mails_PT;
 use JUVO_MailEditor\Trigger_Registry;
 use WP_User;
 

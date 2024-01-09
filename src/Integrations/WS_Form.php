@@ -17,8 +17,4 @@ class WS_Form {
 
 	}
 
-	private function forgot_password() {
-
-	}
-
 }

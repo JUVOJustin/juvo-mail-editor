@@ -4,6 +4,7 @@
 namespace JUVO_MailEditor;
 
 use JUVO_MailEditor\Admin\Admin;
+use JUVO_MailEditor\Integrations\WS_Form;
 use JUVO_MailEditor\Mails\New_User;
 use JUVO_MailEditor\Mails\New_User_Admin;
 use JUVO_MailEditor\Mails\New_User_Admin_Rest;
@@ -124,8 +125,8 @@ class Mail_Editor {
 		 * Handle Sending
 		 */
 		$relay = new Relay();
-		$this->loader->add_action("juvo_mail_editor_send", $relay, 'send_mails_action_callback', 10, 2);
-		$this->loader->add_filter("wp_mail", $relay, 'wpmail_filter_callback', 10, 1);
+		$this->loader->add_action( "juvo_mail_editor_send", $relay, 'send_mails_action_callback', 10, 2 );
+		$this->loader->add_filter( "wp_mail", $relay, 'wpmail_filter_callback', 10, 1 );
 
 		/**
 		 * Placeholders
@@ -135,8 +136,8 @@ class Mail_Editor {
 		/**
 		 * User Locale
 		 */
-		$this->loader->add_filter('juvo_mail_editor_user_language', new Integrations\Language(), 'getUserLocale', 10, 2);
-		$this->loader->add_filter('juvo_mail_editor_user_language', new Integrations\WPML(), 'getUserLocale', 20, 2);
+		$this->loader->add_filter( 'juvo_mail_editor_user_language', new Integrations\Language(), 'getUserLocale', 10, 2 );
+		$this->loader->add_filter( 'juvo_mail_editor_user_language', new Integrations\WPML(), 'getUserLocale', 20, 2 );
 
 		/**
 		 * New User Notification for enduser
@@ -163,6 +164,9 @@ class Mail_Editor {
 		 */
 		$this->loader->add_filter( 'wp_mail', new Integrations\BuddyBoss(), 'useTemplate', 99, 1 );
 		$this->loader->add_filter( 'user_activation_notification_message', new Integrations\Formidable_Forms\Confirm_User(), 'prepareSend', 99, 3 );
+		$wsf = new WS_Form();
+		$this->loader->add_filter( 'wsf_action_email_headers', $wsf, 'header_filter_callback', 10, 4 );
+
 	}
 
 	/**
@@ -183,8 +187,7 @@ class Mail_Editor {
 	 * @since    1.0.0
 	 * @access   private
 	 */
-	private function define_public_hooks() {
-	}
+	private function define_public_hooks() {}
 
 	/**
 	 * Run the loader to execute all of the hooks with WordPress.

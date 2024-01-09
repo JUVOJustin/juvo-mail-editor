@@ -124,21 +124,43 @@ class Trigger {
 	 *
 	 * @return array
 	 */
-	public function addTriggerToHeader( array $args ): array {
+	public function addTriggerMailArray( array $args ): array {
 
-		// Enforce headers to be array
-		if ( ! empty( $args['headers'] ) && is_string( $args['headers'] ) ) {
-			$args['headers'] = explode( "\n", str_replace( "\r\n", "\n", $args['headers'] ) );
-		} elseif(empty($args['headers'])) {
-			$args['headers'] = [];
+		if (!empty($args['headers'])) {
+			// Format back to string since some smtp plugins do not support arrays
+			$args['headers'] = implode("\r\n", $this->addTriggerMailArray($args['headers']));
 		}
 
-		$args['headers'][] = "X-JUVO-ME-Trigger: {$this->getSlug()}";
-
-		// Format back to string since some smtp plugins do not support arrays
-		$args['headers'] = implode("\r\n", $args['headers']);
-
 		return $args;
+
+	}
+
+	/**
+	 * Adds template slug as header to mark the mails to be processed later
+	 *
+	 * @param array|string $headers
+	 *
+	 * @return array
+	 */
+	public function addTriggerToHeader( $headers ): array {
+
+		// Ensure string or array
+		if (!is_array($headers) && !is_string($headers)) {
+			return $headers;
+		}
+
+		// Exit early
+		if (empty($headers)) {
+			return $headers;
+		}
+
+		if ( is_string( $headers ) ) {
+			$headers = explode( "\n", str_replace( "\r\n", "\n", $headers ) );
+		}
+
+		$headers[] = "X-JUVO-ME-Trigger: {$this->getSlug()}";
+
+		return $headers;
 
 	}
 

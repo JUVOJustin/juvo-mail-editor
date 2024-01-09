@@ -3,13 +3,15 @@
 
 namespace JUVO_MailEditor\Mails;
 
-use CMB2;
 use JUVO_MailEditor\Mail_Generator;
-use JUVO_MailEditor\Mail_Trigger_TAX;
-use JUVO_MailEditor\Mails_PT;
 use JUVO_MailEditor\Trigger_Registry;
 use WP_User;
 
+/**
+ * Class Password_Changed
+ * 
+ * Triggered after the user changed his password. By default only triggered on the profile page
+ */
 class Password_Changed extends Mail_Generator {
 
 	protected function getTrigger(): string {

@@ -32,7 +32,7 @@
   },
   "require": {
     "cmb2/cmb2": "^2.9",
-    "php": ">=7.2.0",
+    "php": ">=7.4.0",
     "timber/timber": "^2.0.0"
   },
   "scripts": {

@@ -146,9 +146,9 @@ class Mail_Editor {
 		 * New User Notification for enduser
 		 */
 		$this->loader->add_action( 'wp_new_user_notification_email', new New_User(), 'prepareSend', 10, 2 );
-		$this->loader->add_action( 'rest_insert_user', new New_User_Rest(), 'prepareSend', 12, 1 ); // Rest
+		$this->loader->add_action( 'rest_insert_user', new New_User_Rest(), 'prepareSend', 12, 3 ); // Rest
 		$this->loader->add_action( 'wp_new_user_notification_email_admin', new New_User_Admin(), 'prepareSend', 10, 2 );
-		$this->loader->add_action( 'rest_insert_user', new New_User_Admin_Rest(), 'prepareSend', 12, 1 ); // Rest
+		$this->loader->add_action( 'rest_insert_user', new New_User_Admin_Rest(), 'prepareSend', 12, 3 ); // Rest
 
 		/**
 		 * Password Reset

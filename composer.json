@@ -37,12 +37,10 @@
   "require": {
     "cmb2/cmb2": "^2.9",
     "php": ">=7.2.0",
-    "timber/timber": "^2.0.0",
-    "symfony/polyfill-mbstring": "v1.20.0"
+    "timber/timber": "^2.0.0"
   },
   "scripts": {
     "sniff": "@php ./vendor/bin/phpcs -s ./",
-    "test": "@php ./vendor/phpunit/phpunit/phpunit",
     "strauss": [
       "test -f ./bin/strauss.phar || curl -o bin/strauss.phar -L -C - https://github.com/BrianHenryIE/strauss/releases/latest/download/strauss.phar",
       "@php bin/strauss.phar"

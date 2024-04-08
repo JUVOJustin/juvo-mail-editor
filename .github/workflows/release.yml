@@ -31,6 +31,17 @@ jobs:
         if: steps.composer-cache.outputs.cache-hit != 'true'
         run: composer install --no-dev --prefer-dist --no-progress --no-suggest --ignore-platform-reqs
 
+      - name: Clean up development files (Prod)
+        run: |
+          find . -name "composer.json" -type f -delete && find . -name "composer.lock" -type f -delete
+          find . -name "package.json" -type f -delete && find . -name "package-lock.json" -type f -delete
+          find . -name "constants.php" && find . -name "README.md"
+          rm -rf .git && find . -name ".gitignore" -type f -delete
+          rm -rf .github
+          rm -rf tests
+          rm -rf bin
+        shell: bash
+
       # Update Version
       - name: Set env
         run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
@@ -38,6 +49,7 @@ jobs:
         run: |
           sed -i 's/\(\s*\)\*\(\s*\)Version:\(\s*\)[^,]*/\1*\2Version:\3${{ env.RELEASE_VERSION }}/g' ${{ github.event.repository.name }}.php
           sed -i 's/Stable tag:\(\s*\)[^,]*/Stable tag:\1${{ env.RELEASE_VERSION }}/g' readme.txt
+
       - name: Update resources
         uses: test-room-7/action-update-file@v1
         with:

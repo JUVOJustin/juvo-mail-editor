@@ -58,7 +58,7 @@ jobs:
         with:
           file-path: |
             ${{ github.event.repository.name }}.php
-            README.txt
+            readme.txt
           commit-msg: Update Version in WordPress specific files
           github-token: ${{ secrets.GITHUB_TOKEN }}
 

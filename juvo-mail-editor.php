@@ -31,24 +31,23 @@ define('JUVO_MAIL_EDITOR_URL', plugin_dir_url(__FILE__));
  * Use Composer PSR-4 Autoloading
  * Add file check to avoid autoloading if included as sub-package
  */
-$juvo_mail_editor_plugin_dir = plugin_dir_path(__FILE__);
 if (
-    file_exists($juvo_mail_editor_plugin_dir . 'vendor/autoload.php')
-    && file_exists($juvo_mail_editor_plugin_dir . 'vendor/vendor-prefixed/autoload.php')
+    file_exists(JUVO_MAIL_EDITOR_PATH . 'vendor/autoload.php')
+    && file_exists(JUVO_MAIL_EDITOR_PATH . 'vendor/vendor-prefixed/autoload.php')
 ) {
-	require plugin_dir_path(__FILE__) . 'vendor/autoload.php';
-    require plugin_dir_path(__FILE__) . 'vendor/vendor-prefixed/autoload.php';
+	require JUVO_MAIL_EDITOR_PATH . 'vendor/autoload.php';
+    require JUVO_MAIL_EDITOR_PATH . 'vendor/vendor-prefixed/autoload.php';
 }
 
 /**
  * Load cmb2 manually and not by composer because file autoloading does not work
  */
-if (file_exists($juvo_mail_editor_plugin_dir . 'vendor/cmb2/cmb2/init.php')) {
+if (file_exists(JUVO_MAIL_EDITOR_PATH . 'vendor/cmb2/cmb2/init.php')) {
 	// Path for standalone plugin. Load from local vendor folder
-	require plugin_dir_path(__FILE__) . 'vendor/cmb2/cmb2/init.php';
+	require JUVO_MAIL_EDITOR_PATH . 'vendor/cmb2/cmb2/init.php';
 } else {
 	// Lookup vendor folder when included as library
-	preg_match('/(.*)vendor/U', $juvo_mail_editor_plugin_dir, $matches);
+	preg_match('/(.*)vendor/U', JUVO_MAIL_EDITOR_PATH, $matches);
 	if (file_exists($matches[1] . 'vendor/cmb2/cmb2/init.php')) {
 		require $matches[1] . 'vendor/cmb2/cmb2/init.php';
 	}

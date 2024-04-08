@@ -22,7 +22,7 @@ jobs:
 
       - name: Cache Composer packages
         id: cache-composer
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: vendor
           key: composer-${{ inputs.mode }}-${{ hashFiles('composer.lock') }}
@@ -71,9 +71,8 @@ jobs:
 
       - name: Cache all Deps
         id: cache-deps
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             vendor
-            dist
           key: deps-${{ inputs.mode }}-${{ hashFiles('composer.lock') }}

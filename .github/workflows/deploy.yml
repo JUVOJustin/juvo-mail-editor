@@ -24,11 +24,10 @@ jobs:
       - uses: actions/setup-node@v2.1.4
 
       - name: Load Cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             vendor
-            dist
           key: deps-prod-${{ hashFiles('composer.lock') }}
           fail-on-cache-miss: true
         id: cache

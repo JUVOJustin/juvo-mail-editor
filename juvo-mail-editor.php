@@ -8,7 +8,7 @@
  * Text Domain:     juvo-mail-editor
  * Domain Path:     /languages
  * Version:         3.1.2
- * Requires at least: 6.2
+ * Requires at least: 6.5
  * Requires PHP: 7.4
  */
 

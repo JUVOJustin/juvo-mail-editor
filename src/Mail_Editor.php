@@ -13,6 +13,7 @@ use JUVO_MailEditor\Mails\Password_Changed;
 use JUVO_MailEditor\Mails\Password_Changed_Admin;
 use JUVO_MailEditor\Mails\Password_Reset;
 use JUVO_MailEditor\Mails\Password_Reset_Admin;
+use Timber\Timber;
 
 class Mail_Editor {
 
@@ -58,6 +59,8 @@ class Mail_Editor {
 		$this->plugin_name = 'juvo-mail-editor';
 
 		$this->loader = new Loader();
+
+        Timber::init();
 
 		$this->set_locale();
 		$this->define_admin_hooks();

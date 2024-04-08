@@ -8,5 +8,8 @@ parameters:
         # Uses func_get_args()
         - '#Parameter \#2 \$args of function register_post_type expects array\X*#'
         - '#Parameter \#3 \$args of function register_taxonomy expects array\X*#'
+    scanDirectories:
+        - vendor/vendor-prefixed
+        - vendor
     scanFiles:
-        - %rootDir%/../../lipemat/phpstan-wordpress/stubs/cmb2/cmb2-2.9.php
+    bootstrapFiles:

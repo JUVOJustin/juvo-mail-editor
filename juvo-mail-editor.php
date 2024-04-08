@@ -32,8 +32,12 @@ define('JUVO_MAIL_EDITOR_URL', plugin_dir_url(__FILE__));
  * Add file check to avoid autoloading if included as sub-package
  */
 $juvo_mail_editor_plugin_dir = plugin_dir_path(__FILE__);
-if (file_exists($juvo_mail_editor_plugin_dir . 'vendor/autoload.php')) {
+if (
+    file_exists($juvo_mail_editor_plugin_dir . 'vendor/autoload.php')
+    && file_exists($juvo_mail_editor_plugin_dir . 'vendor/vendor-prefixed/autoload.php')
+) {
 	require plugin_dir_path(__FILE__) . 'vendor/autoload.php';
+    require plugin_dir_path(__FILE__) . 'vendor/vendor-prefixed/autoload.php';
 }
 
 /**

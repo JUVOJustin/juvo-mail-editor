@@ -14,8 +14,8 @@
   "authors": [
     {
       "name": "Justin Vogt",
-      "email": "mail@juvo-design.de",
-      "homepage": "https://juvo-design.de"
+      "email": "mail@justin-vogt.com",
+      "homepage": "https://justin-vogt.com"
     }
   ],
   "require-dev": {
@@ -37,19 +37,54 @@
   "require": {
     "cmb2/cmb2": "^2.9",
     "php": ">=7.2.0",
-    "timber/timber": "^1.19",
+    "timber/timber": "^2.0.0",
     "symfony/polyfill-mbstring": "v1.20.0"
   },
   "scripts": {
     "sniff": "@php ./vendor/bin/phpcs -s ./",
-    "static-analyse": "@php ./vendor/bin/phpstan analyse src",
-    "test": "@php ./vendor/phpunit/phpunit/phpunit"
+    "test": "@php ./vendor/phpunit/phpunit/phpunit",
+    "strauss": [
+      "test -f ./bin/strauss.phar || curl -o bin/strauss.phar -L -C - https://github.com/BrianHenryIE/strauss/releases/latest/download/strauss.phar",
+      "@php bin/strauss.phar"
+    ],
+    "post-install-cmd": [
+      "@strauss"
+    ],
+    "post-update-cmd": [
+      "@strauss"
+    ],
+    "static-analyse": "@php ./vendor/bin/phpstan analyse"
   },
   "extra": {
     "installer-paths": {
       "vendor/{$vendor}/{$name}/": [
         "type:wordpress-plugin"
       ]
+    },
+    "strauss": {
+      "target_directory": "vendor/vendor-prefixed",
+      "namespace_prefix": "JUVO_MailEditor\\Dependencies\\",
+      "classmap_prefix": "JUVO_MailEditor",
+      "constant_prefix": "JUVO_MAIL_EDITOR",
+      "exclude_from_copy": {
+        "packages": [
+        ],
+        "namespaces": [
+        ],
+        "file_patterns": [
+        ]
+      },
+      "exclude_from_prefix": {
+        "packages": [
+          "timber/timber",
+          "twig/twig"
+        ],
+        "namespaces": [
+        ],
+        "file_patterns": [
+        ]
+      },
+      "delete_vendor_files": true
     }
   },
   "config": {

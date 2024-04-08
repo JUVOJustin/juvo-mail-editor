@@ -3,9 +3,7 @@
 
 namespace JUVO_MailEditor;
 
-use Timber\Term;
 use Timber\Timber;
-use Timber\User;
 use WP_Post;
 use WP_Term;
 use WP_User;
@@ -34,11 +32,11 @@ class Placeholder {
 
 		foreach ( $context as $key => $item ) {
 			if ( $item instanceof WP_User ) {
-				$renderContext[ $key ] = new User( $item );
+				$renderContext[ $key ] = Timber::get_user($item);
 			} elseif ( $item instanceof WP_Post ) {
 				$renderContext[ $key ] = Timber::get_post( $item->ID );
 			} elseif ( $item instanceof WP_Term ) {
-				$renderContext[ $key ] = new Term( $item->term_id );
+				$renderContext[ $key ] = Timber::get_term($item->term_id);
 			} else {
 				$renderContext[ $key ] = $item;
 			}

@@ -7,3 +7,5 @@ wp-cli.local.yml
 *.tar.gz
 *.zip
 /vendor/
+bin/
+!bin/.gitkeep

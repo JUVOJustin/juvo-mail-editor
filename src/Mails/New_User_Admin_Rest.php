@@ -3,11 +3,15 @@
 namespace JUVO_MailEditor\Mails;
 
 use JUVO_MailEditor\Mail_Generator;
+use WP_REST_Request;
 use WP_User;
 
 class New_User_Admin_Rest extends Mail_Generator {
 
-	public function prepareSend( WP_User $user ): void {
+	public function prepareSend( WP_User $user, WP_REST_Request $request, bool $creating ): void {
+        if (!$creating) {
+            return;
+        }
 		do_action( "juvo_mail_editor_send", $this->getTrigger(), [ "user" => $user ] );
 	}
 

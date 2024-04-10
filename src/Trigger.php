@@ -17,12 +17,12 @@ class Trigger {
 	/**
 	 * @var string
 	 */
-	private $name;
+	private string $name;
 
 	/**
 	 * @var string
 	 */
-	private $slug;
+	private string $slug;
 
 	/**
 	 * @var WP_Term|null
@@ -31,6 +31,11 @@ class Trigger {
 
 	private array $context = [];
 
+	/**
+	 * The hook name of the filter which is used to modify the mails data
+	 *
+	 * @var string
+	 */
 	private string $mailHook;
 
 	/**
@@ -46,7 +51,9 @@ class Trigger {
 		$this->mailHook = $mailHook;
 		$this->term     = get_term_by( 'slug', $slug, Mail_Trigger_TAX::TAXONOMY_NAME ) ?: null;
 
-		add_filter( $this->mailHook, array( $this, 'addTriggerToHeader' ), 9, 1 );
+		if ($this->mailHook) {
+			add_filter( $this->mailHook, array( $this, 'addTriggerToHeader' ), 9, 1 );
+		}
 	}
 
 	public function getTerm(): ?WP_Term {
@@ -138,30 +145,34 @@ class Trigger {
 	/**
 	 * Adds template slug as header to mark the mails to be processed later
 	 *
-	 * @param array|string $headers
+	 * @param array $email
 	 *
 	 * @return array
 	 */
-	public function addTriggerToHeader( $headers ): array {
+	public function addTriggerToHeader( array $email ): array {
 
-		// Ensure string or array
-		if (!is_array($headers) && !is_string($headers)) {
-			return $headers;
+		// Check if the passed argument is of the correct structure
+		if ( !isset( $email['to'] )
+		     || ! isset( $email['subject'] )
+		) {
+			return $email;
 		}
 
-		// Exit early
-		if (empty($headers)) {
-			return $headers;
+		$headers = $email['headers'] ?? [];
+
+		// Ensure string or array
+		if ( ! is_array( $headers ) && ! is_string( $headers ) ) {
+			return $email;
 		}
 
 		if ( is_string( $headers ) ) {
 			$headers = explode( "\n", str_replace( "\r\n", "\n", $headers ) );
 		}
 
-		$headers[] = "X-JUVO-ME-Trigger: {$this->getSlug()}";
+		$headers[]        = "X-JUVO-ME-Trigger: {$this->getSlug()}";
+		$email['headers'] = $headers;
 
-		return $headers;
-
+		return $email;
 	}
 
 }

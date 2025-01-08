@@ -32,8 +32,8 @@
   },
   "require": {
     "cmb2/cmb2": "^2.9",
-    "php": ">=7.4.0",
-    "timber/timber": "^2.0.0"
+    "php": ">=8.1.0",
+    "timber/timber": "^2.3.0"
   },
   "scripts": {
     "post-create-project-cmd": [

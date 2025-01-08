@@ -9,7 +9,7 @@
  * Domain Path:     /languages
  * Version:         3.1.7
  * Requires at least: 6.2
- * Requires PHP: 7.4
+ * Requires PHP: 8.1
  */
 
 use JUVO_MailEditor\Activator;

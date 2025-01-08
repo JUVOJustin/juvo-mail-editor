@@ -7,7 +7,7 @@
  * License:         GPL v2 or later
  * Text Domain:     juvo-mail-editor
  * Domain Path:     /languages
- * Version:         3.1.7
+ * Version:         3.1.8
  * Requires at least: 6.2
  * Requires PHP: 8.1
  */

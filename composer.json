@@ -36,15 +36,19 @@
     "timber/timber": "^2.0.0"
   },
   "scripts": {
-    "strauss": [
-      "test -f ./bin/strauss.phar || curl -o bin/strauss.phar -L -C - https://github.com/BrianHenryIE/strauss/releases/latest/download/strauss.phar",
-      "@php bin/strauss.phar"
+    "post-create-project-cmd": [
+      "composer exec -- wp setup"
+    ],
+    "prefix-namespaces": [
+      "sh -c 'test -f ./bin/strauss.phar || curl -o bin/strauss.phar -L -C - https://github.com/BrianHenryIE/strauss/releases/latest/download/strauss.phar'",
+      "@php bin/strauss.phar",
+      "@php composer dump-autoload"
     ],
     "post-install-cmd": [
-      "@strauss"
+      "@prefix-namespaces"
     ],
     "post-update-cmd": [
-      "@strauss"
+      "@prefix-namespaces"
     ],
     "static-analyse": "@php ./vendor/bin/phpstan analyse"
   },
@@ -59,25 +63,16 @@
       "namespace_prefix": "JUVO_MailEditor\\Dependencies\\",
       "classmap_prefix": "JUVO_MailEditor",
       "constant_prefix": "JUVO_MAIL_EDITOR",
-      "packages": [
-        "juvo/mail-editor"
-      ],
       "exclude_from_copy": {
         "packages": [
-        ],
-        "namespaces": [
-        ],
-        "file_patterns": [
+          "timber/timber",
+          "twig/twig"
         ]
       },
       "exclude_from_prefix": {
         "packages": [
           "timber/timber",
           "twig/twig"
-        ],
-        "namespaces": [
-        ],
-        "file_patterns": [
         ]
       },
       "delete_vendor_files": true

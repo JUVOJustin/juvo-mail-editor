@@ -2,8 +2,8 @@
 /**
  * Plugin Name:     JUVO Mail Editor
  * Description:     JUVO Mail Editor helps to modify the standard WordPress Mailings and allows adding dynamic mail triggers
- * Author:          JUVO Webdesign - Justin Vogt
- * Author URI:      https://juvo-design.de
+ * Author:          Justin Vogt
+ * Author URI:      https://justin-vogt.com
  * License:         GPL v2 or later
  * Text Domain:     juvo-mail-editor
  * Domain Path:     /languages
